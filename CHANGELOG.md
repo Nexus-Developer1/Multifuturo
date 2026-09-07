@@ -9,6 +9,36 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Voltar à lista no topo da ficha
+
+$${\color{#5D6348}\textsf{2026-09-07 · 11:13}}$$
+
+**Commit:** `398a99d` — `Site: voltar a lista no topo da ficha, debaixo dos botoes do cabecalho`
+
+O "Voltar à lista" estava lá em baixo, ao lado dos imóveis semelhantes — só o
+encontrava quem rolasse a ficha toda. Passou para a primeira linha da página,
+encostado à direita, debaixo dos botões do cabeçalho e alinhado com o "Contactos".
+
+Deixou de ser uma ligação sublinhada e passou a botão com contorno e seta para a
+esquerda: escurece ao passar o rato. A linha das migalhas continua à esquerda, na
+mesma altura.
+
+**Ficheiros**
+
+- `resources/views/pages/property.blade.php` — migalhas e botão na mesma linha
+  (`justify-between`); a ligação do fim da página saiu, e o título "Imóveis
+  semelhantes" ficou sozinho na sua linha.
+
+**Notas**
+
+- O botão não parte em três linhas em ecrãs estreitos (`whitespace-nowrap`,
+  `shrink-0`); em telemóvel desce para baixo das migalhas.
+- Verificado no browser: o botão fica a 113 px do topo, com o bordo direito
+  alinhado com o botão "Contactos" do cabeçalho. 234 testes a passar.
+
+---
+
+
 ## Listas de escolha com o desenho do site
 
 $${\color{#5D6348}\textsf{2026-09-07 · 10:58}}$$
