@@ -23,11 +23,22 @@ it('a homepage mostra destaques, zonas e a banda de contacto', function () {
     $html = $this->get(route('home'))->assertOk()->getContent();
 
     expect($html)->toContain(__('ui.home_sections.featured'))
-        ->and(substr_count($html, 'data-slug='))->toBe(4)   // 2 destaques + completa até 3+ com recentes (máx. 6)
+        ->and(substr_count($html, 'data-slug='))->toBe(4)   // 2 destaques + completa com os recentes até encher a fila
         ->and($html)->toContain(route('zones.city', 'cascais'))
         // A barra de pesquisa saiu da abertura (pedido do cliente): procura-se
         // a partir das listagens, que têm os filtros todos.
         ->and($html)->not->toContain('role="search"');
+});
+
+it('a fila de destaques tem quatro lugares e não mais', function () {
+    // Mesmo que a base de dados tenha mais marcados (dados antigos, importações),
+    // a página nunca mostra uma quinta fotografia.
+    Property::factory()->count(7)->featured()->create();
+
+    $html = $this->get(route('home'))->assertOk()->getContent();
+
+    expect(substr_count($html, 'data-slug='))->toBe(Property::MAX_FEATURED)
+        ->and(Property::MAX_FEATURED)->toBe(4);
 });
 
 /*

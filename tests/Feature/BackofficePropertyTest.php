@@ -8,6 +8,7 @@
 
 use App\Filament\Resources\Properties\Pages\CreateProperty;
 use App\Filament\Resources\Properties\Pages\EditProperty;
+use App\Filament\Resources\Properties\Pages\ListProperties;
 use App\Models\Property;
 use App\Models\User;
 use App\Support\PropertyCache;
@@ -131,4 +132,51 @@ it('gravar no backoffice invalida a cache do site', function () {
         ->call('create');
 
     expect(PropertyCache::store()->get('props:sentinela'))->toBeNull();
+});
+
+it('o destaque para na fila da página inicial: o quinto é recusado', function () {
+    Property::factory()->count(Property::MAX_FEATURED)->featured()->create();
+    $quinto = Property::factory()->create(['reference' => 'MF-3010']);
+
+    // Pela ficha: o formulário não grava e diz quais tirar primeiro.
+    Livewire::test(EditProperty::class, ['record' => $quinto->getRouteKey()])
+        ->fillForm(['is_featured' => true])
+        ->call('save')
+        ->assertHasFormErrors(['is_featured']);
+
+    expect($quinto->fresh()->is_featured)->toBeFalse();
+
+    // Tirando o destaque a um deles, abre lugar.
+    Property::query()->featured()->first()->update(['is_featured' => false]);
+
+    Livewire::test(EditProperty::class, ['record' => $quinto->getRouteKey()])
+        ->fillForm(['is_featured' => true])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($quinto->fresh()->is_featured)->toBeTrue()
+        ->and(Property::featuredCount())->toBe(Property::MAX_FEATURED);
+});
+
+it('editar um imóvel que já está em destaque não se atrapalha com ele próprio', function () {
+    Property::factory()->count(Property::MAX_FEATURED - 1)->featured()->create();
+    $emDestaque = Property::factory()->featured()->create(['reference' => 'MF-3011']);
+
+    Livewire::test(EditProperty::class, ['record' => $emDestaque->getRouteKey()])
+        ->fillForm(['is_featured' => true, 'city' => 'Braga'])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($emDestaque->fresh()->is_featured)->toBeTrue();
+});
+
+it('na lista, o interruptor de destaque também para nos quatro', function () {
+    Property::factory()->count(Property::MAX_FEATURED)->featured()->create();
+    $quinto = Property::factory()->create(['reference' => 'MF-3012']);
+
+    Livewire::test(ListProperties::class)
+        ->call('updateTableColumnState', 'is_featured', (string) $quinto->getKey(), true);
+
+    expect($quinto->fresh()->is_featured)->toBeFalse()
+        ->and(Property::featuredCount())->toBe(Property::MAX_FEATURED);
 });

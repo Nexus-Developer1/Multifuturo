@@ -13,6 +13,7 @@ use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -187,10 +188,29 @@ class PropertiesTable
                     ->afterStateUpdated(fn () => PropertyCache::flush())
                     ->toggleable(isToggledHiddenByDefault: true),
 
+                /*
+                 * Escolher os destaques faz-se aqui, a partir da lista: fica-se
+                 * a ver quais são e trocam-se num clique. A página inicial só
+                 * tem quatro cartões, por isso o quinto é recusado com o nome
+                 * dos que já lá estão — em vez de ficar marcado sem aparecer.
+                 */
                 ToggleColumn::make('is_featured')
                     ->label('Destaque')
-                    ->afterStateUpdated(fn () => PropertyCache::flush())
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->updateStateUsing(function (Property $record, bool $state): void {
+                        if ($state && Property::featuredCount($record->id) >= Property::MAX_FEATURED) {
+                            Notification::make()
+                                ->warning()
+                                ->title('Já há '.Property::MAX_FEATURED.' imóveis em destaque')
+                                ->body('Tire o destaque a um destes primeiro: '.Property::featuredReferences($record->id).'.')
+                                ->send();
+
+                            return;
+                        }
+
+                        $record->update(['is_featured' => $state]);
+                        PropertyCache::flush();
+                    })
+                    ->toggleable(),
 
                 IconColumn::make('is_exclusive')
                     ->label('Exclusivo')

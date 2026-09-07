@@ -6,6 +6,7 @@ use App\Enums\BusinessType;
 use App\Models\Property;
 use App\Support\Geocoder;
 use App\Support\Locales;
+use Closure;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
@@ -312,8 +313,15 @@ class PropertyForm
                     Checkbox::make('is_active')
                         ->label('Visível no website')
                         ->default(true),
+                    // A página inicial tem quatro cartões de destaque: o quinto
+                    // não apareceria a ninguém. Diz-se quais tirar primeiro.
                     Checkbox::make('is_featured')
-                        ->label('Destaque'),
+                        ->label('Destaque')
+                        ->rule(fn (?Property $record) => function (string $attribute, mixed $value, Closure $fail) use ($record) {
+                            if ($value && Property::featuredCount($record?->id) >= Property::MAX_FEATURED) {
+                                $fail('Já há '.Property::MAX_FEATURED.' imóveis em destaque. Tire o destaque a um destes primeiro: '.Property::featuredReferences($record?->id).'.');
+                            }
+                        }),
                     TagsInput::make('admin.monitors')
                         ->label('Monitores')
                         ->placeholder('Escreva e prima Enter'),
@@ -1012,10 +1020,10 @@ class PropertyForm
      * moldura nenhuma; com vários, cada idioma é uma secção (a do idioma por
      * omissão aberta, as outras fechadas).
      *
-     * @param  \Closure(string): array<int, mixed>  $campos
+     * @param  Closure(string): array<int, mixed>  $campos
      * @return array<int, mixed>
      */
-    private static function porIdioma(\Closure $campos): array
+    private static function porIdioma(Closure $campos): array
     {
         $locales = Locales::enabled();
 

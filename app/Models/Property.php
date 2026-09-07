@@ -218,6 +218,33 @@ class Property extends Model
     }
 
     /**
+     * Quantos destaques a página inicial mostra — e, por isso, quantos o
+     * backoffice deixa marcar. A fila são quatro cartões: um quinto destaque
+     * não apareceria a ninguém, e a agência ficaria a pensar que sim.
+     */
+    public const MAX_FEATURED = 4;
+
+    /** Destaques já marcados, sem contar com um imóvel (o que está a ser editado). */
+    public static function featuredCount(?int $exceptId = null): int
+    {
+        return static::query()
+            ->featured()
+            ->when($exceptId, fn (Builder $q) => $q->whereKeyNot($exceptId))
+            ->count();
+    }
+
+    /** Referências dos destaques atuais, para dizer à agência quais tirar. */
+    public static function featuredReferences(?int $exceptId = null): string
+    {
+        return static::query()
+            ->featured()
+            ->when($exceptId, fn (Builder $q) => $q->whereKeyNot($exceptId))
+            ->get(['reference', 'internal_id'])
+            ->map(fn (self $p): string => $p->reference ?: $p->internal_id)
+            ->implode(', ');
+    }
+
+    /**
      * Filtra por características usando o índice GIN (features @> '["garagem"]').
      *
      * @param  Builder<Property>  $query

@@ -16,13 +16,19 @@ class PageController extends Controller
 {
     public function home(): View
     {
-        // Destaques: is_featured primeiro; se não houver, os mais recentes. Máx. 6.
+        /*
+         * Destaques: os marcados no backoffice primeiro; se forem menos do que
+         * a fila leva, completa-se com os mais recentes, para a página inicial
+         * nunca aparecer com buracos. Nunca mais do que MAX_FEATURED — é o que
+         * a fila mostra, e marcar mais no backoffice já não é permitido.
+         */
         $featured = PropertyCache::remember('home:featured', function () {
-            $featured = Property::query()->active()->featured()->orderByRaw('crm_updated_at DESC NULLS LAST')->limit(6)->get();
+            $max = Property::MAX_FEATURED;
+            $featured = Property::query()->active()->featured()->orderByRaw('crm_updated_at DESC NULLS LAST')->limit($max)->get();
 
-            if ($featured->count() < 3) {
+            if ($featured->count() < $max) {
                 $featured = $featured->concat(
-                    Property::query()->active()->whereKeyNot($featured->modelKeys())->orderByRaw('crm_updated_at DESC NULLS LAST')->limit(6 - $featured->count())->get()
+                    Property::query()->active()->whereKeyNot($featured->modelKeys())->orderByRaw('crm_updated_at DESC NULLS LAST')->limit($max - $featured->count())->get()
                 );
             }
 
