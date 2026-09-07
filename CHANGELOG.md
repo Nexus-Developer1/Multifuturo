@@ -9,6 +9,28 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Listagem sem separadores, navegação em maiúsculas
+
+$${\color{#5D6348}\textsf{2026-09-07 · 10:11}}$$
+
+**Commit:** `3595a77` — `Site: listagem sem os separadores; navegacao do topo em maiusculas`
+
+Saem os separadores **Comprar / Arrendar** da barra de filtros das listagens: eram uma
+segunda porta para o mesmo sítio, já que a navegação do topo os tem. A barra fica só
+com a ordenação e o botão de mais filtros, encostados à direita.
+
+A **navegação do topo passa a maiúsculas** — Comprar, Arrendar, Zonas, Quanto vale a
+minha casa?, A agência e o botão Contactos —, no mesmo registo dos rótulos dos filtros
+e das secções. No menu do telemóvel também, em serifada. A mudança é de estilo (CSS),
+não de texto: os termos nos ficheiros de idioma ficam como estão.
+
+- `resources/views/livewire/property-listing.blade.php` — separadores removidos.
+- `resources/views/components/site/header.blade.php` — navegação, botão e menu móvel.
+- Verificado: 235 testes a passar, `pint --test` no projeto inteiro (196 ficheiros) e a
+  listagem fotografada a 1600 px.
+
+---
+
 ## Os testes do GitHub voltam a passar
 
 $${\color{#5D6348}\textsf{2026-09-03 · 12:25}}$$
