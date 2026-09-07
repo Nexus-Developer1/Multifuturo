@@ -9,6 +9,47 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Passar as fotografias da abertura com o rato
+
+$${\color{#5D6348}\textsf{2026-09-07 · 15:33}}$$
+
+**Commit:** `72fc799` — `Site: passar as fotografias da abertura com setas e arrastando o rato`
+
+As fotografias da abertura só trocavam sozinhas de cinco em cinco segundos. Agora
+passam-se à mão de três maneiras: **duas setas** ao lado dos pontos, **os pontos** (já
+antes) e **arrastando por cima da fotografia** — com o rato ou com o dedo, a partir de
+60 px de percurso. Qualquer uma delas pára a rotação automática: quem está a escolher
+não quer a fotografia a fugir-lhe.
+
+As setas dão a volta: a anterior na primeira fotografia salta para a última.
+
+**Dois defeitos apanhados pelo caminho, ambos anteriores a isto**
+
+- **Os comandos ficavam escondidos por trás do aviso de cookies.** Mediam a altura do
+  aviso uma vez, no arranque, quando ele ainda não estava desenhado — e dava zero.
+  Agora voltam a medir sempre que o aviso abre, fecha ou muda de tamanho.
+- **A barra do comparador aparecia vazia** ("0 imóveis para comparar") mal se fechava
+  o aviso de cookies. O `:style` era texto e reescrevia o atributo inteiro, apagando o
+  `display: none` com que se escondia. Passou a objeto, que muda só a propriedade.
+
+**Ficheiros**
+
+- `resources/js/app.js` — `seguinte()`, `anterior()` e o arrastar (com captura do
+  ponteiro, para o gesto não se perder ao sair da imagem); e `consentOffset()`, que
+  mede o aviso de cookies e serve os dois sítios que assentam no fundo do ecrã.
+- `resources/views/pages/home.blade.php` — as setas, a camada de arrastar e o texto
+  da abertura por cima dela (para continuar a poder seleccionar-se).
+- `resources/views/components/layouts/app.blade.php` — a barra do comparador.
+- `lang/pt/ui.php`, `lang/en/ui.php` — "Fotografia anterior" e "Fotografia seguinte".
+
+**Notas**
+
+- Verificado no browser: setas, pontos, a volta ao fim, arrastar nos dois sentidos, a
+  rotação a parar depois da escolha e o título ainda seleccionável. Sem erros na
+  consola. 240 testes a passar.
+
+---
+
 ## Destaques: quatro, escolhidos no backoffice
 
 $${\color{#5D6348}\textsf{2026-09-07 · 15:01}}$$
