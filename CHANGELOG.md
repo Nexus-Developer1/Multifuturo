@@ -9,6 +9,26 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Direitos reservados ao centro do rodapé
+
+$${\color{#5D6348}\textsf{2026-09-07 · 17:26}}$$
+
+**Commit:** `2c8f5f6` — `Site: linha dos direitos reservados centrada no rodape`
+
+A última linha do rodapé — "© 2026 Multifuturo Propriedades. Todos os direitos
+reservados." — estava encostada à esquerda. Passou a ficar ao centro.
+
+**Ficheiros**
+
+- `resources/views/components/site/footer.blade.php` — `text-center` na faixa de
+  baixo do rodapé.
+
+**Notas**
+
+- 227 testes a passar.
+
+---
+
 ## Valores de referência e Zonas fora do backoffice
 
 $${\color{#5D6348}\textsf{2026-09-07 · 15:47}}$$
