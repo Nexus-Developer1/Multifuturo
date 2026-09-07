@@ -9,6 +9,31 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Contactos e voltar à lista sem contorno
+
+$${\color{#5D6348}\textsf{2026-09-07 · 12:27}}$$
+
+**Commit:** `c8d3aca` — `Site: contactos e voltar a lista sem contorno`
+
+Os dois botões perderam a caixa: ficam só as palavras, como o resto da navegação. Ao
+passar o rato passam a verde azeitona, em vez de encherem de tinta.
+
+Com o contorno saiu também o espaçamento interno, e por isso ambos passaram a
+encostar à margem da página — o "Contactos" alinhado com o limite direito do
+cabeçalho e o "Voltar à lista" logo por baixo, na mesma linha vertical.
+
+**Ficheiros**
+
+- `resources/views/components/site/header.blade.php` — o "Contactos".
+- `resources/views/pages/property.blade.php` — o "Voltar à lista", que continua com a
+  seta à esquerda.
+
+**Notas**
+
+- 237 testes a passar.
+
+---
+
 ## Pedido de informação mais compacto
 
 $${\color{#5D6348}\textsf{2026-09-07 · 12:21}}$$
