@@ -206,7 +206,6 @@ return [
                 'paragraphs' => [
                     'Queremos estar presentes nos momentos mais importantes da vida dos nossos clientes: na compra da primeira casa, numa mudança familiar ou profissional, na procura de uma nova oportunidade ou na realização de um investimento.',
                     'Na Multifuturo, crescemos com os nossos clientes e acreditamos que as melhores histórias são construídas em conjunto.',
-                    'Queremos que esta seja a nossa história.',
                 ],
             ],
             [
