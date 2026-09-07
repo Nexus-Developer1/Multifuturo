@@ -9,6 +9,32 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Filtros da listagem sem espaços vazios
+
+$${\color{#5D6348}\textsf{2026-09-07 · 10:29}}$$
+
+**Commit:** `0f64568` — `Site: filtros da listagem numa grelha de quatro colunas, sem espacos vazios`
+
+Depois de sairem os separadores Comprar/Arrendar, a barra ficou com a ordenação sozinha
+à direita e um vazio grande à esquerda; e as duas linhas de campos tinham larguras
+diferentes (três campos largos em cima, quatro estreitos em baixo).
+
+Agora são **oito campos numa grelha de quatro colunas**, duas linhas cheias e da mesma
+largura: Distrito · Concelho · Freguesia · Tipo de imóvel, e Tipologia · Preço mín. ·
+Preço máx. · Ordenar. A ordenação passou para dentro da grelha — era ela que sobrava
+na barra de cima.
+
+A barra passa a ter a **contagem de resultados** à esquerda ("3 imóveis", que era
+invisível desde que o cabeçalho saiu) e **"Mais filtros"** à direita, agora com texto
+além do ícone. O botão da lupa saiu: com JavaScript os filtros já se aplicam sozinhos,
+e sem ele continua a haver o botão "Aplicar" no fim do formulário.
+
+- `resources/views/livewire/property-listing.blade.php` — barra e grelha.
+- Verificado: 234 testes a passar, `pint --test` no projeto inteiro (195 ficheiros) e a
+  listagem fotografada a 1600 px.
+
+---
+
 ## "Vistos recentemente" removido
 
 $${\color{#5D6348}\textsf{2026-09-07 · 10:23}}$$
