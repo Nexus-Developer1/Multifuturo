@@ -18,36 +18,27 @@
         os motores de busca — uma página sem <h1> não se anuncia a ninguém.
     --}}
     <h1 class="sr-only">{{ $venda ? __('ui.listing.buy_title') : __('ui.listing.rent_title') }}</h1>
-    <p class="sr-only" aria-live="polite">{{ trans_choice('ui.listing.results', $results->total(), ['count' => number_format($results->total(), 0, ',', ' ')]) }}</p>
 
     <form method="get" action="{{ url()->current() }}" wire:submit.prevent id="lst-filters" class="mt-4">
-        {{--
-            Ordenação e mais filtros. Comprar/Arrendar trocam-se pela navegação do
-            topo — os separadores aqui eram uma segunda porta para o mesmo sítio.
-        --}}
-        <div class="flex flex-wrap items-center justify-end gap-x-8 gap-y-4 border-b border-sand-200 pb-4">
-            <div class="flex items-center gap-5">
-                <div class="flex items-baseline gap-3">
-                    <label for="lst-sort" class="label whitespace-nowrap">{{ __('ui.listing.sort') }}</label>
-                    <select id="lst-sort" name="ordenar" wire:model.live="sort" class="field-line select-chevron min-h-0 w-auto py-1 text-sm">
-                        <option value="recent">{{ __('ui.listing.sort_recent') }}</option>
-                        <option value="price_asc">{{ __('ui.listing.sort_price_asc') }}</option>
-                        <option value="price_desc">{{ __('ui.listing.sort_price_desc') }}</option>
-                    </select>
-                </div>
+        {{-- Barra: o que há à esquerda, o que se pode abrir à direita. --}}
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-sand-200 pb-4">
+            <p class="label" aria-live="polite">{{ trans_choice('ui.listing.results', $results->total(), ['count' => number_format($results->total(), 0, ',', ' ')]) }}</p>
 
-                <button type="button" @click="maisFiltros = !maisFiltros" :aria-expanded="maisFiltros" aria-controls="lst-mais"
-                        class="grid h-11 w-11 place-items-center text-ink transition-colors hover:text-olive-700">
-                    <span class="sr-only">{{ __('ui.listing.more_filters') }}</span>
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                        <path stroke-linecap="round" d="M7 4v6m0 4v6M17 4v10m0 4v2M4 12h6m4 2h6"/>
-                    </svg>
-                </button>
-            </div>
+            <button type="button" @click="maisFiltros = !maisFiltros" :aria-expanded="maisFiltros" aria-controls="lst-mais"
+                    class="flex items-center gap-2 text-[0.8rem] uppercase tracking-[0.12em] text-ink transition-colors hover:text-olive-700">
+                {{ __('ui.listing.more_filters') }}
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" d="M7 4v6m0 4v6M17 4v10m0 4v2M4 12h6m4 2h6"/>
+                </svg>
+            </button>
         </div>
 
-        {{-- Onde --}}
-        <div class="mt-8 grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
+        {{--
+            Oito campos, quatro colunas, duas linhas cheias: sem sobras e sem
+            linhas de larguras diferentes. A ordenação entra na grelha como os
+            outros — era ela que sobrava na barra de cima.
+        --}}
+        <div class="mt-8 grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
             <div>
                 <label for="lst-district" class="label">{{ __('ui.listing.district') }}</label>
                 <select id="lst-district" name="distrito" wire:model.live="district" class="field-line select-chevron mt-1">
@@ -75,10 +66,6 @@
                     @endforeach
                 </select>
             </div>
-        </div>
-
-        {{-- O quê e quanto --}}
-        <div class="mt-7 grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] lg:items-end">
             <div>
                 <label for="lst-type" class="label">{{ __('ui.listing.type') }}</label>
                 <select id="lst-type" name="tipo" wire:model.live="type" class="field-line select-chevron mt-1">
@@ -105,13 +92,14 @@
                 <label for="lst-pmax" class="label">{{ __('ui.listing.price_max') }}</label>
                 <input id="lst-pmax" name="preco_max" type="text" inputmode="numeric" wire:model.live.debounce.600ms="priceMax" class="field-line mt-1" placeholder="€">
             </div>
-            {{-- Com JavaScript os filtros já se aplicam sozinhos; o botão é para quem não o tem. --}}
-            <button type="submit" class="grid h-11 w-11 place-items-center justify-self-start text-ink transition-colors hover:text-olive-700 lg:justify-self-end">
-                <span class="sr-only">{{ __('ui.search.submit') }}</span>
-                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-                    <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m20 20-3.5-3.5"/>
-                </svg>
-            </button>
+            <div>
+                <label for="lst-sort" class="label">{{ __('ui.listing.sort') }}</label>
+                <select id="lst-sort" name="ordenar" wire:model.live="sort" class="field-line select-chevron mt-1">
+                    <option value="recent">{{ __('ui.listing.sort_recent') }}</option>
+                    <option value="price_asc">{{ __('ui.listing.sort_price_asc') }}</option>
+                    <option value="price_desc">{{ __('ui.listing.sort_price_desc') }}</option>
+                </select>
+            </div>
         </div>
 
         {{-- Mais filtros: pesquisa livre, área e comodidades --}}
