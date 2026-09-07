@@ -18,7 +18,7 @@ return [
         'buy' => 'Comprar',
         'rent' => 'Arrendar',
         'zones' => 'Zonas',
-        'about' => 'A agência',
+        'about' => 'Quem somos',
         'contact' => 'Contactos',
         'favorites' => 'Favoritos',
         'menu_open' => 'Abrir menu',

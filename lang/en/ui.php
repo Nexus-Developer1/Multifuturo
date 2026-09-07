@@ -19,7 +19,7 @@ return [
         'buy' => 'Buy',
         'rent' => 'Rent',
         'zones' => 'Areas',
-        'about' => 'The agency',
+        'about' => 'About us',
         'contact' => 'Contact',
         'favorites' => 'Favourites',
         'menu_open' => 'Open menu',
