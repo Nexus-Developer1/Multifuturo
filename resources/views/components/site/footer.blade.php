@@ -66,7 +66,7 @@
     </div>
 
     <div class="border-t border-olive-700">
-        <div class="container-site py-6 text-xs text-sand-200">
+        <div class="container-site py-6 text-center text-xs text-sand-200">
             {{ __('ui.footer.rights', ['year' => now()->year, 'name' => $agency['name']]) }}
         </div>
     </div>
