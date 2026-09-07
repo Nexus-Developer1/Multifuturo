@@ -42,20 +42,34 @@
     </x-slot:head>
 
     <article class="container-site pt-8 pb-24">
-        {{-- Migalhas discretas --}}
-        <nav aria-label="Breadcrumb" class="text-xs text-ink-muted print:hidden">
-            <ol class="flex flex-wrap gap-2">
-                <li><a href="{{ route('home') }}" class="hover:text-ink">Início</a></li>
-                <li aria-hidden="true">/</li>
-                <li><a href="{{ route($p->business_type->routeName()) }}" class="hover:text-ink">{{ $p->business_type->routeName() === 'buy' ? __('ui.nav.buy') : __('ui.nav.rent') }}</a></li>
-                @if ($p->city)
+        {{--
+            Primeira linha da ficha: migalhas à esquerda e o regresso à lista à
+            direita, debaixo dos botões do cabeçalho — é onde se procura a saída,
+            não no fim da página.
+        --}}
+        <div class="flex flex-wrap items-center justify-between gap-4 print:hidden">
+            <nav aria-label="Breadcrumb" class="text-xs text-ink-muted">
+                <ol class="flex flex-wrap gap-2">
+                    <li><a href="{{ route('home') }}" class="hover:text-ink">Início</a></li>
                     <li aria-hidden="true">/</li>
-                    <li><a href="{{ route('zones.city', \Illuminate\Support\Str::slug($p->city)) }}" class="hover:text-ink">{{ $p->city }}</a></li>
-                @endif
-                <li aria-hidden="true">/</li>
-                <li aria-current="page">{{ $p->reference ?? $p->internal_id }}</li>
-            </ol>
-        </nav>
+                    <li><a href="{{ route($p->business_type->routeName()) }}" class="hover:text-ink">{{ $p->business_type->routeName() === 'buy' ? __('ui.nav.buy') : __('ui.nav.rent') }}</a></li>
+                    @if ($p->city)
+                        <li aria-hidden="true">/</li>
+                        <li><a href="{{ route('zones.city', \Illuminate\Support\Str::slug($p->city)) }}" class="hover:text-ink">{{ $p->city }}</a></li>
+                    @endif
+                    <li aria-hidden="true">/</li>
+                    <li aria-current="page">{{ $p->reference ?? $p->internal_id }}</li>
+                </ol>
+            </nav>
+
+            <a href="{{ route($p->business_type->routeName(), ['concelho' => $p->city]) }}"
+               class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-md border border-sand-300 px-4 py-2 text-[0.8rem] tracking-wide text-ink transition-colors hover:border-ink hover:bg-ink hover:text-sand-50">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 6l-6 6 6 6"/>
+                </svg>
+                {{ __('ui.property.back_to_list') }}
+            </a>
+        </div>
 
         <div class="mt-6">
             <x-property.gallery :photos="$p->photos ?? []" :title="$title" />
@@ -209,10 +223,7 @@
 
         @if ($similar->isNotEmpty())
             <section class="mt-24 print:hidden">
-                <div class="flex items-end justify-between gap-6">
-                    <h2 class="display-sm">{{ __('ui.property.similar') }}</h2>
-                    <a href="{{ route($p->business_type->routeName(), ['concelho' => $p->city]) }}" class="link text-sm">{{ __('ui.property.back_to_list') }}</a>
-                </div>
+                <h2 class="display-sm">{{ __('ui.property.similar') }}</h2>
                 <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($similar as $s)
                         <x-property.card :property="$s" />
