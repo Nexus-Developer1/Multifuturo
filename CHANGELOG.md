@@ -9,6 +9,50 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## "Quanto vale a minha casa?" eliminado
+
+$${\color{#5D6348}\textsf{2026-09-07 · 13:06}}$$
+
+**Commit:** `b99c44b` — `Site: eliminada a funcionalidade Quanto vale a minha casa`
+
+A funcionalidade saiu do site: a página, o simulador de estimativa imediata, a entrada
+no menu e no rodapé, a linha do sitemap e os textos nos dois idiomas. O endereço
+`/pt/quanto-vale-a-minha-casa` passa a devolver 404.
+
+O formulário de pedido de contacto deixou de ter a variante da avaliação: era um
+componente para três origens, agora são duas — ficha de imóvel e contacto geral. Saiu
+com ela o passo 1 (o simulador), os campos escondidos do imóvel e o código que os
+mantinha sincronizados.
+
+**Ficheiros**
+
+- `resources/views/pages/valuation.blade.php` e
+  `resources/views/components/valuation-simulator.blade.php` — **eliminados**.
+- `routes/web.php` — a rota `valuation`.
+- `app/Http/Controllers/PageController.php` — o método e o `use` que ficou sem uso.
+- `app/Http/Controllers/SitemapController.php` — a entrada no sitemap.
+- `resources/views/components/site/header.blade.php`,
+  `resources/views/components/site/footer.blade.php` — as ligações.
+- `resources/views/components/lead-form.blade.php` — a variante `valuation`.
+- `lang/pt/ui.php`, `lang/en/ui.php` — o bloco `valuation` inteiro e os títulos do
+  formulário.
+- `tests/` — cinco ficheiros: a rota saiu das listas de páginas percorridas
+  (acessibilidade, legal, frontend), o teste dos formulários passou a usar a ficha de
+  imóvel em vez da avaliação, e o antigo `SimuladorAvaliacaoTest` ficou só com o
+  cálculo e o ecrã do backoffice.
+
+**Notas — o que ficou de propósito**
+
+- **Os valores de referência e a importação do INE ficaram no backoffice**, com a
+  revisão mensal a correr. Foram pedidos à parte e não é o que estava no ecrã; mas,
+  sem a página, deixaram de alimentar seja o que for. É uma decisão a tomar.
+- **O tipo de origem "Avaliação" continua a existir nas leads**: há um pedido antigo
+  gravado com essa origem e tem de continuar a abrir e a responder-se no backoffice.
+  Nenhum novo pode entrar — a página que os criava já não existe.
+- 236 testes a passar.
+
+---
+
 ## Botão "Ver imóveis" fora da abertura
 
 $${\color{#5D6348}\textsf{2026-09-07 · 12:52}}$$
