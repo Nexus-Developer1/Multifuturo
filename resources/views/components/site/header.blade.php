@@ -29,7 +29,7 @@
         <nav class="ml-10 hidden items-center gap-7 whitespace-nowrap xl:flex" aria-label="{{ __('ui.nav.main') }}">
             @foreach ($links as $link)
                 <a href="{{ route($link['route']) }}"
-                   @class(['text-sm tracking-wide transition-colors hover:text-olive-700', 'text-olive-700' => request()->routeIs($link['route']), 'text-ink' => ! request()->routeIs($link['route'])])
+                   @class(['text-[0.8rem] uppercase tracking-[0.12em] transition-colors hover:text-olive-700', 'text-olive-700' => request()->routeIs($link['route']), 'text-ink' => ! request()->routeIs($link['route'])])
                    @if (request()->routeIs($link['route'])) aria-current="page" @endif>
                     {{ $link['label'] }}
                 </a>
@@ -51,7 +51,7 @@
                       class="absolute -right-2 -top-2 min-w-4 rounded-full bg-olive-600 px-1 text-center text-[0.65rem] leading-4 text-sand-50"></span>
             </a>
             <x-site.language-switcher class="hidden lg:flex" />
-            <a href="{{ route('contact') }}" class="hidden rounded-md border border-ink px-6 py-2.5 text-sm tracking-wide transition-colors hover:bg-ink hover:text-sand-50 lg:inline-block">
+            <a href="{{ route('contact') }}" class="hidden rounded-md border border-ink px-6 py-2.5 text-[0.8rem] uppercase tracking-[0.12em] transition-colors hover:bg-ink hover:text-sand-50 lg:inline-block">
                 {{ __('ui.nav.contact') }}
             </a>
         </div>
@@ -61,12 +61,12 @@
         <div class="container-site flex flex-col py-4">
             @foreach ([...$links, ['route' => 'contact', 'label' => __('ui.nav.contact')]] as $link)
                 <a href="{{ route($link['route']) }}"
-                   @class(['border-b border-sand-200 py-3 font-serif text-xl last:border-0 hover:text-olive-700', 'text-olive-700' => request()->routeIs($link['route']), 'text-ink' => ! request()->routeIs($link['route'])])
+                   @class(['border-b border-sand-200 py-3 font-serif text-xl uppercase last:border-0 hover:text-olive-700', 'text-olive-700' => request()->routeIs($link['route']), 'text-ink' => ! request()->routeIs($link['route'])])
                    @if (request()->routeIs($link['route'])) aria-current="page" @endif>
                     {{ $link['label'] }}
                 </a>
             @endforeach
-            <a href="{{ route('favorites') }}" class="py-3 font-serif text-xl text-ink hover:text-olive-700">{{ __('ui.nav.favorites') }}</a>
+            <a href="{{ route('favorites') }}" class="py-3 font-serif text-xl uppercase text-ink hover:text-olive-700">{{ __('ui.nav.favorites') }}</a>
             <x-site.language-switcher class="mt-3 gap-2" compact />
         </div>
     </nav>

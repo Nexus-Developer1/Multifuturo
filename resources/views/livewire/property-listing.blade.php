@@ -21,20 +21,11 @@
     <p class="sr-only" aria-live="polite">{{ trans_choice('ui.listing.results', $results->total(), ['count' => number_format($results->total(), 0, ',', ' ')]) }}</p>
 
     <form method="get" action="{{ url()->current() }}" wire:submit.prevent id="lst-filters" class="mt-4">
-        {{-- Finalidade à esquerda, ordenação e mais filtros à direita --}}
-        <div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-b border-sand-200 pb-4">
-            <nav class="flex items-baseline gap-8" aria-label="{{ __('ui.listing.filters') }}">
-                @foreach ([['buy', __('ui.nav.buy')], ['rent', __('ui.nav.rent')]] as [$rota, $rotulo])
-                    <a href="{{ route($rota) }}"
-                       @class([
-                           'label text-sm transition-colors',
-                           'border-b-2 border-ink pb-1 text-ink' => request()->routeIs($rota),
-                           'text-ink-muted hover:text-ink' => ! request()->routeIs($rota),
-                       ])
-                       @if (request()->routeIs($rota)) aria-current="page" @endif>{{ $rotulo }}</a>
-                @endforeach
-            </nav>
-
+        {{--
+            Ordenação e mais filtros. Comprar/Arrendar trocam-se pela navegação do
+            topo — os separadores aqui eram uma segunda porta para o mesmo sítio.
+        --}}
+        <div class="flex flex-wrap items-center justify-end gap-x-8 gap-y-4 border-b border-sand-200 pb-4">
             <div class="flex items-center gap-5">
                 <div class="flex items-baseline gap-3">
                     <label for="lst-sort" class="label whitespace-nowrap">{{ __('ui.listing.sort') }}</label>
