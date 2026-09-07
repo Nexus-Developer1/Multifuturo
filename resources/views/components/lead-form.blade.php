@@ -30,7 +30,7 @@
 @endphp
 
 @php $campo = $tone === 'linha' ? 'field-line' : 'field'; @endphp
-<div {{ $attributes->merge(['class' => $tone === 'linha' ? '' : 'rounded-xl bg-sand-100 border border-sand-200 p-6 sm:p-8']) }} id="{{ $formId }}"
+<div {{ $attributes->merge(['class' => $tone === 'linha' ? '' : 'rounded-xl bg-sand-100 border border-sand-200 p-6 sm:p-7']) }} id="{{ $formId }}"
     @if ($isValuation)
         {{--
             O simulador emite 'valuation-change' a cada alteração. Os campos
@@ -49,7 +49,7 @@
         x-on:valuation-change.window="sync($event.detail)"
     @endif
 >
-    <div @class(['grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:gap-16' => $wide])>
+    <div @class(['grid items-start gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,2.4fr)] lg:gap-12' => $wide])>
     <div>
     <h2 class="text-2xl">{{ __('ui.lead.'.($isValuation ? 'form_title_valuation' : 'title_'.$source)) }}</h2>
     <p class="mt-2 text-sm text-ink-muted">{{ __('ui.lead.'.($isValuation ? 'form_lead_valuation' : 'lead_'.$source)) }}</p>
@@ -71,7 +71,7 @@
         <p class="border-l-2 border-error bg-sand-50 px-4 py-3 text-sm text-error" role="alert">{{ __('ui.lead.error') }}</p>
     @endif
 
-    <form method="post" action="{{ route('leads.store') }}" @class(['grid gap-5 mt-6', 'lg:mt-0 max-w-2xl gap-4!' => $wide]) novalidate>
+    <form method="post" action="{{ route('leads.store') }}" @class(['grid gap-5 mt-6', 'lg:mt-0 gap-4!' => $wide]) novalidate>
         @csrf
         <input type="hidden" name="source" value="{{ $source }}">
         <input type="hidden" name="form_ts" value="{{ \App\Http\Requests\StoreLeadRequest::signedTimestamp() }}">
@@ -92,7 +92,8 @@
             <p class="label mt-4 text-olive-700">{{ __('ui.valuation.step_contact') }}</p>
         @endif
 
-        <div class="grid gap-5 sm:grid-cols-2">
+        {{-- Em modo largo os três campos curtos cabem numa linha só. --}}
+        <div @class(['grid gap-5 sm:grid-cols-2', 'lg:grid-cols-3 gap-4!' => $wide])>
             <div>
                 <label for="{{ $formId }}-name" class="label">{{ __('ui.lead.name') }}</label>
                 <input id="{{ $formId }}-name" name="name" type="text" required autocomplete="name" value="{{ old('name') }}" class="{{ $campo }} mt-2 @error('name') border-error @enderror">
@@ -103,12 +104,11 @@
                 <input id="{{ $formId }}-email" name="email" type="email" required autocomplete="email" value="{{ old('email') }}" class="{{ $campo }} mt-2 @error('email') border-error @enderror">
                 @error('email')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
             </div>
-        </div>
-
-        <div>
-            <label for="{{ $formId }}-phone" class="label">{{ __('ui.lead.phone') }} <span class="normal-case tracking-normal">({{ __('ui.lead.optional') }})</span></label>
-            <input id="{{ $formId }}-phone" name="phone" type="tel" autocomplete="tel" value="{{ old('phone') }}" class="{{ $campo }} mt-2 @error('phone') border-error @enderror">
-            @error('phone')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
+            <div @class(['sm:col-span-2', 'lg:col-span-1' => $wide])>
+                <label for="{{ $formId }}-phone" class="label">{{ __('ui.lead.phone') }} <span class="normal-case tracking-normal">({{ __('ui.lead.optional') }})</span></label>
+                <input id="{{ $formId }}-phone" name="phone" type="tel" autocomplete="tel" value="{{ old('phone') }}" class="{{ $campo }} mt-2 @error('phone') border-error @enderror">
+                @error('phone')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
+            </div>
         </div>
 
         @if ($isValuation)
