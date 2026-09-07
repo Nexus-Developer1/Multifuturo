@@ -203,6 +203,13 @@ return [
         'energy_class' => 'Classe energética :class',
         'ami' => 'AMI',
         'characteristics' => 'Características',
+        'additional_info' => 'Informações adicionais',
+        'feature_groups' => [
+            'general' => 'Geral',
+            'interior' => 'Interior',
+            'exterior' => 'Exterior',
+            'surroundings' => 'Envolvente',
+        ],
         'price_on_request' => 'Preço sob consulta',
         'per_month' => '/mês',
         'exclusive' => 'Exclusivo',

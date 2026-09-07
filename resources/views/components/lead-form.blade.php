@@ -17,6 +17,9 @@
     'tone' => 'cartao',
     'source' => 'contact',
     'property' => null,
+    // À largura da página (ficha do imóvel): título à esquerda, campos à direita.
+    // Numa coluna estreita continua tudo empilhado, como antes.
+    'wide' => false,
 ])
 
 @php
@@ -46,18 +49,29 @@
         x-on:valuation-change.window="sync($event.detail)"
     @endif
 >
+    <div @class(['grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:gap-16' => $wide])>
+    <div>
     <h2 class="text-2xl">{{ __('ui.lead.'.($isValuation ? 'form_title_valuation' : 'title_'.$source)) }}</h2>
     <p class="mt-2 text-sm text-ink-muted">{{ __('ui.lead.'.($isValuation ? 'form_lead_valuation' : 'lead_'.$source)) }}</p>
+    @if ($wide && $isProperty)
+        <p class="mt-4 text-sm text-ink-muted">{{ __('ui.property.reference') }} {{ $property->reference ?? $property->internal_id }}</p>
+    @endif
+    {{-- Coluna da esquerda em modo largo: é onde entra o consultor do imóvel. --}}
+    @isset($aside)
+        <div class="mt-6">{{ $aside }}</div>
+    @endisset
+    </div>
 
+    <div>
     @if (session('lead_sent'))
-        <p class="mt-6 border-l-2 border-olive-600 bg-sand-50 px-4 py-3 text-sm text-ink" role="status">{{ __('ui.lead.success') }}</p>
+        <p class="border-l-2 border-olive-600 bg-sand-50 px-4 py-3 text-sm text-ink" role="status">{{ __('ui.lead.success') }}</p>
     @endif
 
     @if ($errors->any())
-        <p class="mt-6 border-l-2 border-error bg-sand-50 px-4 py-3 text-sm text-error" role="alert">{{ __('ui.lead.error') }}</p>
+        <p class="border-l-2 border-error bg-sand-50 px-4 py-3 text-sm text-error" role="alert">{{ __('ui.lead.error') }}</p>
     @endif
 
-    <form method="post" action="{{ route('leads.store') }}" class="mt-6 grid gap-5" novalidate>
+    <form method="post" action="{{ route('leads.store') }}" @class(['grid gap-5 mt-6', 'lg:mt-0 max-w-2xl gap-4!' => $wide]) novalidate>
         @csrf
         <input type="hidden" name="source" value="{{ $source }}">
         <input type="hidden" name="form_ts" value="{{ \App\Http\Requests\StoreLeadRequest::signedTimestamp() }}">
@@ -113,7 +127,7 @@
 
         <div>
             <label for="{{ $formId }}-message" class="label">{{ __('ui.lead.message') }}</label>
-            <textarea id="{{ $formId }}-message" name="message" rows="4" class="{{ $campo }} mt-2 @error('message') border-error @enderror">{{ old('message', $defaultMessage) }}</textarea>
+            <textarea id="{{ $formId }}-message" name="message" rows="{{ $wide ? 3 : 4 }}" class="{{ $campo }} mt-2 @error('message') border-error @enderror">{{ old('message', $defaultMessage) }}</textarea>
             @error('message')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
         </div>
 
@@ -138,4 +152,6 @@
             <button type="submit" class="btn-primary">{{ __('ui.lead.submit') }}</button>
         </div>
     </form>
+    </div>
+    </div>
 </div>

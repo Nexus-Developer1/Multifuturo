@@ -141,11 +141,12 @@ it('os cartões e o layout trazem o comparador', function () {
         ->toContain(__('ui.compare.open'));
 });
 
-it('a ficha tem partilha', function () {
+it('a ficha não repete os botões de guardar e partilhar', function () {
+    // Saíram a pedido da agência; guardar continua a fazer-se pelo coração dos cartões.
     $p = Property::factory()->create();
 
     $html = $this->get(route('property.show', $p))->assertOk()->getContent();
 
-    expect($html)->toContain(__('ui.property.share'))
-        ->toContain('navigator.share');
+    expect($html)->not->toContain('navigator.share')
+        ->not->toContain(__('ui.property.favorite_add'));
 });

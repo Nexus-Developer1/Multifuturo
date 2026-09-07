@@ -100,43 +100,22 @@
         </header>
 
         {{--
-            Em ecrã largo: texto à esquerda (duas linhas da grelha), cartão de dados e
-            pedido de informação à direita. Em telemóvel a ordem é cartão → texto →
-            pedido, para os dados essenciais ficarem logo a seguir ao cabeçalho.
+            Em ecrã largo: título e atalhos à esquerda, cartão de dados à direita. Em
+            telemóvel o cartão vem primeiro, para os dados essenciais ficarem logo a
+            seguir ao cabeçalho. Tudo o resto — características, texto, mapa e pedido
+            de informação — segue em bandas à largura da página.
         --}}
         <div class="mt-10 grid gap-x-12 gap-y-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-            <div class="order-2 lg:order-none lg:col-start-1 lg:row-start-1 lg:row-span-2">
+            <div class="order-2 lg:order-none lg:col-start-1 lg:row-start-1">
                 <h2 class="font-serif text-2xl leading-snug sm:text-3xl">{{ $title }}</h2>
 
-                @if ($p->website_html || $p->description)
-                    <div class="prose-multifuturo mt-5 max-w-2xl text-[15px] leading-relaxed text-ink/90">
-                        {{-- O texto "Website (HTML)" manda quando existe; passa pelo limpador — só formatação de texto. --}}
-                        @if ($p->website_html)
-                            {!! \App\Support\Html::clean($p->website_html) !!}
-                        @else
-                            {!! \App\Support\Html::paragraphs($p->description) !!}
-                        @endif
-                    </div>
+                @if ($p->short_description)
+                    <p class="mt-5 max-w-2xl text-[15px] leading-relaxed text-ink/90">{{ $p->short_description }}</p>
                 @endif
 
+                {{-- Só as visitas ao imóvel: guardar e partilhar saíram da ficha. --}}
+                @if ($p->virtual_tour_url || $p->video_url || $p->floorplan_url)
                 <div class="mt-6 flex flex-wrap gap-3 print:hidden">
-                    <button type="button" x-cloak x-data @click="$store.favorites.toggle(@js($p->slug))" class="btn-secondary py-2 text-xs"
-                            :aria-pressed="$store.favorites.has(@js($p->slug))">
-                        <span x-text="$store.favorites.has(@js($p->slug)) ? @js(__('ui.property.favorite_remove')) : @js(__('ui.property.favorite_add'))"></span>
-                    </button>
-                    {{--
-                        Partilhar: no telemóvel abre a partilha do sistema (WhatsApp,
-                        mensagens…); no computador copia a ligação e confirma. Só aparece
-                        com JavaScript — sem ele não haveria nada que fazer.
-                    --}}
-                    <button type="button" x-cloak x-data="{ copiado: false }" class="btn-secondary py-2 text-xs"
-                            @click="
-                                const dados = { title: @js($title), text: @js($metaDescription), url: window.location.href };
-                                if (navigator.share) { try { await navigator.share(dados); } catch {} return; }
-                                try { await navigator.clipboard.writeText(dados.url); copiado = true; setTimeout(() => copiado = false, 2500); } catch {}
-                            ">
-                        <span x-text="copiado ? @js(__('ui.property.share_copied')) : @js(__('ui.property.share'))"></span>
-                    </button>
                     @if ($p->virtual_tour_url)
                         <a href="{{ $p->virtual_tour_url }}" rel="noopener nofollow" target="_blank" class="btn-secondary py-2 text-xs">{{ __('ui.property.virtual_tour') }}</a>
                     @endif
@@ -147,39 +126,7 @@
                         <a href="{{ $p->floorplan_url }}" rel="noopener nofollow" target="_blank" class="btn-secondary py-2 text-xs">{{ __('ui.property.floorplan') }}</a>
                     @endif
                 </div>
-
-                @if ($p->features)
-                    <section class="mt-12">
-                        <h2 class="display-sm text-2xl!">{{ __('ui.property.characteristics') }}</h2>
-                        <ul class="mt-5 grid grid-cols-1 gap-x-8 gap-y-3 text-sm sm:grid-cols-2 md:grid-cols-3">
-                            @foreach ($p->features as $feature)
-                                <li class="flex items-start gap-3">
-                                    <svg class="mt-0.5 h-4 w-4 shrink-0 text-olive-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4 12.5 5 5L20 6.5"/></svg>
-                                    <span class="capitalize">{{ $feature }}</span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </section>
                 @endif
-
-                {{--
-                    Mapa: só se gmap_visible (compromisso contratual). Aparece logo ao abrir
-                    a ficha: o Leaflet vem do nosso storage e só os quadrados do mapa vêm
-                    do openstreetmap.org. Rodapé reduzido à linha que a licença exige.
-                --}}
-                <section id="mapa" class="mt-12 scroll-mt-8 print:hidden">
-                    <h2 class="display-sm text-2xl!">{{ __('ui.property.map') }}</h2>
-                    @if ($coords)
-                        @php $lat = (float) $coords['lat']; $lon = (float) $coords['lon']; @endphp
-                        <div x-data="propertyMap(@js($leaflet), {{ $lat }}, {{ $lon }})"
-                            class="mt-5 overflow-hidden rounded-xl border border-sand-200 bg-sand-100">
-                            <div x-ref="map" class="h-96 w-full" role="img" aria-label="{{ __('ui.property.map') }}" data-map></div>
-                            <noscript><p class="p-4 text-sm"><a class="link" href="https://www.openstreetmap.org/?mlat={{ $lat }}&mlon={{ $lon }}#map=16/{{ $lat }}/{{ $lon }}" rel="noopener" target="_blank">OpenStreetMap</a></p></noscript>
-                        </div>
-                    @else
-                        <p class="mt-4 text-sm text-ink-muted">{{ __('ui.property.map_hidden') }}</p>
-                    @endif
-                </section>
             </div>
 
             {{-- Cartão de dados, como na referência: rótulo a negrito e valor ao lado. --}}
@@ -205,9 +152,82 @@
                 @endif
             </div>
 
-            <aside class="order-3 lg:order-none lg:col-start-2 lg:row-start-2 lg:sticky lg:top-8 lg:self-start print:hidden">
-                    @if ($p->broker && ($p->broker['name'] ?? null))
-                        <div class="mb-4 flex items-center gap-4 rounded-xl border border-sand-200 bg-sand-100 px-5 py-4">
+        </div>
+
+        {{--
+            Características e informações adicionais lado a lado, à largura da
+            página: à esquerda a lista arrumada por grupos (o CRM manda-a corrida,
+            trinta itens seguidos não se leem), à direita o texto do imóvel.
+        --}}
+        @if ($p->features || $p->website_html || $p->description)
+            <section class="mt-16 grid gap-x-16 gap-y-12 border-t border-sand-200 pt-12 lg:grid-cols-2">
+                @if ($p->features)
+                    <div>
+                        <h2 class="display-sm text-2xl!">{{ __('ui.property.characteristics') }}</h2>
+                        {{--
+                            Colunas de texto, não grelha: os grupos têm alturas muito
+                            diferentes e numa grelha as linhas alinhavam-se pela mais
+                            alta, abrindo buracos entre elas.
+                        --}}
+                        <div class="mt-6 gap-x-10 sm:columns-2">
+                            @foreach (\App\Support\Features::grouped($p->features) as $grupo => $itens)
+                                <div class="mb-9 break-inside-avoid">
+                                    <h3 class="label">{{ __('ui.property.feature_groups.'.$grupo) }}</h3>
+                                    <ul class="mt-3 space-y-2 text-sm">
+                                        @foreach ($itens as $feature)
+                                            <li class="flex items-start gap-2.5">
+                                                <svg class="mt-1 h-3.5 w-3.5 shrink-0 text-olive-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4 12.5 5 5L20 6.5"/></svg>
+                                                <span class="first-letter:uppercase">{{ $feature }}</span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                @if ($p->website_html || $p->description)
+                    <div>
+                        <h2 class="display-sm text-2xl!">{{ __('ui.property.additional_info') }}</h2>
+                        <div class="prose-multifuturo mt-6 max-w-2xl text-[15px] leading-relaxed text-ink/90">
+                            {{-- O texto "Website (HTML)" manda quando existe; passa pelo limpador — só formatação de texto. --}}
+                            @if ($p->website_html)
+                                {!! \App\Support\Html::clean($p->website_html) !!}
+                            @else
+                                {!! \App\Support\Html::paragraphs($p->description) !!}
+                            @endif
+                        </div>
+                    </div>
+                @endif
+            </section>
+        @endif
+
+        {{--
+            Mapa: só se gmap_visible (compromisso contratual). Aparece logo ao abrir
+            a ficha: o Leaflet vem do nosso storage e só os quadrados do mapa vêm
+            do openstreetmap.org. Rodapé reduzido à linha que a licença exige.
+        --}}
+        <section id="mapa" class="mt-16 scroll-mt-8 print:hidden">
+            <h2 class="display-sm text-2xl!">{{ __('ui.property.map') }}</h2>
+            @if ($coords)
+                @php $lat = (float) $coords['lat']; $lon = (float) $coords['lon']; @endphp
+                <div x-data="propertyMap(@js($leaflet), {{ $lat }}, {{ $lon }})"
+                    class="mt-5 overflow-hidden rounded-xl border border-sand-200 bg-sand-100">
+                    <div x-ref="map" class="h-96 w-full" role="img" aria-label="{{ __('ui.property.map') }}" data-map></div>
+                    <noscript><p class="p-4 text-sm"><a class="link" href="https://www.openstreetmap.org/?mlat={{ $lat }}&mlon={{ $lon }}#map=16/{{ $lat }}/{{ $lon }}" rel="noopener" target="_blank">OpenStreetMap</a></p></noscript>
+                </div>
+            @else
+                <p class="mt-4 text-sm text-ink-muted">{{ __('ui.property.map_hidden') }}</p>
+            @endif
+        </section>
+
+        {{-- Pedido de informação, à largura da página. --}}
+        <section class="mt-16 print:hidden">
+            <x-lead-form source="property" :property="$p" wide>
+                @if ($p->broker && ($p->broker['name'] ?? null))
+                    <x-slot:aside>
+                        <div class="flex max-w-sm items-center gap-4 rounded-xl border border-sand-200 bg-white px-5 py-4">
                             @if ($p->broker['photo'] ?? null)
                                 <img src="{{ $p->broker['photo'] }}" alt="" width="56" height="56" class="h-14 w-14 rounded-full object-cover" loading="lazy" onerror="this.style.display='none'">
                             @endif
@@ -216,10 +236,10 @@
                                 <p class="mt-1 font-medium">{{ $p->broker['name'] }}</p>
                             </div>
                         </div>
-                    @endif
-                    <x-lead-form source="property" :property="$p" />
-            </aside>
-        </div>
+                    </x-slot:aside>
+                @endif
+            </x-lead-form>
+        </section>
 
         @if ($similar->isNotEmpty())
             <section class="mt-24 print:hidden">

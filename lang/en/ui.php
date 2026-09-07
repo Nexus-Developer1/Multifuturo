@@ -204,6 +204,13 @@ return [
         'energy_class' => 'Energy class :class',
         'ami' => 'AMI',
         'characteristics' => 'Features',
+        'additional_info' => 'Additional information',
+        'feature_groups' => [
+            'general' => 'General',
+            'interior' => 'Interior',
+            'exterior' => 'Exterior',
+            'surroundings' => 'Surroundings',
+        ],
         'price_on_request' => 'Price on request',
         'per_month' => '/month',
         'exclusive' => 'Exclusive',

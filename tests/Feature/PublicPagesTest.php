@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Property;
+use App\Support\Features;
+
 /*
  * Fumo das páginas públicas da Fase 1: respondem, têm o layout, e o rodapé mostra
  * AMI e Livro de Reclamações.
@@ -41,4 +44,32 @@ it('não faz pedidos a fontes externas', function () {
     expect($html)->not->toContain('fonts.googleapis.com')
         ->and($html)->not->toContain('fonts.gstatic.com')
         ->and($html)->toContain('/fonts/bodoni-moda-latin.woff2');
+});
+
+it('as características da ficha aparecem arrumadas por grupos', function () {
+    $p = Property::factory()->create([
+        'features' => ['cozinha equipada', 'terraço', 'proximidade: escolas', 'elevador'],
+    ]);
+
+    $html = $this->get(route('property.show', $p))->assertOk()->getContent();
+
+    // Cada grupo com o seu título, e o texto do imóvel ao lado.
+    expect($html)->toContain(__('ui.property.feature_groups.interior'))
+        ->toContain(__('ui.property.feature_groups.exterior'))
+        ->toContain(__('ui.property.feature_groups.surroundings'))
+        ->toContain(__('ui.property.feature_groups.general'))
+        ->toContain(__('ui.property.additional_info'));
+});
+
+it('a arrumação das características não perde nenhuma', function () {
+    $lista = ['cozinha equipada', 'terraço', 'proximidade: escolas', 'elevador', 'coisa nunca vista'];
+
+    $grupos = Features::grouped($lista);
+
+    expect(array_merge(...array_values($grupos)))->toHaveCount(5)
+        ->and($grupos['interior'])->toBe(['cozinha equipada'])
+        ->and($grupos['exterior'])->toBe(['terraço'])
+        ->and($grupos['surroundings'])->toBe(['proximidade: escolas'])
+        // O que não se reconhece cai no grupo geral em vez de desaparecer.
+        ->and($grupos['general'])->toBe(['elevador', 'coisa nunca vista']);
 });
