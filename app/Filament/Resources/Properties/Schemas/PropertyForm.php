@@ -939,9 +939,9 @@ class PropertyForm
                     Tab::make('Texto principal')->schema(self::porIdioma(fn (string $loc): array => [
                         TextInput::make("translations.{$loc}.title")
                             ->label('Título')
-                            ->maxLength(60)
+                            ->maxLength(100)
                             ->live(onBlur: true)
-                            ->hint(fn (?string $state): string => mb_strlen((string) $state).'/60')
+                            ->hint(fn (?string $state): string => mb_strlen((string) $state).'/100')
                             ->columnSpanFull(),
                         TagsInput::make("translations.{$loc}.keywords")
                             ->label('Palavras-chave')

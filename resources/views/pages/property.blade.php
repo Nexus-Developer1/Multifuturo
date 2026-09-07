@@ -114,7 +114,7 @@
                         @if ($p->website_html)
                             {!! \App\Support\Html::clean($p->website_html) !!}
                         @else
-                            {!! nl2br(e($p->description)) !!}
+                            {!! \App\Support\Html::paragraphs($p->description) !!}
                         @endif
                     </div>
                 @endif

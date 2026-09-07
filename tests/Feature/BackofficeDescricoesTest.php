@@ -56,7 +56,7 @@ it('o Texto principal é gravado em translations e volta ao formulário', functi
         ]);
 });
 
-it('o título tem no máximo 60 caracteres e a descrição curta 300', function () {
+it('o título tem no máximo 100 caracteres e a descrição curta 300', function () {
     Livewire::test(CreateProperty::class)
         ->fillForm([
             'reference' => 'MF-TXT-2',
@@ -64,7 +64,7 @@ it('o título tem no máximo 60 caracteres e a descrição curta 300', function 
             'property_type' => 'Moradia',
             'city' => 'Sintra',
             'energy_rating' => 'C',
-            'translations.pt.title' => str_repeat('a', 61),
+            'translations.pt.title' => str_repeat('a', 101),
             'translations.pt.short_description' => str_repeat('b', 301),
         ])
         ->call('create')
@@ -151,4 +151,17 @@ it('Html::clean deixa só formatação de texto', function () {
         ->and(Html::clean('<a href="mailto:geral@exemplo.pt">mail</a>'))->toBe('<a href="mailto:geral@exemplo.pt" rel="noopener">mail</a>')
         ->and(Html::clean('<a href="/pt/contactos">interno</a>'))->toBe('<a href="/pt/contactos" rel="noopener">interno</a>')
         ->and(Html::clean('<style>p{}</style><div><span>texto</span></div>'))->toBe('texto');
+});
+
+it('a descrição escrita à mão sai em parágrafos, não num bloco só', function () {
+    // Uma quebra de linha entre parágrafos (é assim que vem do CRM) já chega.
+    expect(Html::paragraphs("Primeiro.\nSegundo."))->toBe('<p>Primeiro.</p><p>Segundo.</p>')
+        // Linhas em branco a mais não fazem parágrafos vazios.
+        ->and(Html::paragraphs("A.\n\n\n  \nB."))->toBe('<p>A.</p><p>B.</p>')
+        ->and(Html::paragraphs(null))->toBe('')
+        // Traços seguidos viram uma lista, e só uma.
+        ->and(Html::paragraphs("Tem:\n- Piscina\n- Jardim\nFim."))
+        ->toBe('<p>Tem:</p><ul><li>Piscina</li><li>Jardim</li></ul><p>Fim.</p>')
+        // O texto é sempre escapado: nada do que a agência escreve vira HTML.
+        ->and(Html::paragraphs('<script>alert(1)</script>'))->toContain('&lt;script&gt;');
 });

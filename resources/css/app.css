@@ -280,6 +280,50 @@
 |
 */
 @layer components {
+    /*
+     * Texto corrido da ficha do imóvel — o que a agência escreve no backoffice
+     * ou vem do CRM. O Tailwind zera as margens, por isso os parágrafos saíam
+     * colados uns aos outros, num bloco só. Aqui ganham ar, e as listas,
+     * subtítulos e ligações ficam com a mesma voz do resto do site.
+     */
+    .prose-multifuturo > :first-child {
+        margin-top: 0;
+    }
+    .prose-multifuturo p {
+        @apply mt-4;
+        /* Linhas nem muito curtas nem muito largas: a leitura agradece. */
+        text-wrap: pretty;
+    }
+    .prose-multifuturo h2,
+    .prose-multifuturo h3,
+    .prose-multifuturo h4 {
+        @apply mt-8 font-serif text-xl font-normal text-ink;
+    }
+    .prose-multifuturo ul,
+    .prose-multifuturo ol {
+        @apply mt-4 space-y-1.5 pl-5;
+    }
+    .prose-multifuturo ul {
+        @apply list-disc marker:text-olive-600;
+    }
+    .prose-multifuturo ol {
+        @apply list-decimal marker:text-ink-muted;
+    }
+    .prose-multifuturo strong,
+    .prose-multifuturo b {
+        @apply font-medium text-ink;
+    }
+    .prose-multifuturo a {
+        @apply underline underline-offset-4 transition-colors;
+        text-decoration-color: var(--color-sand-300);
+    }
+    .prose-multifuturo a:hover {
+        text-decoration-color: var(--color-olive-600);
+    }
+    .prose-multifuturo blockquote {
+        @apply mt-6 border-l-2 border-olive-600 pl-5 font-serif text-lg italic text-ink;
+    }
+
     /* Pequeno rótulo em itálico serifado, por cima dos títulos. */
     .eyebrow {
         @apply font-serif text-base italic text-ink-muted;

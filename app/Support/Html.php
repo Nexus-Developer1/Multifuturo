@@ -38,4 +38,36 @@ final class Html
 
         return preg_replace('#<(?!a\b|/)(\w+)\b[^>]*>#i', '<$1>', $html) ?? '';
     }
+
+    /**
+     * Texto simples (o campo "Descrição", escrito à mão ou vindo do CRM) em
+     * parágrafos. Vem quase sempre com uma quebra de linha entre parágrafos e
+     * nenhuma linha em branco: com <br> saía tudo colado, um bloco só. Cada
+     * linha com texto passa a ser um parágrafo; as linhas que começam por
+     * traço ou ponto viram uma lista.
+     */
+    public static function paragraphs(?string $texto): string
+    {
+        $linhas = preg_split('/\R/u', trim((string) $texto)) ?: [];
+        $linhas = array_values(array_filter(array_map('trim', $linhas), fn (string $l): bool => $l !== ''));
+
+        $html = '';
+        $lista = false;
+
+        foreach ($linhas as $linha) {
+            $item = preg_match('/^[-–—•*]\s+(.+)$/u', $linha, $m) === 1;
+
+            if ($item && ! $lista) {
+                $html .= '<ul>';
+                $lista = true;
+            } elseif (! $item && $lista) {
+                $html .= '</ul>';
+                $lista = false;
+            }
+
+            $html .= $item ? '<li>'.e($m[1]).'</li>' : '<p>'.e($linha).'</p>';
+        }
+
+        return $lista ? $html.'</ul>' : $html;
+    }
 }
