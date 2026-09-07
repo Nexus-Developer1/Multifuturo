@@ -9,6 +9,47 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Título até 100 caracteres e descrição em parágrafos
+
+$${\color{#5D6348}\textsf{2026-09-07 · 11:51}}$$
+
+**Commit:** `cb1bf71` — `Backoffice: titulo ate 100 caracteres; Site: descricao da ficha em paragrafos`
+
+Duas coisas na ficha do imóvel.
+
+**O título passou de 60 para 100 caracteres.** Sessenta não chegavam para títulos
+como "Famalicão | Propriedade T3+1 Térrea | 1.500 m² | Piscina | Jardim | LUXO". O
+contador debaixo do campo passou a `0/100`.
+
+**A descrição deixou de ser um bloco só.** O texto vem do CRM com uma única quebra de
+linha entre parágrafos, e o site convertia-a em `<br>`: linhas encostadas umas às
+outras, doze parágrafos com o aspecto de um. Agora cada parágrafo é um parágrafo, com
+espaço entre eles; linhas começadas por traço ou ponto formam uma lista.
+
+**Ficheiros**
+
+- `app/Support/Html.php` — método `paragraphs()`: parte o texto por linhas, deita
+  fora as vazias e devolve `<p>` (ou `<ul><li>` nos traços). Escapa sempre — o que a
+  agência escreve é texto, nunca HTML.
+- `resources/views/pages/property.blade.php` — a descrição passa por `paragraphs()`
+  em vez de `nl2br()`.
+- `resources/css/app.css` — `.prose-multifuturo` existia no HTML mas não em lado
+  nenhum do CSS; ganhou corpo: espaço entre parágrafos, listas com marca azeitona,
+  subtítulos em serifada, citações com barra à esquerda e ligações sublinhadas a
+  areia.
+- `app/Filament/Resources/Properties/Schemas/PropertyForm.php` — o limite e o
+  contador do título.
+- `tests/Feature/BackofficeDescricoesTest.php` — o teste do limite passou a 101
+  caracteres e há um teste novo para os parágrafos (incluindo o escape).
+
+**Notas**
+
+- Nada a fazer na base de dados: os textos vivem em `jsonb`, sem limite de coluna.
+- Verificado no browser na ficha de Vila Nova de Famalicão: 19 parágrafos
+  separados, onde antes era um bloco corrido. 235 testes a passar.
+
+---
+
 ## Voltar à lista no topo da ficha
 
 $${\color{#5D6348}\textsf{2026-09-07 · 11:13}}$$
