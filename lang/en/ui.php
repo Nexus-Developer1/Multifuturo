@@ -297,7 +297,6 @@ return [
         'stat_localities' => '{0} parishes|{1} parish|[2,*] parishes',
         'hero_title' => 'The right home, in the right place',
         'hero_lead' => 'Estate agency with close support, from the first conversation to the deed.',
-        'hero_cta' => 'View properties',
         'featured' => 'Featured properties',
         'featured_all' => 'View all properties',
         'about' => 'About Multifuturo',

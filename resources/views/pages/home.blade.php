@@ -66,7 +66,6 @@
             </x-site.reveal>
             <x-site.reveal atraso="260">
                 <p @class(['mt-8 max-w-md text-base leading-relaxed', 'text-sand-100' => $heroImage, 'text-ink-muted' => ! $heroImage])>{{ __('ui.home_sections.hero_lead') }}</p>
-                <a href="{{ route('buy') }}" @class(['btn mt-8', 'bg-ink text-sand-50 hover:bg-olive-900' => $heroImage, 'bg-olive-600 text-sand-50 hover:bg-olive-700' => ! $heroImage])>{{ __('ui.home_sections.hero_cta') }}</a>
             </x-site.reveal>
         </div>
     </section>

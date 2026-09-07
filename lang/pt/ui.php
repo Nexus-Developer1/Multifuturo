@@ -296,7 +296,6 @@ return [
         'stat_localities' => '{0} freguesias|{1} freguesia|[2,*] freguesias',
         'hero_title' => 'A casa certa, no sítio certo',
         'hero_lead' => 'Mediação imobiliária com acompanhamento próximo, do primeiro contacto à escritura.',
-        'hero_cta' => 'Ver imóveis',
         'featured' => 'Imóveis em destaque',
         'featured_all' => 'Ver todos os imóveis',
         'about' => 'Sobre a Multifuturo',
