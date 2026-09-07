@@ -9,6 +9,34 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Composição da página inicial alinhada com a página
+
+$${\color{#5D6348}\textsf{2026-09-07 · 14:19}}$$
+
+**Commit:** `2c52447` — `Site: composicao da pagina inicial alinhada com a grelha da pagina`
+
+As duas fotografias a seguir ao parágrafo grande estavam presas a uma medida própria,
+mais estreita do que o resto da página. Em ecrãs largos ficavam a boiar no meio, mais
+pequenas do que deviam e desalinhadas do texto que vem por cima.
+
+Passaram a ocupar a grelha da página: a grande encostada à margem esquerda, a mesma do
+título e do parágrafo; a pequena encostada à direita, com uma coluna de folga entre
+elas e o desnível de sempre a puxá-la para baixo. Num ecrã de 1600 px cresceram de
+811 para 818 px e de 453 para 454 px, mas o ganho verdadeiro é nos ecrãs maiores, onde
+antes paravam de crescer aos 1408 px e agora acompanham a página.
+
+**Ficheiros**
+
+- `resources/views/pages/home.blade.php` — fora a medida estreita (`container-read`),
+  espaço entre colunas um pouco maior em ecrã largo e o desnível da fotografia pequena
+  de 80 para 64 px.
+
+**Notas**
+
+- 236 testes a passar.
+
+---
+
 ## "Quanto vale a minha casa?" eliminado
 
 $${\color{#5D6348}\textsf{2026-09-07 · 13:06}}$$
