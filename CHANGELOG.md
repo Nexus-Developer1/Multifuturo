@@ -9,6 +9,51 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Destaques: quatro, escolhidos no backoffice
+
+$${\color{#5D6348}\textsf{2026-09-07 · 15:01}}$$
+
+**Commit:** `490d978` — `Backoffice: escolher os destaques na lista, no maximo quatro; pagina inicial mostra so esses`
+
+A fila de destaques da página inicial mostrava até seis imóveis e transbordava para
+uma segunda linha. Passou a ter **quatro lugares, e só quatro**.
+
+**Escolher quais** faz-se na lista de imóveis do backoffice: a coluna **Destaque**
+deixou de estar escondida e liga-se ou desliga-se num clique, com o filtro "Em
+destaque" ao lado para ver rapidamente quem lá está. Ao tentar marcar um quinto, o
+backoffice recusa e diz quais são os quatro que lá estão, para se tirar um primeiro —
+antes ficava marcado e não aparecia a lado nenhum, o que enganava.
+
+A mesma regra vale na ficha do imóvel: a caixa "Destaque" não grava com a fila cheia,
+e a mensagem diz o mesmo. Editar um imóvel que já está em destaque continua a
+funcionar — não conta contra si próprio.
+
+Quando há menos de quatro marcados, a fila completa-se com os imóveis mais recentes,
+como antes: a página inicial nunca aparece com buracos.
+
+**Ficheiros**
+
+- `app/Models/Property.php` — `MAX_FEATURED = 4` e dois auxiliares: quantos destaques
+  já estão tomados e as referências de quem os ocupa.
+- `app/Http/Controllers/PageController.php` — a fila da página inicial passou a usar
+  a constante em vez de um seis à solta.
+- `app/Filament/Resources/Properties/Tables/PropertiesTable.php` — a coluna Destaque
+  visível, com a recusa do quinto e o aviso com as referências.
+- `app/Filament/Resources/Properties/Schemas/PropertyForm.php` — a mesma regra na
+  caixa da ficha.
+- `tests/Feature/FrontendTest.php`, `tests/Feature/BackofficePropertyTest.php` —
+  quatro testes novos: a página nunca passa dos quatro (mesmo com sete marcados na
+  base de dados), o quinto é recusado pela ficha e pela lista, e editar um destaque
+  já existente não dá erro.
+
+**Notas**
+
+- O limite é do backoffice e da página; a importação do CRM nunca mexeu em destaques,
+  por isso não há risco de uma importação passar a falhar.
+- 240 testes a passar.
+
+---
+
 ## Composição da página inicial alinhada com a página
 
 $${\color{#5D6348}\textsf{2026-09-07 · 14:19}}$$
