@@ -51,7 +51,7 @@
                       class="absolute -right-2 -top-2 min-w-4 rounded-full bg-olive-600 px-1 text-center text-[0.65rem] leading-4 text-sand-50"></span>
             </a>
             <x-site.language-switcher class="hidden lg:flex" />
-            <a href="{{ route('contact') }}" class="hidden rounded-md border border-ink px-6 py-2.5 text-[0.8rem] uppercase tracking-[0.12em] transition-colors hover:bg-ink hover:text-sand-50 lg:inline-block">
+            <a href="{{ route('contact') }}" class="hidden text-[0.8rem] uppercase tracking-[0.12em] transition-colors hover:text-olive-700 lg:inline-block">
                 {{ __('ui.nav.contact') }}
             </a>
         </div>

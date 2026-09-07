@@ -63,7 +63,7 @@
             </nav>
 
             <a href="{{ route($p->business_type->routeName(), ['concelho' => $p->city]) }}"
-               class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-md border border-sand-300 px-4 py-2 text-[0.8rem] tracking-wide text-ink transition-colors hover:border-ink hover:bg-ink hover:text-sand-50">
+               class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-[0.8rem] tracking-wide text-ink transition-colors hover:text-olive-700">
                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M14 6l-6 6 6 6"/>
                 </svg>
