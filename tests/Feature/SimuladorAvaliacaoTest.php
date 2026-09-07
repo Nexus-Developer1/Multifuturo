@@ -1,8 +1,9 @@
 <?php
 
 /*
- * Simulador "Quanto vale a minha casa?": tabela de €/m² (referência do
- * backoffice > mediana da carteira), conta, página e pedido com a estimativa.
+ * Valores de referência: tabela de €/m² (referência do backoffice > mediana da
+ * carteira) e a conta que os usa. A página pública "Quanto vale a minha casa?"
+ * foi eliminada; isto serve o ecrã de valores de referência e a importação do INE.
  */
 
 use App\Filament\Resources\ReferencePrices\Pages\CreateReferencePrice;
@@ -57,38 +58,6 @@ it('o valor de referência do backoffice sobrepõe-se à carteira', function () 
     expect(Valuation::table()['Lisboa']['types']['apartment'])->toMatchArray(['ppm2' => 4000.0, 'source' => 'reference']);
 });
 
-it('a página mostra o simulador com os concelhos disponíveis, ou o aviso quando não há valores', function () {
-    $this->get(route('valuation'))->assertOk()
-        ->assertDontSee('data-valuation', false)
-        ->assertSee('A estimativa imediata está em preparação');
-
-    ReferencePrice::create(['city' => 'Sintra', 'property_type' => 'apartment', 'price_per_m2' => 2500]);
-
-    $html = $this->get(route('valuation'))->assertOk()
-        ->assertSee('data-valuation', false)
-        ->assertSee('<datalist id="val-cities">', false)
-        ->assertSee('<option value="Sintra">', false)
-        ->assertSee('Estimativa imediata e avaliação gratuita')
-        // Um só cartão: o simulador é o passo 1 do formulário; o imóvel segue escondido.
-        ->assertSee('1 · O seu imóvel')
-        ->assertSee('2 · Os seus dados')
-        ->assertSee('<input type="hidden" id="lead-valuation-city" name="payload[city]"', false)
-        ->assertSee('<input type="hidden" id="lead-valuation-locality" name="payload[locality]"', false)
-        ->assertDontSee('name="payload[bedrooms]"', false)
-        ->getContent();
-
-    // O x-data vive num atributo HTML: uma aspa dupla lá dentro (num comentário,
-    // num nome de freguesia) fecha-o e o JavaScript aparece na página.
-    $inicio = strpos($html, 'x-data="{'.PHP_EOL.'        table:');
-    $fim = strpos($html, '"', $inicio + 9);
-    expect(substr($html, $fim - 5, 28))->toBe('    }"'.'
-'.'    x-effect="emit()"');
-
-    $this->get('/en/quanto-vale-a-minha-casa')->assertOk()
-        ->assertSee('Instant estimate and free valuation')
-        ->assertSee('1 · Your property');
-});
-
 it('uma freguesia com valor próprio sobrepõe-se ao concelho; sem ele, usa-se o concelho', function () {
     ReferencePrice::create(['city' => 'Sintra', 'property_type' => 'house', 'price_per_m2' => 2800]);
     ReferencePrice::create(['city' => 'Sintra', 'locality' => 'Colares', 'property_type' => 'house', 'price_per_m2' => 4000]);
@@ -96,8 +65,6 @@ it('uma freguesia com valor próprio sobrepõe-se ao concelho; sem ele, usa-se o
     expect(Valuation::estimate('Sintra', 'house', 100, 'good', 'Colares'))->toMatchArray(['mid' => 400000, 'place' => 'Colares, Sintra'])
         ->and(Valuation::estimate('Sintra', 'house', 100, 'good', 'Algueirão'))->toMatchArray(['mid' => 280000, 'place' => 'Sintra'])
         ->and(Valuation::estimate('Sintra', 'apartment', 100, 'good', 'Colares'))->toBeNull();
-
-    $this->get(route('valuation'))->assertOk()->assertSee('id="val-localities"', false);
 });
 
 it('o valor "todos os concelhos" é a rede para o que não tem valor próprio, e nos terrenos o estado não conta', function () {
@@ -110,12 +77,6 @@ it('o valor "todos os concelhos" é a rede para o que não tem valor próprio, e
         ->and(Valuation::estimate('Sintra', 'apartment', 100, 'renovate'))->toBeNull()
         ->and(Valuation::estimate(Valuation::DEFAULT_CITY, 'land', 1000))->toBeNull()
         ->and(Valuation::estimate('', 'land', 1000))->toBeNull();
-
-    // O marcador nunca aparece como concelho sugerido; o valor por omissão vai à parte.
-    $html = $this->get(route('valuation'))->assertOk()->getContent();
-
-    expect($html)->not->toContain('<option value="*">')
-        ->and($html)->toContain('defaults:');
 });
 
 it('o pedido de avaliação guarda a estimativa que a pessoa viu', function () {

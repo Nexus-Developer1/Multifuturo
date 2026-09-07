@@ -8,7 +8,6 @@
         ['route' => 'buy', 'label' => __('ui.nav.buy')],
         ['route' => 'rent', 'label' => __('ui.nav.rent')],
         ['route' => 'zones.index', 'label' => __('ui.nav.zones')],
-        ['route' => 'valuation', 'label' => __('ui.nav.valuation')],
         ['route' => 'about', 'label' => __('ui.nav.about')],
     ];
 @endphp

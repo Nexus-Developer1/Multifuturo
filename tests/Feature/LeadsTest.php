@@ -217,9 +217,11 @@ it('aplica rate limiting por IP', function () {
 |--------------------------------------------------------------------------
 */
 
-it('as páginas de contacto e avaliação mostram o formulário com honeypot e consentimentos desmarcados', function () {
-    foreach (['contact', 'valuation'] as $route) {
-        $html = $this->get(route($route))->assertOk()->getContent();
+it('as páginas com formulário trazem honeypot e consentimentos desmarcados', function () {
+    $p = Property::factory()->create();
+
+    foreach ([route('contact'), route('property.show', $p)] as $url) {
+        $html = $this->get($url)->assertOk()->getContent();
 
         expect($html)->toContain('name="website"')
             ->and($html)->toContain('name="consent_contact"')

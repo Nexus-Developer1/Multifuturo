@@ -107,7 +107,6 @@ Route::prefix('{locale}')
         Route::get('/pesquisa/sugestoes', SearchSuggestController::class)->middleware('throttle:60,1')->name('search.suggest');
 
         // Institucionais e legais
-        Route::get('/quanto-vale-a-minha-casa', [PageController::class, 'valuation'])->name('valuation');
         Route::get('/a-agencia', [PageController::class, 'about'])->name('about');
         Route::get('/contactos', [PageController::class, 'contact'])->name('contact');
         Route::get('/politica-de-privacidade', [PageController::class, 'privacy'])->name('privacy');

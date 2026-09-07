@@ -69,7 +69,7 @@ it('o banner de cookies existe em todas as páginas, com recusa efetiva e person
 });
 
 it('nenhuma página carrega scripts de terceiros antes do consentimento', function () {
-    foreach (['home', 'buy', 'rent', 'contact', 'valuation', 'privacy', 'zones.index'] as $route) {
+    foreach (['home', 'buy', 'rent', 'contact', 'privacy', 'zones.index'] as $route) {
         $html = $this->get(route($route))->assertOk()->getContent();
 
         preg_match_all('~<script[^>]+src="([^"]+)"~', $html, $m);

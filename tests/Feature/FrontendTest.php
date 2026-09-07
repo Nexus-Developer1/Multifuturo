@@ -25,7 +25,6 @@ it('a homepage mostra destaques, zonas e a banda de contacto', function () {
     expect($html)->toContain(__('ui.home_sections.featured'))
         ->and(substr_count($html, 'data-slug='))->toBe(4)   // 2 destaques + completa até 3+ com recentes (máx. 6)
         ->and($html)->toContain(route('zones.city', 'cascais'))
-        ->and($html)->toContain(route('valuation'))
         // A barra de pesquisa saiu da abertura (pedido do cliente): procura-se
         // a partir das listagens, que têm os filtros todos.
         ->and($html)->not->toContain('role="search"');

@@ -20,7 +20,6 @@ function a11yPages(): array
         ['property.show', $p],
         ['zones.index', null],
         ['contact', null],
-        ['valuation', null],
         ['privacy', null],
         ['favorites', null],
     ];
@@ -52,7 +51,7 @@ it('todas as imagens têm atributo alt', function () {
 });
 
 it('todos os campos de formulário têm label associada (for/id) ou aria-label', function () {
-    foreach (['contact', 'valuation', 'buy'] as $route) {
+    foreach (['contact', 'buy'] as $route) {
         $html = $this->get(route($route))->getContent();
 
         preg_match_all('/<(?:input|select|textarea)\b[^>]*>/i', $html, $m);

@@ -38,7 +38,6 @@
             <ul class="mt-4 space-y-2 text-sm">
                 <li><a href="{{ route('buy') }}" class="hover:text-sand-50">{{ __('ui.nav.buy') }}</a></li>
                 <li><a href="{{ route('rent') }}" class="hover:text-sand-50">{{ __('ui.nav.rent') }}</a></li>
-                <li><a href="{{ route('valuation') }}" class="hover:text-sand-50">{{ __('ui.nav.valuation') }}</a></li>
             </ul>
             @if ($social)
                 <h2 class="label mt-8 text-sand-200">{{ __('ui.footer.follow') }}</h2>

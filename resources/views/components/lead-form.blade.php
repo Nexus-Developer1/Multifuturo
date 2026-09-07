@@ -1,10 +1,7 @@
 {{--
-    Formulário de lead — um componente para as três origens:
+    Formulário de lead — um componente para as duas origens:
       source="property"   ficha de imóvel (passar :property)
       source="contact"    contacto geral
-      source="valuation"  "Quanto vale a minha casa?" — o simulador entra pelo slot
-                          "simulator" como passo 1; os dados do imóvel seguem em
-                          campos escondidos payload[...], sempre sincronizados
 
     Server-rendered, funciona sem JavaScript. Anti-spam: honeypot "website"
     (escondido por CSS) + timestamp assinado "form_ts". RGPD: duas checkboxes
@@ -23,36 +20,18 @@
 ])
 
 @php
-    $isValuation = $source === 'valuation';
     $isProperty = $source === 'property' && $property;
     $defaultMessage = $isProperty ? __('ui.lead.message_property', ['reference' => $property->reference ?? $property->internal_id]) : '';
     $formId = 'lead-'.$source.($property?->id ? '-'.$property->id : '');
 @endphp
 
 @php $campo = $tone === 'linha' ? 'field-line' : 'field'; @endphp
-<div {{ $attributes->merge(['class' => $tone === 'linha' ? '' : 'rounded-xl bg-sand-100 border border-sand-200 p-6 sm:p-7']) }} id="{{ $formId }}"
-    @if ($isValuation)
-        {{--
-            O simulador emite 'valuation-change' a cada alteração. Os campos
-            escondidos acompanham-no sempre, e a mensagem é proposta com a
-            estimativa — só enquanto a pessoa não a escreveu à mão.
-        --}}
-        x-data="{
-            auto: '',
-            sync(d) {
-                const set = (n, v) => { const el = document.getElementById('{{ $formId }}-' + n); if (el) el.value = v ?? ''; };
-                set('city', d.city); set('locality', d.locality); set('ptype', d.type); set('area', d.area); set('condition', d.condition); set('estimate', d.estimate);
-                const m = document.getElementById('{{ $formId }}-message');
-                if (m && d.message && (! m.value.trim() || m.value === this.auto)) { m.value = d.message; this.auto = d.message; }
-            },
-        }"
-        x-on:valuation-change.window="sync($event.detail)"
-    @endif
->
+<div {{ $attributes->merge(['class' => $tone === 'linha' ? '' : 'rounded-xl bg-sand-100 border border-sand-200 p-6 sm:p-7']) }} id="{{ $formId }}">
+
     <div @class(['grid items-start gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,2.4fr)] lg:gap-12' => $wide])>
     <div>
-    <h2 class="text-2xl">{{ __('ui.lead.'.($isValuation ? 'form_title_valuation' : 'title_'.$source)) }}</h2>
-    <p class="mt-2 text-sm text-ink-muted">{{ __('ui.lead.'.($isValuation ? 'form_lead_valuation' : 'lead_'.$source)) }}</p>
+    <h2 class="text-2xl">{{ __('ui.lead.title_'.$source) }}</h2>
+    <p class="mt-2 text-sm text-ink-muted">{{ __('ui.lead.lead_'.$source) }}</p>
     @if ($wide && $isProperty)
         <p class="mt-4 text-sm text-ink-muted">{{ __('ui.property.reference') }} {{ $property->reference ?? $property->internal_id }}</p>
     @endif
@@ -85,13 +64,6 @@
             <input type="text" id="{{ $formId }}-website" name="website" tabindex="-1" autocomplete="off">
         </div>
 
-        @if ($isValuation && isset($simulator))
-            {{-- Passo 1: o imóvel e a estimativa. --}}
-            <p class="label text-olive-700">{{ __('ui.valuation.step_property') }}</p>
-            {{ $simulator }}
-            <p class="label mt-4 text-olive-700">{{ __('ui.valuation.step_contact') }}</p>
-        @endif
-
         {{-- Em modo largo os três campos curtos cabem numa linha só. --}}
         <div @class(['grid gap-5 sm:grid-cols-2', 'lg:grid-cols-3 gap-4!' => $wide])>
             <div>
@@ -110,20 +82,6 @@
                 @error('phone')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
             </div>
         </div>
-
-        @if ($isValuation)
-            <div>
-                <label for="{{ $formId }}-address" class="label">{{ __('ui.lead.address') }} <span class="normal-case tracking-normal">({{ __('ui.lead.optional') }})</span></label>
-                <input id="{{ $formId }}-address" name="payload[address]" type="text" autocomplete="street-address" value="{{ old('payload.address') }}" class="{{ $campo }} mt-2">
-            </div>
-            {{-- O imóvel descreve-se no simulador ao lado; estes campos seguem-no em silêncio. --}}
-            <input type="hidden" id="{{ $formId }}-city" name="payload[city]" value="{{ old('payload.city') }}">
-            <input type="hidden" id="{{ $formId }}-locality" name="payload[locality]" value="{{ old('payload.locality') }}">
-            <input type="hidden" id="{{ $formId }}-ptype" name="payload[property_type]" value="{{ old('payload.property_type') }}">
-            <input type="hidden" id="{{ $formId }}-area" name="payload[area]" value="{{ old('payload.area') }}">
-            <input type="hidden" id="{{ $formId }}-condition" name="payload[condition]" value="{{ old('payload.condition') }}">
-            <input type="hidden" id="{{ $formId }}-estimate" name="payload[estimate]" value="{{ old('payload.estimate') }}">
-        @endif
 
         <div>
             <label for="{{ $formId }}-message" class="label">{{ __('ui.lead.message') }}</label>
