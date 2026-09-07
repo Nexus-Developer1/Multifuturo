@@ -9,6 +9,34 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## "Vistos recentemente" removido
+
+$${\color{#5D6348}\textsf{2026-09-07 · 10:23}}$$
+
+**Commit:** `a9042fc` — `Site: remover os 'Vistos recentemente' (seccao, memoria no browser, rota e testes)`
+
+Sai a secção "Vistos recentemente" da página inicial e do fim da ficha de imóvel, e
+com ela tudo o que a servia: a memória dos imóveis visitados no browser
+(`localStorage`), o registo que a ficha fazia de si própria ao abrir, o fragmento de
+cartões que o servidor devolvia e a rota que o entregava.
+
+A pesquisa com sugestões, os favoritos e o comparador não foram tocados.
+
+- Removidos: `components/recently-viewed.blade.php`, `PropertyCardsController`,
+  `partials/property-cards.blade.php` e a rota `property.cards`.
+- `resources/js/app.js` — sai a memória `recent`; `pages/home.blade.php` e
+  `pages/property.blade.php` — sai a secção e o registo da visita.
+- `lang/pt/ui.php`, `lang/en/ui.php` — sai o título da secção.
+- `tests/Feature/SiteDinamicoTest.php` — sai o teste dos cartões; o teste da ficha fica
+  só com a partilha.
+- A limpeza levou à frente, por engano, a rota das sugestões da pesquisa: oito testes
+  apanharam-no de imediato e foi reposta.
+- Verificado: 234 testes a passar, `pint --test` no projeto inteiro (195 ficheiros), e
+  as duas páginas conferidas no site a correr — nenhuma menção à secção, e as sugestões
+  a responder.
+
+---
+
 ## Listagem sem separadores, navegação em maiúsculas
 
 $${\color{#5D6348}\textsf{2026-09-07 · 10:11}}$$
