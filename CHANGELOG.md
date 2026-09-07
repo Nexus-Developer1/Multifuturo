@@ -9,6 +9,39 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Email geral@multifuturo.pt e menu "Quem somos"
+
+$${\color{#5D6348}\textsf{2026-09-07 · 17:48}}$$
+
+**Commit:** `5407cde` — `Site: email geral@multifuturo.pt nos modelos de configuracao; menu passa a Quem somos`
+
+Mais dois dados da agência:
+
+- **O email passou a `geral@multifuturo.pt`** — aparece na página "Quem somos", nos
+  contactos, no rodapé e nos textos legais, no lugar do `dev@nxs.pt` que servia de
+  arranque. É também para este endereço que vão os avisos dos pedidos feitos no site
+  (além dos administradores do backoffice).
+- **A entrada do menu "A agência" passou a "Quem somos"** (em inglês, "About us"). O
+  rodapé segue o mesmo texto, por isso mudou também.
+
+**Ficheiros**
+
+- `.env.example`, `.env.production.example` — `AGENCY_EMAIL`. O `.env` desta máquina
+  também ficou com ele, mas esse nunca vai para o repositório.
+- `lang/pt/ui.php`, `lang/en/ui.php` — o texto do menu.
+
+**Notas**
+
+- O remetente dos emails (`MAIL_FROM_ADDRESS`) é outra coisa: é a identidade com que o
+  servidor de email envia, e depende dos dados de SMTP que ainda faltam. Fica como
+  está até haver esses dados.
+- O título grande da página continua "A agência", com a primeira secção "Quem somos"
+  por baixo. Se quiser o título também como "Quem somos", a primeira secção terá de
+  mudar de nome para não se repetir — é dizer.
+- 227 testes a passar.
+
+---
+
 ## Frase final retirada e morada da sede
 
 $${\color{#5D6348}\textsf{2026-09-07 · 17:39}}$$
