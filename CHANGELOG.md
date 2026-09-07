@@ -9,6 +9,35 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Frase final retirada e morada da sede
+
+$${\color{#5D6348}\textsf{2026-09-07 · 17:39}}$$
+
+**Commit:** `a955dee` — `Site: frase final retirada do texto da agencia; morada da sede nos modelos de configuracao`
+
+Duas correções da agência, logo a seguir ao texto novo:
+
+- **"Queremos que esta seja a nossa história." já não faz parte do texto** — saiu. A
+  secção "A nossa história" fica com dois parágrafos.
+- **A morada da sede** passou a existir: *Matosinhos e Leça da Palmeira, Rua Brito
+  Capelo, nº 598 2º – Escritório 2.4*. Aparece em "Onde estamos", na página de
+  contactos, no rodapé e nos textos legais ("com sede em …"), que até aqui
+  escondiam a linha por estar vazia.
+
+**Ficheiros**
+
+- `lang/pt/legal.php` — a frase.
+- `.env.example`, `.env.production.example` — `AGENCY_ADDRESS` preenchido nos dois
+  modelos, para nenhuma instalação arrancar sem a morada. O `.env` local desta
+  máquina também ficou com ela, mas esse nunca vai para o repositório.
+
+**Notas**
+
+- A morada está tal como a agência a escreveu, sem arrumar a ordem.
+- 227 testes a passar.
+
+---
+
 ## "A agência" com o texto da missão
 
 $${\color{#5D6348}\textsf{2026-09-07 · 17:35}}$$
@@ -59,35 +88,6 @@ reservados." — estava encostada à esquerda. Passou a ficar ao centro.
 
 **Notas**
 
-- 227 testes a passar.
-
----
-
-## Frase final retirada e morada da sede
-
-$${\color{#5D6348}\textsf{2026-09-07 · 17:39}}$$
-
-**Commit:** `a955dee` — `Site: frase final retirada do texto da agencia; morada da sede nos modelos de configuracao`
-
-Duas correções da agência, logo a seguir ao texto novo:
-
-- **"Queremos que esta seja a nossa história." já não faz parte do texto** — saiu. A
-  secção "A nossa história" fica com dois parágrafos.
-- **A morada da sede** passou a existir: *Matosinhos e Leça da Palmeira, Rua Brito
-  Capelo, nº 598 2º – Escritório 2.4*. Aparece em "Onde estamos", na página de
-  contactos, no rodapé e nos textos legais ("com sede em …"), que até aqui
-  escondiam a linha por estar vazia.
-
-**Ficheiros**
-
-- `lang/pt/legal.php` — a frase.
-- `.env.example`, `.env.production.example` — `AGENCY_ADDRESS` preenchido nos dois
-  modelos, para nenhuma instalação arrancar sem a morada. O `.env` local desta
-  máquina também ficou com ela, mas esse nunca vai para o repositório.
-
-**Notas**
-
-- A morada está tal como a agência a escreveu, sem arrumar a ordem.
 - 227 testes a passar.
 
 ---
