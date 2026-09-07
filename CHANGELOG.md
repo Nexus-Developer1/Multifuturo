@@ -9,6 +9,35 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Pedido de informação mais compacto
+
+$${\color{#5D6348}\textsf{2026-09-07 · 12:21}}$$
+
+**Commit:** `7629d32` — `Site: pedido de informacao mais compacto na ficha do imovel`
+
+O cartão do pedido de informação continuava alto e com um vazio grande à esquerda: à
+largura da página, os campos empilhavam-se em três linhas e o título ocupava um terço
+da largura para dizer duas frases.
+
+Agora, na ficha do imóvel, **nome, email e telefone ficam numa linha só** e a coluna
+do título encolheu. O cartão perdeu cerca de um terço da altura e o espaço vazio
+desapareceu.
+
+**Ficheiros**
+
+- `resources/views/components/lead-form.blade.php` — em modo `wide`: os três campos
+  curtos numa grelha de três colunas, a coluna do título mais estreita, espaços entre
+  campos e o preenchimento do cartão um pouco menores. Em coluna estreita (contactos,
+  avaliação) fica tudo exactamente como estava.
+
+**Notas**
+
+- O telefone continua a ocupar a linha toda em telemóvel e em ecrã médio; só se junta
+  aos outros dois a partir do ecrã largo.
+- 237 testes a passar.
+
+---
+
 ## Ficha do imóvel reorganizada
 
 $${\color{#5D6348}\textsf{2026-09-07 · 12:17}}$$
