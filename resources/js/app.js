@@ -183,7 +183,108 @@ function slideshow(total, intervalo = 5000) {
     };
 }
 
+/*
+ * Lista de opções desenhada por nós.
+ *
+ * A lista que o browser abre num <select> é desenhada pelo sistema operativo:
+ * o CSS não lhe chega. Para ter o desenho do site, o <select> real continua na
+ * página (é ele que guarda o valor, alimenta o Livewire e funciona sem
+ * JavaScript) e, quando o Alpine arranca, esconde-se e passa a ser conduzido
+ * por um botão e uma lista nossos. Se o Alpine não arrancar, fica o <select>
+ * de sempre — ninguém fica sem filtro.
+ */
+function listbox() {
+    return {
+        pronto: false,
+        aberto: false,
+        activo: -1,
+        // Cópia reactiva do <select>: sem ela, o rótulo do botão não mudava ao escolher.
+        indice: 0,
+
+        init() {
+            this.pronto = true;
+            this.sincronizar();
+            this.nativo.addEventListener('change', () => this.sincronizar());
+            // O Livewire mexe no <select> por baixo (limpar filtros, opções que mudam
+            // com o concelho): o observador mantém o rótulo certo sem depender de
+            // eventos que o morph não dispara.
+            new MutationObserver(() => this.sincronizar())
+                .observe(this.nativo, { attributes: true, childList: true, subtree: true });
+        },
+
+        sincronizar() {
+            this.indice = this.nativo.selectedIndex;
+        },
+
+        get nativo() {
+            return this.$refs.nativo;
+        },
+
+        get opcoes() {
+            return [...this.nativo.options];
+        },
+
+        get rotulo() {
+            return this.nativo.options[this.indice]?.text ?? '';
+        },
+
+        abrir() {
+            if (this.nativo.disabled) return;
+            this.sincronizar();
+            this.aberto = true;
+            this.activo = this.indice;
+            // A opção escolhida entra no ecrã antes de a pessoa procurar por ela.
+            this.$nextTick(() => this.$refs.lista?.children[this.activo]?.scrollIntoView({ block: 'nearest' }));
+        },
+
+        fechar() {
+            this.aberto = false;
+            this.activo = -1;
+        },
+
+        alternar() {
+            this.aberto ? this.fechar() : this.abrir();
+        },
+
+        mover(passo) {
+            if (!this.aberto) return this.abrir();
+            const total = this.opcoes.length;
+            this.activo = (this.activo + passo + total) % total;
+            this.$refs.lista?.children[this.activo]?.scrollIntoView({ block: 'nearest' });
+        },
+
+        /** Escolher escreve no <select> real e avisa o Livewire, como faria um clique. */
+        escolher(i) {
+            this.nativo.selectedIndex = i;
+            this.sincronizar();
+            this.nativo.dispatchEvent(new Event('input', { bubbles: true }));
+            this.nativo.dispatchEvent(new Event('change', { bubbles: true }));
+            this.fechar();
+            this.$refs.botao?.focus();
+        },
+
+        confirmar() {
+            if (this.aberto && this.activo >= 0) this.escolher(this.activo);
+            else this.alternar();
+        },
+    };
+}
+
+/*
+ * O Livewire pode mudar o valor de um <select> sem disparar 'change' nem mexer
+ * no HTML (é o caso do "limpar filtros"): as nossas listas ficavam com o rótulo
+ * antigo. O aviso sai no fim da troca do DOM, mas só na volta seguinte do
+ * relógio: o Livewire ainda repõe o valor dos campos depois do 'morphed'.
+ */
+document.addEventListener('livewire:init', () => {
+    window.Livewire.hook('morphed', () => {
+        setTimeout(() => window.dispatchEvent(new CustomEvent('livewire-atualizado')), 0);
+    });
+});
+
 document.addEventListener('alpine:init', () => {
+    window.Alpine.data('listbox', listbox);
+
     window.Alpine.data('slideshow', slideshow);
     window.Alpine.data('suggestions', suggestions);
     window.Alpine.data('propertyMap', propertyMap);

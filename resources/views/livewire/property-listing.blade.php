@@ -39,51 +39,21 @@
             outros — era ela que sobrava na barra de cima.
         --}}
         <div class="mt-8 grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-                <label for="lst-district" class="label">{{ __('ui.listing.district') }}</label>
-                <select id="lst-district" name="distrito" wire:model.live="district" class="field-line select-chevron mt-1">
-                    <option value="">{{ __('ui.listing.any_district') }}</option>
-                    @foreach ($opts['districts'] as $d)
-                        <option value="{{ $d }}">{{ $d }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label for="lst-city" class="label">{{ __('ui.listing.city') }}</label>
-                <select id="lst-city" name="concelho" wire:model.live="city" class="field-line select-chevron mt-1">
-                    <option value="">{{ __('ui.listing.any_city') }}</option>
-                    @foreach ($opts['cities'] as $c)
-                        <option value="{{ $c }}">{{ $c }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label for="lst-locality" class="label">{{ __('ui.listing.locality') }}</label>
-                <select id="lst-locality" name="freguesia" wire:model.live="locality" class="field-line select-chevron mt-1" @disabled($city === '')>
-                    <option value="">{{ __('ui.listing.any_locality') }}</option>
-                    @foreach ($opts['localities'] as $l)
-                        <option value="{{ $l }}">{{ $l }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label for="lst-type" class="label">{{ __('ui.listing.type') }}</label>
-                <select id="lst-type" name="tipo" wire:model.live="type" class="field-line select-chevron mt-1">
-                    <option value="">{{ __('ui.listing.any_type') }}</option>
-                    @foreach ($opts['types'] as $t)
-                        <option value="{{ $t }}">{{ $t }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label for="lst-bedrooms" class="label">{{ __('ui.listing.bedrooms') }}</label>
-                <select id="lst-bedrooms" name="tipologia" wire:model.live="bedrooms" class="field-line select-chevron mt-1">
-                    <option value="">{{ __('ui.listing.any_bedrooms') }}</option>
-                    @foreach ($opts['bedrooms'] as $b)
-                        <option value="{{ $b }}">{{ __('ui.listing.bedrooms_min', ['n' => $b]) }}</option>
-                    @endforeach
-                </select>
-            </div>
+            <x-site.select id="lst-district" name="distrito" model="district"
+                           :label="__('ui.listing.district')" :placeholder="__('ui.listing.any_district')"
+                           :options="$opts['districts']" />
+            <x-site.select id="lst-city" name="concelho" model="city"
+                           :label="__('ui.listing.city')" :placeholder="__('ui.listing.any_city')"
+                           :options="$opts['cities']" />
+            <x-site.select id="lst-locality" name="freguesia" model="locality"
+                           :label="__('ui.listing.locality')" :placeholder="__('ui.listing.any_locality')"
+                           :options="$opts['localities']" :disabled="$city === ''" />
+            <x-site.select id="lst-type" name="tipo" model="type"
+                           :label="__('ui.listing.type')" :placeholder="__('ui.listing.any_type')"
+                           :options="$opts['types']" />
+            <x-site.select id="lst-bedrooms" name="tipologia" model="bedrooms"
+                           :label="__('ui.listing.bedrooms')" :placeholder="__('ui.listing.any_bedrooms')"
+                           :options="collect($opts['bedrooms'])->mapWithKeys(fn ($b) => [$b => __('ui.listing.bedrooms_min', ['n' => $b])])->all()" />
             <div>
                 <label for="lst-pmin" class="label">{{ __('ui.listing.price_min') }}</label>
                 <input id="lst-pmin" name="preco_min" type="text" inputmode="numeric" wire:model.live.debounce.600ms="priceMin" class="field-line mt-1" placeholder="€">
@@ -92,14 +62,12 @@
                 <label for="lst-pmax" class="label">{{ __('ui.listing.price_max') }}</label>
                 <input id="lst-pmax" name="preco_max" type="text" inputmode="numeric" wire:model.live.debounce.600ms="priceMax" class="field-line mt-1" placeholder="€">
             </div>
-            <div>
-                <label for="lst-sort" class="label">{{ __('ui.listing.sort') }}</label>
-                <select id="lst-sort" name="ordenar" wire:model.live="sort" class="field-line select-chevron mt-1">
-                    <option value="recent">{{ __('ui.listing.sort_recent') }}</option>
-                    <option value="price_asc">{{ __('ui.listing.sort_price_asc') }}</option>
-                    <option value="price_desc">{{ __('ui.listing.sort_price_desc') }}</option>
-                </select>
-            </div>
+            <x-site.select id="lst-sort" name="ordenar" model="sort" :label="__('ui.listing.sort')"
+                           :options="[
+                               'recent' => __('ui.listing.sort_recent'),
+                               'price_asc' => __('ui.listing.sort_price_asc'),
+                               'price_desc' => __('ui.listing.sort_price_desc'),
+                           ]" />
         </div>
 
         {{-- Mais filtros: pesquisa livre, área e comodidades --}}
