@@ -9,6 +9,53 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Listas de escolha com o desenho do site
+
+$${\color{#5D6348}\textsf{2026-09-07 · 10:58}}$$
+
+**Commit:** `6d79d21` — `Site: listas de escolha com o desenho do site em vez das do sistema`
+
+Ao abrir um filtro, quem aparecia era a lista do Windows: caixa cinzenta de cantos
+vivos, letra do sistema, azul do sistema. Estava fora do site.
+
+Agora a lista é nossa: cartão branco com cantos arredondados e sombra suave, a mesma
+letra do resto do site, a opção escolhida a verde azeitona com visto à direita e a
+linha sob o rato em areia. A seta do campo roda ao abrir e a lista entra com uma
+animação curta.
+
+Por baixo continua a existir o `<select>` verdadeiro — é ele que guarda o valor, fala
+com o Livewire e serve quem tem o JavaScript desligado. Só se esconde quando a lista
+nova está pronta; se o JavaScript falhar, fica a lista de sempre. Funciona com o
+teclado (setas, Enter, Espaço, Home, End, Esc), fecha ao clicar fora e anuncia-se aos
+leitores de ecrã como `listbox`.
+
+**Ficheiros**
+
+- `resources/views/components/site/select.blade.php` — **novo**. O campo completo:
+  `<select>` escondido, botão com o rótulo actual e a lista desenhada. Recebe
+  `id`, `name`, `model` (o `wire:model`), `label`, `placeholder`, `options` e
+  `disabled`.
+- `resources/js/app.js` — componente Alpine `listbox`: lê sempre o `<select>` como
+  fonte da verdade, sincroniza o rótulo quando o valor muda e devolve os eventos
+  `input`/`change` ao escolher, para o Livewire ouvir. Um `MutationObserver` apanha
+  as opções que mudam sozinhas (os concelhos dependem do distrito). E um aviso
+  `livewire-atualizado`, disparado no fim de cada troca de DOM, faz os rótulos
+  acompanharem o "limpar filtros" — que muda o valor sem tocar no HTML.
+- `resources/views/livewire/property-listing.blade.php` — os seis campos de escolha
+  passaram a usar o componente novo.
+
+**Notas**
+
+- O aviso sai uma volta do relógio depois do `morphed`: o Livewire ainda repõe o
+  valor dos campos a seguir a esse momento, e sem essa espera o rótulo lia o valor
+  antigo.
+- Verificado no browser: escolher pela lista muda o endereço e os resultados,
+  o rótulo acompanha, e o "limpar filtros" devolve os rótulos ao estado inicial.
+  Sem erros na consola. 234 testes a passar.
+
+---
+
+
 ## Filtros da listagem sem espaços vazios
 
 $${\color{#5D6348}\textsf{2026-09-07 · 10:29}}$$
