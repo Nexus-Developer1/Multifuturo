@@ -73,6 +73,8 @@ return [
 
     'home' => [
         'photo_n' => 'Fotografia :n de :total',
+        'photo_prev' => 'Fotografia anterior',
+        'photo_next' => 'Fotografia seguinte',
         'title' => 'Imóveis para comprar e arrendar',
         'eyebrow' => 'Mediação imobiliária',
         'lead' => 'A carteira da Multifuturo, atualizada diariamente.',

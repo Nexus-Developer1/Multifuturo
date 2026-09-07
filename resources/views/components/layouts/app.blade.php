@@ -74,11 +74,11 @@
     --}}
     {{-- O aviso de cookies manda: enquanto estiver no ecrã, a barra assenta por cima dele. --}}
     <div x-cloak x-show="$store.compare.count > 0" x-transition
-         x-data="{ get offset() {
-             const aviso = document.querySelector('[data-consent-banner]');
-             return ($store.consent?.open && aviso) ? aviso.offsetHeight : 0;
-         } }"
-         :style="'bottom: ' + offset + 'px'"
+         x-data="consentOffset()"
+         {{-- Em objeto, não em texto: um :style de texto reescreve o atributo
+              inteiro e apagava o "display: none" com que o x-show esconde a
+              barra — ela aparecia vazia mal se fechasse o aviso de cookies. --}}
+         :style="{ bottom: offset + 'px' }"
          class="fixed inset-x-0 bottom-0 z-30 border-t border-sand-200 bg-sand-50/95 backdrop-blur print:hidden">
         <div class="container-site flex flex-wrap items-center justify-between gap-3 py-3">
             <p class="text-sm" aria-live="polite">

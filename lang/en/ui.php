@@ -74,6 +74,8 @@ return [
 
     'home' => [
         'photo_n' => 'Photo :n of :total',
+        'photo_prev' => 'Previous photo',
+        'photo_next' => 'Next photo',
         'title' => 'Properties for sale and to rent',
         'eyebrow' => 'Estate agency',
         'lead' => 'The Multifuturo portfolio, updated daily.',

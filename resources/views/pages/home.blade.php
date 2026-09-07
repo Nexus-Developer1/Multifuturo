@@ -35,29 +35,62 @@
             </div>
             <div class="absolute inset-0 -z-10 bg-linear-to-t from-ink/85 via-ink/60 to-ink/25" aria-hidden="true"></div>
 
-            {{-- Pontos: dizem quantas fotografias há e deixam escolher (a rotação pára). --}}
             @if (count($heroImages) > 1)
-                {{-- Assentam por cima do aviso de cookies enquanto ele estiver no ecrã. --}}
-                <div x-cloak class="absolute bottom-6 right-5 z-10 flex gap-2.5 sm:right-8 lg:right-12 2xl:right-20"
-                     x-data="{ get offset() {
-                         const aviso = document.querySelector('[data-consent-banner]');
-                         return ($store.consent?.open && aviso) ? aviso.offsetHeight + 16 : 0;
-                     } }"
-                     :style="'bottom: calc(1.5rem + ' + offset + 'px)'">
-                    @foreach ($heroImages as $i => $imagem)
-                        <button type="button" @click="ir({{ $i }})"
-                                class="grid h-11 w-6 place-items-center"
-                                :aria-current="atual === {{ $i }} ? 'true' : 'false'"
-                                aria-label="{{ __('ui.home.photo_n', ['n' => $i + 1, 'total' => count($heroImages)]) }}">
-                            <span class="block h-1.5 rounded-full bg-sand-50 transition-all duration-500"
-                                  :class="atual === {{ $i }} ? 'w-6 opacity-100' : 'w-1.5 opacity-50'"></span>
-                        </button>
-                    @endforeach
+                {{--
+                    Passar as fotografias à mão: arrastar por cima da imagem (rato
+                    ou dedo) e duas setas nos lados, que se acendem ao aproximar o
+                    rato. Qualquer uma delas pára a rotação automática — quem está
+                    a escolher não quer a fotografia a fugir-lhe.
+                --}}
+                <div x-cloak class="absolute inset-0 z-0 cursor-grab active:cursor-grabbing"
+                     @pointerdown="agarrar($event)" @pointerup="largar($event)" @pointercancel="inicioX = null"
+                     aria-hidden="true"></div>
+
+            @endif
+
+            {{--
+                Comandos: duas setas e os pontos, que dizem quantas fotografias há.
+                Qualquer um deles pára a rotação automática — quem está a escolher
+                não quer a fotografia a fugir-lhe. Assentam por cima do aviso de
+                cookies enquanto ele estiver no ecrã.
+            --}}
+            @if (count($heroImages) > 1)
+                <div x-cloak class="absolute bottom-6 right-5 z-10 flex items-center gap-1 sm:right-8 lg:right-12 2xl:right-20"
+                     x-data="consentOffset(16)"
+                     :style="{ bottom: 'calc(1.5rem + ' + offset + 'px)' }">
+                    <button type="button" @click="anterior()"
+                            class="grid h-11 w-9 place-items-center text-sand-50/70 transition-colors duration-300 hover:text-sand-50 focus-visible:text-sand-50">
+                        <span class="sr-only">{{ __('ui.home.photo_prev') }}</span>
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14 6l-6 6 6 6"/>
+                        </svg>
+                    </button>
+
+                    <div class="flex gap-2.5 px-1">
+                        @foreach ($heroImages as $i => $imagem)
+                            <button type="button" @click="ir({{ $i }})"
+                                    class="grid h-11 w-6 place-items-center"
+                                    :aria-current="atual === {{ $i }} ? 'true' : 'false'"
+                                    aria-label="{{ __('ui.home.photo_n', ['n' => $i + 1, 'total' => count($heroImages)]) }}">
+                                <span class="block h-1.5 rounded-full bg-sand-50 transition-all duration-500"
+                                      :class="atual === {{ $i }} ? 'w-6 opacity-100' : 'w-1.5 opacity-50'"></span>
+                            </button>
+                        @endforeach
+                    </div>
+
+                    <button type="button" @click="seguinte()"
+                            class="grid h-11 w-9 place-items-center text-sand-50/70 transition-colors duration-300 hover:text-sand-50 focus-visible:text-sand-50">
+                        <span class="sr-only">{{ __('ui.home.photo_next') }}</span>
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m10 6 6 6-6 6"/>
+                        </svg>
+                    </button>
                 </div>
             @endif
         @endif
 
-        <div class="container-site pb-16 pt-32 sm:pb-24">
+        {{-- Acima da camada de arrastar, para o texto continuar a poder seleccionar-se. --}}
+        <div class="container-site relative z-10 pb-16 pt-32 sm:pb-24">
             <x-site.reveal tipo="fade">
                 <p @class(['eyebrow', 'text-sand-200' => $heroImage])>{{ __('ui.home.eyebrow') }}</p>
             </x-site.reveal>

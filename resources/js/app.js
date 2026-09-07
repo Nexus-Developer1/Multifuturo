@@ -177,8 +177,64 @@ function slideshow(total, intervalo = 5000) {
 
         /** Escolha manual: mostra a imagem e deixa de rodar sozinha. */
         ir(i) {
-            this.atual = i;
+            this.atual = (i + this.total) % this.total;
             this.parar();
+        },
+
+        seguinte() {
+            this.ir(this.atual + 1);
+        },
+
+        anterior() {
+            this.ir(this.atual - 1);
+        },
+
+        /*
+         * Arrastar com o rato (ou com o dedo): a partir de 60 px de percurso
+         * horizontal muda de fotografia. O ponteiro fica preso ao elemento para
+         * o gesto não se perder se sair da imagem a meio.
+         */
+        inicioX: null,
+
+        agarrar(e) {
+            this.inicioX = e.clientX;
+            e.currentTarget.setPointerCapture?.(e.pointerId);
+        },
+
+        largar(e) {
+            if (this.inicioX === null) return;
+
+            const percurso = e.clientX - this.inicioX;
+            this.inicioX = null;
+
+            if (Math.abs(percurso) < 60) return;
+
+            percurso < 0 ? this.seguinte() : this.anterior();
+        },
+    };
+}
+
+/*
+ * Altura do aviso de cookies, para o que assenta no fundo do ecrã não ficar
+ * escondido por trás dele. Medir uma vez à partida não chega: quando o Alpine
+ * lê a altura, o aviso ainda não está desenhado e dá zero. Aqui volta-se a
+ * medir a cada mudança — quando o aviso abre, fecha ou muda de tamanho.
+ */
+function consentOffset(folga = 0) {
+    return {
+        offset: 0,
+
+        init() {
+            const medir = () => {
+                const aviso = document.querySelector('[data-consent-banner]');
+                const aberto = this.$store.consent?.open && aviso?.offsetHeight;
+
+                this.offset = aberto ? aviso.offsetHeight + folga : 0;
+            };
+
+            this.$nextTick(medir);
+            this.$watch('$store.consent.open', () => this.$nextTick(medir));
+            new ResizeObserver(medir).observe(document.body);
         },
     };
 }
@@ -286,6 +342,7 @@ document.addEventListener('alpine:init', () => {
     window.Alpine.data('listbox', listbox);
 
     window.Alpine.data('slideshow', slideshow);
+    window.Alpine.data('consentOffset', consentOffset);
     window.Alpine.data('suggestions', suggestions);
     window.Alpine.data('propertyMap', propertyMap);
 
