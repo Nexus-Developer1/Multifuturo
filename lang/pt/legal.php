@@ -176,21 +176,37 @@ return [
         ],
     ],
 
+    /*
+     * Texto da agência, tal como o enviou (documento "Missão", 2026-09-07).
+     * Está por ela — não se reescreve; se mudar, muda aqui.
+     */
     'about' => [
         'title' => 'A agência',
-        'lead' => 'Mediação imobiliária com acompanhamento próximo, do primeiro contacto à escritura.',
+        'lead' => 'Mais do que concretizar negócios, queremos construir relações de confiança duradouras.',
         'sections' => [
             [
                 'title' => 'Quem somos',
                 'paragraphs' => [
-                    'A :name é uma empresa de mediação imobiliária licenciada (licença AMI :ami), dedicada à compra, venda e arrendamento de imóveis residenciais e comerciais.',
-                    'Trabalhamos com uma carteira própria, atualizada diariamente, e com consultores que conhecem o mercado local e acompanham cada cliente de forma pessoal e transparente.',
+                    'Na MULTIFUTURO, somos o resultado da paixão pelo setor imobiliário de duas pessoas com conhecimento sólido e experiência comprovada, colocando essa experiência ao serviço de cada cliente.',
+                    'O nosso propósito é simples: mais do que concretizar negócios, queremos construir relações de confiança duradouras. A transparência, a seriedade e a comunicação constante orientam a nossa atuação, para que compradores, vendedores, investidores e arrendatários se sintam sempre seguros e bem acompanhados. Asseguramos inclusive acompanhamento jurídico.',
                 ],
             ],
             [
                 'title' => 'Como trabalhamos',
                 'paragraphs' => [
-                    'Avaliamos com rigor, com base em dados reais do mercado. Promovemos cada imóvel com fotografia profissional e divulgação nos principais canais. Tratamos da documentação e acompanhamos a negociação e a escritura, explicando cada passo em linguagem clara.',
+                    'Na Multifuturo, proporcionamos uma análise informada e abrangente de cada imóvel, considerando não apenas os seus aspetos estéticos e técnicos, mas também fatores determinantes como a localização, o estado de conservação, a envolvente e o potencial de valorização futura.',
+                    'Acreditamos que decisões informadas conduzem aos melhores resultados. Por isso, disponibilizamos aos nossos clientes uma visão realista do mercado, permitindo-lhes tomar decisões seguras no momento de comprar, vender, arrendar ou investir.',
+                    'Combinamos uma estratégia de divulgação robusta com uma ampla rede de contactos e canais de promoção, maximizando a visibilidade dos imóveis e aumentando as oportunidades de concretização de negócio.',
+                    'A nossa experiência permite-nos definir o posicionamento adequado de cada imóvel, identificar o seu valor de mercado e desenvolver estratégias personalizadas que contribuem para uma transação mais eficiente e célere.',
+                    'Estamos empenhados em eliminar dúvidas, simplificar processos, otimizar o tempo dos nossos clientes e garantir as melhores condições em cada negócio.',
+                ],
+            ],
+            [
+                'title' => 'A nossa história',
+                'paragraphs' => [
+                    'Queremos estar presentes nos momentos mais importantes da vida dos nossos clientes: na compra da primeira casa, numa mudança familiar ou profissional, na procura de uma nova oportunidade ou na realização de um investimento.',
+                    'Na Multifuturo, crescemos com os nossos clientes e acreditamos que as melhores histórias são construídas em conjunto.',
+                    'Queremos que esta seja a nossa história.',
                 ],
             ],
             [
