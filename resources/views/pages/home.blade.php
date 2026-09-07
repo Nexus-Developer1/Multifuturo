@@ -84,8 +84,10 @@
     {{--
         3. Composição assimétrica: duas fotografias desencontradas, com movimento
         lento. Vêm de config/agency.php (arquivo, decorativas); sem lista, usam-se
-        as capas dos destaques. A composição tem medida própria — espalhada pela
-        largura toda ficava um vazio no meio em vez de uma composição.
+        as capas dos destaques. Ocupam a grelha da página — a grande encostada à
+        margem esquerda, a pequena à direita, com uma coluna de folga entre elas.
+        Numa medida própria, mais estreita, ficavam a boiar no meio do ecrã,
+        desalinhadas do texto que vem por cima.
     --}}
     @php
         $composicao = collect(config('agency.story_images', []))->filter()->values();
@@ -95,14 +97,14 @@
     @endphp
     @if ($composicao->count() === 2)
         <section class="container-site pb-24 sm:pb-32">
-            <div class="container-read grid grid-cols-12 items-end gap-6">
+            <div class="grid grid-cols-12 items-end gap-6 lg:gap-8">
                 <x-site.reveal tipo="wipe" class="col-span-8 lg:col-span-7">
                     <div class="parallax-frame relative aspect-[4/5] sm:aspect-[3/2]">
                         <img src="{{ $composicao[0] }}" alt="" width="1600" height="1067" loading="lazy" decoding="async"
                              data-parallax="0.1" class="absolute inset-x-0 w-full object-cover">
                     </div>
                 </x-site.reveal>
-                <x-site.reveal tipo="wipe" atraso="200" class="col-span-4 lg:col-start-9 lg:col-span-4 lg:-mb-20">
+                <x-site.reveal tipo="wipe" atraso="200" class="col-span-4 lg:col-start-9 lg:col-span-4 lg:-mb-16">
                     <div class="parallax-frame relative aspect-square">
                         <img src="{{ $composicao[1] }}" alt="" width="900" height="900" loading="lazy" decoding="async"
                              data-parallax="0.22" class="absolute inset-x-0 w-full object-cover">
