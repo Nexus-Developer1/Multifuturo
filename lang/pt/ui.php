@@ -240,7 +240,6 @@ return [
         'contact_broker' => 'Consultor',
         'share' => 'Partilhar',
         'share_copied' => 'Ligação copiada',
-        'recent' => 'Vistos recentemente',
         'favorite_add' => 'Guardar nos favoritos',
         'favorite_remove' => 'Remover dos favoritos',
         'view' => 'Ver imóvel',

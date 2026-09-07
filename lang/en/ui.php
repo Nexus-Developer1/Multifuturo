@@ -241,7 +241,6 @@ return [
         'contact_broker' => 'Adviser',
         'share' => 'Share',
         'share_copied' => 'Link copied',
-        'recent' => 'Recently viewed',
         'favorite_add' => 'Save to favourites',
         'favorite_remove' => 'Remove from favourites',
         'view' => 'View property',

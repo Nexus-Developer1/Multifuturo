@@ -89,25 +89,6 @@ it('a paginação numerada continua a existir para quem não tem JavaScript', fu
     expect($lista->instance()->properties()->count())->toBe(PropertyListing::PER_PAGE);
 });
 
-it('os cartões dos vistos recentemente vêm pela ordem pedida e só de imóveis publicados', function () {
-    $a = Property::factory()->create(['city' => 'Porto']);
-    $b = Property::factory()->create(['city' => 'Braga']);
-    $fora = Property::factory()->inactive()->create(['city' => 'Faro']);
-
-    $html = $this->get(route('property.cards', ['slugs' => "{$b->slug},{$a->slug},{$fora->slug}"]))
-        ->assertOk()->getContent();
-
-    expect($html)->toContain($b->slug)->toContain($a->slug)->not->toContain($fora->slug)
-        // A ordem pedida é a ordem mostrada (o mais recente primeiro).
-        ->and(strpos($html, $b->slug))->toBeLessThan(strpos($html, $a->slug));
-
-    // Sem slugs não há cartões nenhuns.
-    expect(trim($this->get(route('property.cards'))->assertOk()->getContent()))->toBe('');
-
-    // Slugs inventados não passam pelo filtro.
-    expect(trim($this->get(route('property.cards', ['slugs' => '../etc/passwd,<script>']))->assertOk()->getContent()))->toBe('');
-});
-
 it('o comparador põe até três imóveis lado a lado', function () {
     // As referências são o que aparece em cada coluna — e, ao contrário dos slugs,
     // não vão na query string (que o <link rel=alternate> repete no cabeçalho).
@@ -160,13 +141,11 @@ it('os cartões e o layout trazem o comparador', function () {
         ->toContain(__('ui.compare.open'));
 });
 
-it('a ficha regista-se nos vistos recentemente e tem partilha', function () {
+it('a ficha tem partilha', function () {
     $p = Property::factory()->create();
 
     $html = $this->get(route('property.show', $p))->assertOk()->getContent();
 
-    expect($html)->toContain('$store.recent.push')
-        ->toContain(__('ui.property.share'))
-        ->toContain('navigator.share')
-        ->toContain(__('ui.property.recent'));
+    expect($html)->toContain(__('ui.property.share'))
+        ->toContain('navigator.share');
 });

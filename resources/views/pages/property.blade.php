@@ -41,8 +41,7 @@
         <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) !!}</script>
     </x-slot:head>
 
-    {{-- A ficha regista-se nos "vistos recentemente" do visitante (localStorage). --}}
-    <article class="container-site pt-8 pb-24" x-data x-init="$store.recent.push(@js($p->slug))">
+    <article class="container-site pt-8 pb-24">
         {{-- Migalhas discretas --}}
         <nav aria-label="Breadcrumb" class="text-xs text-ink-muted print:hidden">
             <ol class="flex flex-wrap gap-2">
@@ -222,6 +221,5 @@
             </section>
         @endif
 
-        <x-recently-viewed :exclude="$p->slug" class="mt-24 print:hidden" />
     </article>
 </x-layouts.app>

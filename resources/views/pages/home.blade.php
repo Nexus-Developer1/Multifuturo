@@ -191,7 +191,4 @@
         </section>
     @endif
 
-    {{-- 7. Vistos recentemente (só a quem já visitou fichas) --}}
-    <x-recently-viewed class="container-site pb-24 sm:pb-32" />
-
 </x-layouts.app>

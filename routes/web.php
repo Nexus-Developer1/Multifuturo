@@ -9,7 +9,6 @@ use App\Http\Controllers\Portal\LoginController;
 use App\Http\Controllers\Portal\MfaController;
 use App\Http\Controllers\Portal\PortalController;
 use App\Http\Controllers\Portal\TeamController;
-use App\Http\Controllers\PropertyCardsController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\SearchSuggestController;
@@ -104,10 +103,8 @@ Route::prefix('{locale}')
         // Comparador (até 3 imóveis; a escolha vive no browser, como os favoritos)
         Route::get('/comparar', CompareController::class)->name('compare');
 
-        // Sugestões da pesquisa (concelhos, freguesias, imóveis) enquanto se escreve,
-        // e o fragmento de cartões pedido pelos "vistos recentemente". Só leitura.
+        // Sugestões da pesquisa (concelhos, freguesias, imóveis) enquanto se escreve. Só leitura.
         Route::get('/pesquisa/sugestoes', SearchSuggestController::class)->middleware('throttle:60,1')->name('search.suggest');
-        Route::get('/imoveis-cartoes', PropertyCardsController::class)->middleware('throttle:60,1')->name('property.cards');
 
         // Institucionais e legais
         Route::get('/quanto-vale-a-minha-casa', [PageController::class, 'valuation'])->name('valuation');

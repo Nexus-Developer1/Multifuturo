@@ -10,8 +10,6 @@ import './motion';
  * a página /favoritos pede ao servidor os cartões desses slugs.
  */
 const FAVORITES_KEY = 'multifuturo:favoritos';
-const RECENT_KEY = 'multifuturo:vistos';
-const RECENT_MAX = 12;
 const COMPARE_KEY = 'multifuturo:comparar';
 const COMPARE_MAX = 3;
 
@@ -304,35 +302,6 @@ document.addEventListener('alpine:init', () => {
                 window.localStorage.setItem(COMPARE_KEY, JSON.stringify(this.slugs));
             } catch {
                 /* armazenamento indisponível — a escolha vive só nesta sessão */
-            }
-        },
-    });
-
-    /*
-     * Imóveis vistos recentemente — só os slugs, no aparelho do visitante, sem
-     * contas nem cookies. A ficha regista-se a si própria ao abrir; a home e as
-     * fichas mostram a lista pedindo os cartões ao servidor.
-     */
-    window.Alpine.store('recent', {
-        slugs: [],
-
-        init() {
-            try {
-                const raw = window.localStorage.getItem(RECENT_KEY);
-                this.slugs = raw ? JSON.parse(raw).filter((s) => typeof s === 'string').slice(0, RECENT_MAX) : [];
-            } catch {
-                this.slugs = [];
-            }
-        },
-
-        /** O mais recente fica à frente e nunca se repete. */
-        push(slug) {
-            if (typeof slug !== 'string' || slug === '') return;
-            this.slugs = [slug, ...this.slugs.filter((s) => s !== slug)].slice(0, RECENT_MAX);
-            try {
-                window.localStorage.setItem(RECENT_KEY, JSON.stringify(this.slugs));
-            } catch {
-                /* armazenamento indisponível — a lista vive só nesta sessão */
             }
         },
     });
