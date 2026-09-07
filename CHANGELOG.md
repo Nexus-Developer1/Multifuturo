@@ -38,7 +38,6 @@ mesma altura.
 
 ---
 
-
 ## Listas de escolha com o desenho do site
 
 $${\color{#5D6348}\textsf{2026-09-07 · 10:58}}$$
@@ -84,7 +83,6 @@ leitores de ecrã como `listbox`.
   Sem erros na consola. 234 testes a passar.
 
 ---
-
 
 ## Filtros da listagem sem espaços vazios
 
