@@ -9,6 +9,28 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Botão "Ver imóveis" fora da abertura
+
+$${\color{#5D6348}\textsf{2026-09-07 · 12:52}}$$
+
+**Commit:** `da171f6` — `Site: botao Ver imoveis fora da abertura`
+
+A abertura da página inicial fica só com o rótulo, o título e a frase por cima das
+fotografias. O botão "Ver imóveis" saiu — o "Comprar" do menu, mesmo por cima, leva
+ao mesmo sítio.
+
+**Ficheiros**
+
+- `resources/views/pages/home.blade.php` — o botão.
+- `lang/pt/ui.php`, `lang/en/ui.php` — o texto `hero_cta`, que já não era usado por
+  ninguém.
+
+**Notas**
+
+- 237 testes a passar.
+
+---
+
 ## Contactos e voltar à lista sem contorno
 
 $${\color{#5D6348}\textsf{2026-09-07 · 12:27}}$$
