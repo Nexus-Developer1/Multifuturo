@@ -9,6 +9,48 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Valores de referência e Zonas fora do backoffice
+
+$${\color{#5D6348}\textsf{2026-09-07 · 15:47}}$$
+
+**Commit:** `15f6afe` — `Backoffice: eliminados os Valores de referencia (INE) e o ecra das Zonas`
+
+Depois de sair o "Quanto vale a minha casa?", os **Valores de referência** ficaram sem
+nada para alimentar. Saíram, e com eles a importação do INE, a revisão mensal
+automática e a conta da estimativa. Saiu também o ecrã **Zonas (editorial)**, que
+estava vazio.
+
+**Ficheiros eliminados**
+
+- `app/Filament/Resources/ReferencePrices/` — o ecrã inteiro (lista, formulário,
+  páginas e o botão "Importar do INE").
+- `app/Filament/Resources/Zones/` — o ecrã das zonas.
+- `app/Console/Commands/ValuationImportIne.php` — a importação do INE.
+- `app/Support/Valuation.php` — a conta da estimativa (€/m², margem, estado).
+- `app/Models/ReferencePrice.php` e `config/valuation.php`.
+- `tests/Feature/ImportacaoIneTest.php` e `tests/Feature/SimuladorAvaliacaoTest.php`.
+
+**Ficheiros alterados**
+
+- `routes/console.php` — a revisão mensal do INE (dia 1, 04:30) deixou de estar
+  agendada.
+- `tests/Feature/AdminPanelTest.php`, `tests/Feature/BackofficeSmokeTest.php` — as
+  duas listagens saíram das voltas que percorrem o backoffice todo.
+- `README.md`, `DEPLOY.md`, `.env.production.example` — as notas, o passo 3 da
+  instalação e as duas variáveis dos indicadores do INE.
+
+**Notas — o que ficou**
+
+- **A tabela `reference_prices` não foi apagada**, e os valores importados continuam
+  lá. Apagar dados é decisão da agência, não minha: basta dizer e junto uma migração
+  que a deixa cair.
+- **As páginas públicas de zonas continuam a funcionar** — o que saiu foi só o ecrã
+  de edição, que estava vazio. Os textos das zonas, quando os houver, entram pelo
+  comando `zones:import`.
+- 227 testes a passar.
+
+---
+
 ## Passar as fotografias da abertura com o rato
 
 $${\color{#5D6348}\textsf{2026-09-07 · 15:33}}$$
