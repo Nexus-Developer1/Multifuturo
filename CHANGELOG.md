@@ -9,6 +9,54 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Ficha do imóvel reorganizada
+
+$${\color{#5D6348}\textsf{2026-09-07 · 12:17}}$$
+
+**Commit:** `cd8c510` — `Site: caracteristicas agrupadas ao lado das informacoes, pedido de informacao a largura da pagina`
+
+A ficha passou a ler-se como a referência que a agência mandou: em cima o título e o
+cartão de dados; por baixo, à largura da página, **Características** à esquerda e
+**Informações adicionais** à direita; depois o mapa; e no fim o pedido de informação.
+
+**As características deixaram de ser uma lista corrida.** O CRM manda-as todas
+seguidas — há imóveis com trinta — e ninguém encontrava nada. Agora vêm arrumadas em
+**Geral, Interior, Exterior e Envolvente**, em colunas de texto (não em grelha: os
+grupos têm alturas muito diferentes e uma grelha abria buracos entre as linhas).
+
+**O pedido de informação saiu da coluna lateral** e ocupa a largura da página: título
+e consultor à esquerda, campos à direita, sem esticar — os campos ficam com uma
+largura de leitura e a mensagem encolheu para três linhas.
+
+**Saíram os botões "Guardar nos favoritos" e "Partilhar"** da ficha, a pedido da
+agência. Guardar continua a fazer-se pelo coração dos cartões da listagem.
+
+**Ficheiros**
+
+- `app/Support/Features.php` — **novo**. Arruma as características por grupo a partir
+  do texto, que é tudo o que o CRM dá. "Vista" e "localização" só contam no princípio
+  da frase — senão "coisa nunca vista" ia parar à envolvente. O que não se reconhece
+  cai no grupo geral, nunca desaparece.
+- `resources/views/pages/property.blade.php` — a nova ordem da página; as duas bandas
+  novas; os botões de guardar/partilhar fora.
+- `resources/views/components/lead-form.blade.php` — atributo `wide` (duas colunas,
+  campos mais contidos) e uma abertura `aside` para o consultor. Sem ele, o
+  formulário fica exactamente como estava — as páginas de contactos e de avaliação
+  não mudaram.
+- `lang/pt/ui.php`, `lang/en/ui.php` — "Informações adicionais" e os nomes dos grupos.
+- `tests/Feature/PublicPagesTest.php` — dois testes novos: os grupos aparecem na
+  ficha, e a arrumação não perde nenhuma característica.
+- `tests/Feature/SiteDinamicoTest.php` — o teste da partilha passou a garantir que os
+  dois botões já não estão lá.
+
+**Notas**
+
+- Conferido contra as características reais da base de dados: as 41 que existem caem
+  todas no grupo certo.
+- 237 testes a passar.
+
+---
+
 ## Título até 100 caracteres e descrição em parágrafos
 
 $${\color{#5D6348}\textsf{2026-09-07 · 11:51}}$$
