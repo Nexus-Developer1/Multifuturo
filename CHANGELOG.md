@@ -9,6 +9,40 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## "A agência" com o texto da missão
+
+$${\color{#5D6348}\textsf{2026-09-07 · 17:35}}$$
+
+**Commit:** `7e73a0c` — `Site: pagina A agencia com o texto da missao enviado pela agencia`
+
+A página "A agência" tinha um texto provisório meu. Passou a ter o texto da agência —
+o documento "Missão" enviado hoje — **palavra por palavra**, sem reescrita.
+
+O documento é um texto corrido, sem títulos; a página tem índice lateral e secções.
+Arrumei os dez parágrafos em três blocos, pela ordem em que vêm: **Quem somos** (os
+dois primeiros), **Como trabalhamos** (os cinco do meio) e **A nossa história** (os
+três últimos, que fecham com "Queremos que esta seja a nossa história."). A frase de
+abertura da página é a frase central do documento: "Mais do que concretizar negócios,
+queremos construir relações de confiança duradouras."
+
+A secção **Onde estamos** ficou no fim — é a morada e os contactos, não é texto;
+continua a preencher-se sozinha a partir da configuração da agência.
+
+**Ficheiros**
+
+- `lang/pt/legal.php` — o bloco `about`, com uma nota a dizer de onde vem o texto e
+  que não se reescreve.
+
+**Notas**
+
+- Em inglês a página continua a mostrar o texto em português, como todas as páginas
+  institucionais e legais: nunca houve tradução destas e não a inventei.
+- A referência à licença AMI saiu desta página com o texto antigo; continua no rodapé
+  de todas as páginas, que é onde a lei a exige.
+- 227 testes a passar.
+
+---
+
 ## Direitos reservados ao centro do rodapé
 
 $${\color{#5D6348}\textsf{2026-09-07 · 17:26}}$$
@@ -25,6 +59,35 @@ reservados." — estava encostada à esquerda. Passou a ficar ao centro.
 
 **Notas**
 
+- 227 testes a passar.
+
+---
+
+## Frase final retirada e morada da sede
+
+$${\color{#5D6348}\textsf{2026-09-07 · 17:39}}$$
+
+**Commit:** `a955dee` — `Site: frase final retirada do texto da agencia; morada da sede nos modelos de configuracao`
+
+Duas correções da agência, logo a seguir ao texto novo:
+
+- **"Queremos que esta seja a nossa história." já não faz parte do texto** — saiu. A
+  secção "A nossa história" fica com dois parágrafos.
+- **A morada da sede** passou a existir: *Matosinhos e Leça da Palmeira, Rua Brito
+  Capelo, nº 598 2º – Escritório 2.4*. Aparece em "Onde estamos", na página de
+  contactos, no rodapé e nos textos legais ("com sede em …"), que até aqui
+  escondiam a linha por estar vazia.
+
+**Ficheiros**
+
+- `lang/pt/legal.php` — a frase.
+- `.env.example`, `.env.production.example` — `AGENCY_ADDRESS` preenchido nos dois
+  modelos, para nenhuma instalação arrancar sem a morada. O `.env` local desta
+  máquina também ficou com ela, mas esse nunca vai para o repositório.
+
+**Notas**
+
+- A morada está tal como a agência a escreveu, sem arrumar a ordem.
 - 227 testes a passar.
 
 ---
