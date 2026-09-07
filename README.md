@@ -209,7 +209,6 @@ O painel de gestão da agência — substitui o CRM. Filament 4, cor da marca, p
 |---|---|
 | **Imóveis** | criar/editar com formulário por secções (identificação, conteúdo, preço/áreas, localização, edifício, publicação); **upload de fotografias** com reordenação (a 1.ª é a capa, guardadas em `storage/app/public/imoveis`); características com sugestões; interruptores rápidos publicado/destaque na listagem; filtros por finalidade/estado/concelho |
 | **Pedidos do site** | caixa de entrada das leads (só leitura — não se criam à mão), badge com a contagem dos últimos 7 dias, detalhe com consentimentos RGPD |
-| **Zonas (editorial)** | editar os textos das páginas de zona no browser |
 | **Clientes** | compradores, proprietários ou ambos; agrega leads e eventos de cada pessoa |
 | **Equipa** | contas de quem entra no backoffice — só visível a administradores |
 | **Agenda** | telefonemas, visitas, reuniões, tarefas e lembretes |
@@ -350,7 +349,7 @@ Os ficheiros restauram-se com `tar -xzf ficheiros.tar.gz -C storage/app/`.
 
 ```
 app/
-├── Console/Commands/     BackupRun (cópia diária) · ValuationImportIne (INE, mensal) · ZonesImport · ZonesImport
+├── Console/Commands/     BackupRun (cópia diária) · ZonesImport
 ├── Enums/                BusinessType · LeadSource · LeadKind · LeadStage · EventType · …
 ├── Http/
 │   ├── Controllers/      Page · Property (ficha, JSON-LD, 410) · Zone · Favorites · Lead · Sitemap · Robots

@@ -20,7 +20,7 @@ it('o login do backoffice é o do portal (/entrar); o do Filament já não exist
 
 it('visitantes não autenticados são redirecionados para o login do portal', function (string $path) {
     $this->get($path)->assertRedirect('/entrar');
-})->with(['/admin', '/admin/properties', '/admin/leads', '/admin/zones']);
+})->with(['/admin', '/admin/properties', '/admin/leads']);
 
 it('um utilizador autenticado vê o painel e as listagens', function () {
     $user = User::factory()->create();
@@ -30,7 +30,6 @@ it('um utilizador autenticado vê o painel e as listagens', function () {
     $this->actingAs($user)->get('/admin')->assertOk();
     $this->actingAs($user)->get('/admin/properties')->assertOk()->assertSee('MF-901');
     $this->actingAs($user)->get('/admin/leads')->assertOk()->assertSee('Pedido Teste');
-    $this->actingAs($user)->get('/admin/zones')->assertOk();
 });
 
 it('não é possível criar pedidos à mão no backoffice', function () {

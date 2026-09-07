@@ -29,18 +29,6 @@ Schedule::command('backup:run')
     ->onFailure(fn () => Log::error('A cópia de segurança diária falhou.'));
 
 /*
-| Valores de referência do INE para o simulador "Quanto vale a minha casa?".
-| Revistos todos os meses, no dia 1 de madrugada: o INE publica a avaliação
-| bancária ao mês e as vendas ao trimestre. Também se corre à mão no
-| backoffice (Importar do INE).
-*/
-Schedule::command('valuation:import-ine')
-    ->monthlyOn(1, '04:30')
-    ->withoutOverlapping()
-    ->runInBackground()
-    ->onFailure(fn () => Log::error('A importação dos valores do INE falhou.'));
-
-/*
 | Registos de consentimento de cookies: a prova guarda-se 24 meses
 | (ConsentLog::prunable) e depois apaga-se — dados a mais são risco a mais.
 */

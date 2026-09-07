@@ -116,10 +116,8 @@ Depois, no browser:
 
 1. `https://multifuturo.pt` — site (vazio de imóveis, é normal).
 2. `https://multifuturo.pt/admin` — entrar com o utilizador criado.
-3. **Valores de referência → Importar do INE** — enche o simulador de imediato
-   (a partir daí é revisto sozinho todos os meses, no dia 1).
-4. Criar a primeira ficha de imóvel, publicar, ver no site.
-5. Fazer um pedido de informação no site e confirmar que o email chega à
+3. Criar a primeira ficha de imóvel, publicar, ver no site.
+4. Fazer um pedido de informação no site e confirmar que o email chega à
    caixa do administrador. Se não chegar: secção 8.
 
 ---
@@ -178,7 +176,7 @@ em baixo — os contentores novos substituem os antigos.
 | Logs | `docker compose -f compose.production.yaml logs -f app` (ou `queue`, `scheduler`) |
 
 Os cinco serviços: `app` (Apache + PHP, a aplicação e os estáticos), `queue`
-(emails), `scheduler` (cópias, INE), `pgsql`, `redis`. Todos arrancam
+(emails), `scheduler` (cópias), `pgsql`, `redis`. Todos arrancam
 sozinhos com o servidor (`restart: unless-stopped`).
 
 ---
