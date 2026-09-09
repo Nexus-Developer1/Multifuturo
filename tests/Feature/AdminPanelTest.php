@@ -13,6 +13,7 @@ use App\Models\Event;
 use App\Models\Lead;
 use App\Models\Property;
 use App\Models\User;
+use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Route;
 
 it('o login do backoffice é o do portal (/entrar); o do Filament já não existe', function () {
@@ -87,4 +88,34 @@ it('o backoffice está todo em português', function () {
 
     $this->get(route('filament.admin.resources.events.edit', $evento))->assertOk()
         ->assertSee('Ligações')->assertDontSee('Ends at');
+});
+
+it('o ícone e o logótipo do backoffice resolvem-se a cada pedido, não no arranque', function () {
+    /*
+     * O painel do Filament é construído no arranque, sem pedido nenhum. Um
+     * asset() avaliado aí fica com o endereço de então — no servidor, o
+     * endereço interno do contentor (http://127.0.0.1:8080/…), que o browser
+     * de fora não alcança: o separador ficava com o ícone genérico e o
+     * logótipo não carregava. Guardados como função, são calculados a cada
+     * pedido, com o domínio certo.
+     *
+     * O teste é à forma e não ao endereço, de propósito: aqui tudo responde
+     * em http://localhost, e um endereço fixado no arranque daria o mesmo
+     * resultado — passaria sem apanhar nada.
+     */
+    $painel = Filament::getPanel('admin');
+
+    foreach (['favicon', 'brandLogo'] as $propriedade) {
+        $p = new ReflectionProperty($painel, $propriedade);
+        $p->setAccessible(true);
+
+        expect($p->getValue($painel))->toBeInstanceOf(Closure::class);
+    }
+
+    // E, com pedido, saem mesmo no endereço do site.
+    $this->actingAs(User::factory()->create(['is_admin' => true]));
+
+    $this->get('/admin')->assertOk()
+        ->assertSee(asset('images/marca/favicon-192.png'), false)
+        ->assertSee(asset('images/marca/simbolo.png'), false);
 });

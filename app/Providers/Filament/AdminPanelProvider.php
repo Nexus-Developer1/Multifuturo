@@ -86,9 +86,15 @@ class AdminPanelProvider extends PanelProvider
                     950 => '#171911',
                 ],
             ])
-            ->brandLogo(asset('images/marca/simbolo.png'))
+            // Em função, não em texto: o painel é construído no arranque, antes
+            // de haver pedido, e um asset() avaliado aí fica com o endereço
+            // interno do contentor (http://127.0.0.1:8080/…), que o browser de
+            // fora não alcança — o separador ficava com o ícone genérico e o
+            // logótipo não carregava. Assim, o endereço é calculado a cada
+            // pedido, com o domínio certo.
+            ->brandLogo(fn (): string => asset('images/marca/simbolo.png'))
             ->brandLogoHeight('2rem')
-            ->favicon(asset('images/marca/favicon-192.png'))
+            ->favicon(fn (): string => asset('images/marca/favicon-192.png'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
