@@ -9,6 +9,58 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Portal e login com o ADN da Multifuturo
+
+$${\color{#5D6348}\textsf{2026-09-09 · 10:25}}$$
+
+**Commit:** `9fc6bf6` — `Portal: ADN da Multifuturo no portal e no login, em vez do da Nexus`
+
+O portal e a entrada tinham o ADN da Nexus — verde `#16A34A`, Poppins, o wordmark do
+Infra-nexus —, pedido em 3 de setembro. A agência mudou de ideias: passam a ter a
+marca da casa, a mesma do site.
+
+**O que mudou de cara**
+
+- **Paleta**: areia `#FAF7F0` no fundo, azeitona `#5D6348` nas ações, tinta `#26261F`
+  no texto, barro `#B08968` no risco do item ativo da barra lateral. A barra lateral e
+  o painel da entrada passaram do gradiente verde para o azeitona escuro do site, e os
+  dois halos do fundo de verdes a quentes.
+- **Letras**: Bodoni Moda nos títulos, Inter no texto — as do site, servidas do nosso
+  servidor.
+- **Marca**: o símbolo da agência com "MULTIFUTURO / PROPRIEDADES" ao lado, com o
+  mesmo desenho do cabeçalho do site. Sobre os fundos escuros o símbolo inverte para
+  branco, senão desapareceria. O ícone do separador passou a ser o do site.
+- **Nome**: o portal chama-se "Multifuturo Propriedades" e já não "Nexus".
+
+**O que não mudou**
+
+O `portal.css` continua a ser uma folha à parte e não usa as classes do site. Comum é
+a paleta e a voz; o layout continua a ser de aplicação — barra lateral, tabelas,
+formulários —, que é o que o trabalho ali exige.
+
+**Ficheiros**
+
+- `resources/css/portal.css` — os tokens todos, as cores soltas herdadas da Nexus e a
+  serifa nos títulos.
+- `resources/views/components/layouts/portal.blade.php` — marca, ícone e cor da barra
+  do sistema.
+- `config/portal.php` — o nome da plataforma.
+- `config/modules.php` — a descrição do Backoffice ainda falava de zonas e valores de
+  referência, que foram eliminados anteontem.
+- `.env.example`, `.env.production.example` — `PORTAL_NAME`.
+- `tests/Feature/PortalTest.php` — o teste que garantia o contrário ("não mencionam a
+  agência") passou a garantir a regra nova, e há outro novo que trava o regresso do
+  verde e da Poppins.
+- **Eliminados**: `public/images/nexus/nexus.png` e as quatro Poppins, sem uso.
+
+**Notas**
+
+- Verificado no browser, com sessão iniciada: título em Bodoni Moda, fundo areia,
+  botão azeitona, sem erros na consola.
+- 228 testes a passar.
+
+---
+
 ## Reposição punha as fotografias na raiz web
 
 $${\color{#5D6348}\textsf{2026-09-09 · 09:40}}$$
