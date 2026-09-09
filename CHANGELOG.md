@@ -9,6 +9,35 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O número das dúvidas conta o que falta fazer
+
+$${\color{#5D6348}\textsf{2026-09-09 · 12:13}}$$
+
+**Commit:** `e375fdf` — `Backoffice: o numero das duvidas conta so o que falta responder`
+
+O número ao lado de "Dúvidas dos clientes" contava os pedidos dos **últimos sete
+dias**, respondidos ou não. Ficava lá um "1" com a caixa toda tratada, e ninguém sabia
+o que ele queria dizer.
+
+Passou a contar só os **pedidos por responder**, sem limite de idade — um pedido de há
+um mês por responder continua a contar, que é o que interessa. Respondidos todos, o
+número desaparece. Ficou âmbar, para se ler como aviso e não como total.
+
+**Ficheiros**
+
+- `app/Filament/Resources/Leads/LeadResource.php` — a conta do emblema e a cor.
+- `tests/Feature/AdminPanelTest.php` — teste novo: nada por responder não mostra
+  número; responder a um baixa a conta; um pedido antigo por responder continua a
+  contar.
+
+**Notas**
+
+- É a mesma conta do indicador "Pedidos por responder" do painel de controlo, para os
+  dois números nunca se contradizerem.
+- 236 testes a passar.
+
+---
+
 ## O backoffice não mostrava o ícone da marca
 
 $${\color{#5D6348}\textsf{2026-09-09 · 12:01}}$$
