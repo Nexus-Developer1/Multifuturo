@@ -9,6 +9,33 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## As fotografias da composição demoram 2 segundos
+
+$${\color{#5D6348}\textsf{2026-09-09 · 12:36}}$$
+
+**Commit:** `19979ec` — `Site: as fotografias da composicao demoram 2 segundos a descobrir-se`
+
+Correção da entrada anterior: eu tinha lido "aumentar a velocidade" como acelerar e
+pus 0,8 segundos, quando o que o cliente queria era vê-las abrir com mais calma.
+
+Ficaram em **2 segundos**, com a segunda a começar 200 ms depois da primeira, para não
+abrirem em bloco. Medido no browser: 2033 ms do princípio ao fim.
+
+**Ficheiros**
+
+- `resources/css/app.css` — o tempo do `reveal--wipe`.
+- `resources/views/pages/home.blade.php` — o atraso da segunda fotografia, de volta
+  aos 200 ms.
+
+**Notas**
+
+- Fica de pé o que estava certo na versão anterior: o efeito anima só o `clip-path`,
+  porque a opacidade e a posição já estão no sítio.
+- Só estas duas fotografias usam este efeito; o resto do site mantém o ritmo.
+- 236 testes a passar.
+
+---
+
 ## As fotografias da composição descobrem-se mais depressa
 
 $${\color{#5D6348}\textsf{2026-09-09 · 12:28}}$$
