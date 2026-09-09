@@ -9,6 +9,45 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O backoffice não mostrava o ícone da marca
+
+$${\color{#5D6348}\textsf{2026-09-09 · 12:01}}$$
+
+**Commit:** `f6385fc` — `Backoffice: icone e logotipo resolvidos a cada pedido, nao no arranque`
+
+O separador do browser mostrava o globo genérico em vez do "M", e o logótipo da barra
+de topo também não carregava.
+
+O painel do Filament é construído no **arranque da aplicação**, sem pedido nenhum. O
+endereço do ícone e do logótipo estava a ser calculado aí, e ficava com o endereço de
+então — no servidor, o endereço **interno do contentor**:
+
+```
+<link rel="icon" href="http://127.0.0.1:8080/images/marca/favicon-192.png">
+```
+
+Nenhum browser de fora chega a esse endereço. As folhas de estilo saíam certas porque
+são geradas a cada pedido; só estas duas é que estavam fixadas.
+
+Passaram a ser guardadas como função, calculada a cada pedido, com o domínio certo.
+
+**Ficheiros**
+
+- `app/Providers/Filament/AdminPanelProvider.php` — `brandLogo` e `favicon` em função
+  em vez de texto, com a razão escrita ao lado.
+- `tests/Feature/AdminPanelTest.php` — teste novo. É à **forma** e não ao endereço, de
+  propósito: no ambiente de testes tudo responde em `http://localhost` e um endereço
+  fixado no arranque daria o mesmo resultado, passando sem apanhar nada. Confirmei que
+  o teste falha com o código antigo e passa com o novo.
+
+**Notas**
+
+- Na máquina local o defeito não dava nas vistas: o `/multifuturo` faltava no
+  endereço, mas o nginx serve na mesma a partir da raiz. Só no servidor é que se via.
+- 235 testes a passar.
+
+---
+
 ## Os emails passam a sair de info@multifuturo.pt
 
 $${\color{#5D6348}\textsf{2026-09-09 · 11:51}}$$
