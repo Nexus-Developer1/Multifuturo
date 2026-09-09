@@ -9,6 +9,35 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## As fotografias da composição descobrem-se mais depressa
+
+$${\color{#5D6348}\textsf{2026-09-09 · 12:28}}$$
+
+**Commit:** `d9a6cee` — `Site: as fotografias da composicao descobrem-se mais depressa`
+
+As duas fotografias a seguir ao parágrafo grande descobriam-se de baixo para cima em
+1,8 segundos, com a segunda a esperar mais 200 ms. São imagens grandes e, a esse
+ritmo, ainda estavam a aparecer muito depois de já se ver o resto do bloco.
+
+Passaram a **0,8 segundos**, e a segunda espera só 120 ms. Medido no browser: 833 ms
+do princípio ao fim, contra os 1800 de antes.
+
+**Ficheiros**
+
+- `resources/css/app.css` — o `reveal--wipe` tem agora tempo próprio e anima só o
+  `clip-path`: a opacidade e a posição já estão no sítio, não havia nada a animar
+  nelas.
+- `resources/views/pages/home.blade.php` — o atraso da segunda fotografia.
+
+**Notas**
+
+- Só estas duas mudaram. O `wipe` não é usado em mais lado nenhum, e os restantes
+  blocos do site continuam a entrar ao ritmo lento de sempre.
+- Com "reduzir movimento" ligado no sistema, continuam a aparecer sem animação.
+- 236 testes a passar.
+
+---
+
 ## O número das dúvidas conta o que falta fazer
 
 $${\color{#5D6348}\textsf{2026-09-09 · 12:13}}$$
