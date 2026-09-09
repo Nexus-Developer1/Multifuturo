@@ -8,6 +8,35 @@ criados/alterados e o que cada um faz. Horas em Europe/Lisbon. Os commits que ap
 atualizam este ficheiro não têm entrada própria.
 
 ---
+## O guião da passagem dos dados aprende a exportar e importar
+
+$${\color{#5D6348}\textsf{2026-09-09 · 13:38}}$$
+
+**Commit:** `37e932c` — `Base de dados: guiao da passagem dos dados ganha modos exportar/importar por JSON (servidor tem um driver por imagem)`
+
+No servidor a imagem antiga da aplicação só tem o driver do PostgreSQL e a nova só o do
+MySQL — nenhuma consegue falar com as duas bases ao mesmo tempo. O guião
+`database/transferir-pgsql-para-mysql.php` passa a ter três modos, escolhidos pela
+variável `TRANSFERENCIA`:
+
+- **vazia** — a cópia directa de uma base para a outra, como se fez nesta máquina;
+- **exportar** — lê a ligação por omissão e escreve um ficheiro JSON por tabela em
+  `storage/backups/transferencia/` (pasta já ignorada pelo Git);
+- **importar** — lê esses ficheiros e grava-os na ligação por omissão, com as chaves
+  estrangeiras suspensas durante a carga e os mesmos ids.
+
+A pasta das cópias é um volume partilhado, por isso sobrevive à troca de contentor:
+exporta-se com a imagem antiga, troca-se a imagem, importa-se com a nova.
+
+**Notas**
+
+- Ensaiado aqui com as duas metades: exportação a partir do PostgreSQL (12 ficheiros)
+  e importação para o MySQL com as mesmas contagens em todas as tabelas — 5 imóveis com
+  as 211 fotografias, 32 actividades, 16 consentimentos, 1308 valores de referência.
+- Pint limpo.
+
+---
+
 
 ## A base de dados passa de PostgreSQL a MySQL
 
