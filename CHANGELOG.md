@@ -101,6 +101,50 @@ PostgreSQL, "Évora" ia parar depois de "Zamora".
   dados estarem confirmados do outro lado.
 
 ---
+## O PostgreSQL sai de cena — no servidor e aqui
+
+$${\color{#5D6348}\textsf{2026-09-09 · 14:01}}$$
+
+**Commit:** `ff0530b` — `Infraestrutura: PostgreSQL sai do compose local; comentarios passam a MySQL`
+
+Com o servidor já a correr sobre MySQL, o serviço `pgsql` deixa de fazer sentido no
+`compose.yaml` de desenvolvimento. Sai o serviço, sai a dependência da aplicação e sai a
+declaração do volume; os comentários que ainda falavam de PostgreSQL (a espera do
+arranque, o cabeçalho do CI, a nota do índice único dos valores de referência) passam a
+dizer o que se faz agora.
+
+**O volume dos dados antigos não foi apagado** — nem aqui nem no servidor. Fica de lado
+como rede de segurança, junto com a cópia em `pg_dump` feita antes da passagem.
+
+**Ficheiros**
+
+- `compose.yaml` — serviço `pgsql`, `depends_on` e volume `sail-pgsql` retirados.
+- `.github/workflows/tests.yml`, `database/migrations/2026_08_27_120000_add_locality_and_source_to_reference_prices_table.php` — comentários.
+
+**A passagem no servidor** (feita hoje, pela mesma ordem que aqui)
+
+1. Cópia de segurança completa com a aplicação ainda em PostgreSQL, e cópia do `.env`.
+2. Exportação das 12 tabelas para JSON, dentro do volume das cópias.
+3. `git pull`, `.env` para `mysql`/3306 com `DB_COLLATION=utf8mb4_0900_ai_ci`.
+4. Contentor MySQL 8.4 de pé, imagem nova da aplicação construída, `app`, `queue` e
+   `scheduler` substituídos.
+5. As 26 migrações de raiz e a importação dos dados: **5 imóveis com as 211 fotografias**,
+   1 conta, 4 visitas, 2 consentimentos — as mesmas contagens de antes.
+6. Verificação: as páginas do site, a ficha de imóvel, as sugestões de pesquisa, o portal
+   e o `/up` respondem; sem erros nos registos; cópia nova feita já com `mysqldump`
+   (21 tabelas no ficheiro); ordenação dos acentos correcta
+   (`Águeda < Amadora < Espinho < Évora < Zamora`).
+7. `deploy/deploy.sh` corrido de ponta a ponta sobre o novo motor, sem falhas.
+
+**Notas**
+
+- 236 testes a passar e Pint limpo depois de retirar o PostgreSQL do compose.
+- O que falta para o alojamento da Domínios: confirmar que servem **MySQL 8.0.19 ou mais
+  recente** (ou MariaDB 10.6+, que tem outras diferenças nas funções JSON). Enquanto o
+  site viver no servidor da empresa, isto já não é um bloqueio.
+
+---
+
 
 ## As fotografias da composição demoram 2 segundos
 
