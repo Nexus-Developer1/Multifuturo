@@ -9,6 +9,52 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Painel de controlo só para administradores
+
+$${\color{#5D6348}\textsf{2026-09-09 · 11:21}}$$
+
+**Commit:** `032cf0e` — `Backoffice: painel de controlo so para administradores; os outros aterram nos imoveis`
+
+O painel de controlo mostra a carteira à venda, os pedidos por responder e as leads de
+angariação — números da direção. Passou a abrir só a administradores.
+
+O problema é que ele vive na raiz do backoffice: fechar a porta punha um consultor a
+bater num **403 logo à entrada**, o que parece uma avaria e não uma regra. Por isso,
+quem não é administrador é encaminhado para a **lista de imóveis**, que é o trabalho
+dele. A entrada do painel também não lhe aparece na barra lateral — o Filament esconde
+o que não se pode abrir.
+
+**Quem vê o quê**
+
+| | `/admin` | Imóveis, pedidos, clientes, agenda |
+|---|---|---|
+| Administrador | painel de controlo | sim |
+| Consultor com o módulo | vai aos imóveis | sim |
+| Sem o módulo | 403 | 403 |
+
+**Ficheiros**
+
+- `app/Filament/Pages/PainelDeControlo.php` — **novo**. Herda o painel do Filament
+  (mesma rota, mesmo título, mesmos quadros) e acrescenta a porta fechada.
+- `app/Http/Middleware/LevaAoQueSePodeVer.php` — **novo**. O encaminhamento, para
+  ninguém aterrar num 403.
+- `app/Providers/Filament/AdminPanelProvider.php` — regista o painel novo em vez do do
+  Filament, e o middleware a seguir ao que já verifica a conta.
+- `config/modules.php` — o cartão do Backoffice no portal apontava para a rota antiga
+  e passou a apontar para esta.
+- `tests/Feature/AdminPanelTest.php`, `PortalTest.php`, `BackofficeSmokeTest.php` — os
+  testes distinguem agora administrador de consultor, e há um novo para o
+  encaminhamento.
+
+**Notas**
+
+- Verificado no browser com duas contas: o administrador aterra no painel, um
+  consultor com acesso ao backoffice é levado aos imóveis e trabalha normalmente. A
+  conta de teste foi apagada no fim.
+- 230 testes a passar.
+
+---
+
 ## Fundo areia partia o modo noturno do backoffice
 
 $${\color{#5D6348}\textsf{2026-09-09 · 11:01}}$$
