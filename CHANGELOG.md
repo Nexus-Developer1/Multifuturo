@@ -9,6 +9,33 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Deploy verifica o endereço certo
+
+$${\color{#5D6348}\textsf{2026-09-09 · 10:35}}$$
+
+**Commit:** `73e5ca2` — `Deploy: verificar o endereco por onde o site responde, nao o dominio final`
+
+No fim de cada atualização, o `deploy.sh` confirmava que o site respondia — mas ia
+bater a `https://multifuturo.pt`, o domínio final, que ainda não está apontado. Fazia
+todo o trabalho bem e terminava sempre com aviso de falha e código de erro.
+
+Passou a verificar o `APP_URL`, que é por onde o site responde de facto. Em
+pré-produção isso é um subdomínio noutra porta; em produção será o domínio final.
+Sem `APP_URL`, continua a usar o `SITE_DOMAIN`.
+
+**Ficheiros**
+
+- `deploy/deploy.sh` — o endereço da verificação.
+
+**Notas**
+
+- Apanhado a pôr o servidor a puxar do GitHub sozinho: a chave de deploy já estava
+  registada desde 7 de setembro, só não estava ligada ao repositório, e faltava a
+  chave do github.com no `known_hosts` do root.
+- 228 testes a passar.
+
+---
+
 ## Portal e login com o ADN da Multifuturo
 
 $${\color{#5D6348}\textsf{2026-09-09 · 10:25}}$$
