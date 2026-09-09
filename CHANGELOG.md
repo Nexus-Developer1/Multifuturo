@@ -9,6 +9,40 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Assinatura da NXS e fundo areia no backoffice
+
+$${\color{#5D6348}\textsf{2026-09-09 · 10:53}}$$
+
+**Commit:** `ddbf17a` — `Portal: assinatura discreta da NXS no rodape; Backoffice com o fundo areia da marca`
+
+**A assinatura de quem construiu.** No rodapé do portal, encostado à direita e a
+seguir ao "acesso reservado", ficou um **By Nexus IT Solutions** em letra mais pequena
+e mais apagada do que o resto — meio escondido, como foi pedido. Ao passar o rato
+ganha contraste e lê-se bem. Está só na área de trabalho: não aparece no login nem em
+lado nenhum do site público, e há um teste que o garante.
+
+**O backoffice ficou com a mesma areia.** O Filament pintava o fundo com um cinzento
+quase branco; passou ao `#FAF7F0` do site e do portal. As superfícies — barra de topo,
+cartões, tabelas — continuam brancas, que é o contraste que faz a leitura. As três
+áreas passam a ser reconhecivelmente a mesma casa.
+
+**Ficheiros**
+
+- `resources/views/components/layouts/portal.blade.php` — o rodapé passou a duas
+  peças.
+- `resources/css/portal.css` — o rodapé em linha e a classe `.p-assinatura`.
+- `resources/css/filament/admin/theme.css` — o fundo do painel.
+- `tests/Feature/PortalTest.php` — teste novo para a assinatura (presente no portal,
+  ausente do login e do site). O teste da marca deixou de proibir a palavra "Nexus",
+  que agora existe de propósito; continua a proibir a identidade visual antiga.
+
+**Notas**
+
+- Verificado no browser nas duas áreas.
+- 229 testes a passar.
+
+---
+
 ## Deploy verifica o endereço certo
 
 $${\color{#5D6348}\textsf{2026-09-09 · 10:35}}$$
