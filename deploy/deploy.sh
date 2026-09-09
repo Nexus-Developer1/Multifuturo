@@ -26,7 +26,15 @@ if [ ! -f .env ]; then
     exit 1
 fi
 
-SITE_DOMAIN="$(grep -E '^SITE_DOMAIN=' .env | cut -d= -f2- | tr -d '"' || true)"
+# Endereço a verificar no fim. É o APP_URL, que é por onde o site responde de
+# facto — em pré-produção pode ser um subdomínio noutra porta, e verificar o
+# SITE_DOMAIN (o domínio final, ainda por apontar) dava falha em todos os
+# deploys. Sem APP_URL, cai no domínio final.
+ALVO="$(grep -E '^APP_URL=' .env | cut -d= -f2- | tr -d '"' || true)"
+if [ -z "$ALVO" ]; then
+    SITE_DOMAIN="$(grep -E '^SITE_DOMAIN=' .env | cut -d= -f2- | tr -d '"' || true)"
+    [ -n "$SITE_DOMAIN" ] && ALVO="https://${SITE_DOMAIN}"
+fi
 
 echo "→ Código"
 git pull --ff-only
@@ -55,15 +63,15 @@ echo "→ Limpeza de imagens antigas"
 docker image prune -f >/dev/null
 
 echo "→ Verificação"
-if [ -n "$SITE_DOMAIN" ]; then
+if [ -n "$ALVO" ]; then
     for i in 1 2 3 4 5 6; do
-        if curl -fsS --max-time 10 "https://${SITE_DOMAIN}/up" >/dev/null 2>&1; then
-            echo "  https://${SITE_DOMAIN} responde. Deploy concluído."
+        if curl -fsS --max-time 10 "${ALVO}/up" >/dev/null 2>&1; then
+            echo "  ${ALVO} responde. Deploy concluído."
             exit 0
         fi
         sleep 5
     done
-    echo "  AVISO: https://${SITE_DOMAIN}/up não respondeu. Ver: $COMPOSE logs --tail 100 app" >&2
+    echo "  AVISO: ${ALVO}/up não respondeu. Ver: $COMPOSE logs --tail 100 app" >&2
     exit 1
 fi
 
