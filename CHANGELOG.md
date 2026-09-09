@@ -9,6 +9,43 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Os emails passam a sair de info@multifuturo.pt
+
+$${\color{#5D6348}\textsf{2026-09-09 · 11:51}}$$
+
+**Commit:** `d29385e` — `Deploy: modelo de producao com a conta de envio info@multifuturo.pt`
+
+A conta de envio do servidor era a `dev@multifuturo.pt`. Passou a **info@multifuturo.pt**,
+que é a que a agência quer que os clientes vejam. Os pedidos do site continuam a chegar
+ao `geral@multifuturo.pt` e aos administradores do backoffice — o que mudou foi quem
+os envia.
+
+**E descobriu-se que nada estava a sair.** A conta antiga não autenticava: o servidor
+de correio respondia `535 Incorrect authentication data`. Três notificações antigas —
+dois pedidos do site e uma resposta a um pedido — ficaram por entregar por causa disso.
+Com a conta nova, o envio funciona: confirmado com dois emails de teste reais, um a
+partir da aplicação e outro a partir do processador da fila.
+
+**Ficheiros**
+
+- `.env.production.example` — o servidor de correio do domínio, o esquema `smtp` e a
+  conta de envio, com uma nota a lembrar que a palavra-passe leva aspas (tem
+  caracteres especiais) e que o remetente e o endereço de resposta são coisas
+  diferentes.
+
+**Notas**
+
+- As credenciais reais estão só no `.env` do servidor, que não vai para o repositório.
+  Guardei uma cópia do ficheiro anterior antes de mexer.
+- É preciso **recriar** os contentores depois de mudar o `.env`: o `docker restart`
+  não relê o ficheiro.
+- Ficaram três trabalhos falhados na base de dados, das tentativas antigas. Não se
+  podem repetir — dizem respeito a pedidos que já não existem, apagados na passagem
+  dos dados. São lixo e podem ser apagados.
+- 234 testes a passar.
+
+---
+
 ## A conta passa a viver no portal
 
 $${\color{#5D6348}\textsf{2026-09-09 · 11:31}}$$
