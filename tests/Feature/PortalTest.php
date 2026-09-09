@@ -5,6 +5,7 @@
  * página de escolha (/portal), acesso aos módulos e gestão na Equipa.
  */
 
+use App\Filament\Resources\Properties\PropertyResource;
 use App\Models\MfaCode;
 use App\Models\User;
 use App\Notifications\MfaCodeNotification;
@@ -149,10 +150,17 @@ it('o backoffice só abre a quem tem o módulo backoffice (ou é administrador)'
 
     // Entre pessoas limpa-se a sessão: o AuthenticateSession do Filament expulsa
     // uma sessão cujo hash de palavra-passe não bate com o utilizador atual.
+    // O administrador aterra no painel de controlo.
     $this->actingAs($admin)->get('/admin')->assertOk();
     $this->flushSession();
-    $this->actingAs($comAcesso)->get('/admin')->assertOk();
+
+    // Quem tem o módulo entra, mas o painel é da direção: vai aos imóveis.
+    $this->actingAs($comAcesso)->get('/admin')->assertRedirect(PropertyResource::getUrl('index'));
     $this->flushSession();
+    $this->actingAs($comAcesso)->get('/admin/properties')->assertOk();
+    $this->flushSession();
+
+    // Quem não tem o módulo não entra de todo.
     $this->actingAs($semAcesso)->get('/admin')->assertForbidden();
 });
 

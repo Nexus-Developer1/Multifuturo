@@ -46,7 +46,9 @@ return [
         'name' => 'Backoffice',
         'description' => 'Fichas de imóveis, pedidos do site, clientes, agenda e calendário.',
         'icon' => 'backoffice',
-        'route' => 'filament.admin.pages.dashboard',
+        // A raiz do backoffice. Quem não é administrador é encaminhado daqui
+        // para a lista de imóveis (LevaAoQueSePodeVer).
+        'route' => 'filament.admin.pages.painel-de-controlo',
         'panel' => 'admin',
         'public' => false,
         'new_tab' => false,

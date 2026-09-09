@@ -29,7 +29,7 @@ it('todas as listagens do backoffice abrem', function () {
             ->assertOk();
     }
 
-    $this->get(route('filament.admin.pages.dashboard'))->assertOk();
+    $this->get(route('filament.admin.pages.painel-de-controlo'))->assertOk();
     $this->get(route('filament.admin.pages.calendario'))->assertOk();
 });
 

@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Calendario;
+use App\Filament\Pages\PainelDeControlo;
 use App\Filament\Resources\Properties\Pages\CreateProperty;
 use App\Filament\Resources\Properties\Pages\EditProperty;
 use App\Filament\Widgets\BuyerLeadsWidget;
@@ -12,12 +13,12 @@ use App\Filament\Widgets\PropertyActivitiesWidget;
 use App\Filament\Widgets\PropertyViewsChart;
 use App\Filament\Widgets\UpcomingEventsWidget;
 use App\Http\Middleware\EnsureAccountActive;
+use App\Http\Middleware\LevaAoQueSePodeVer;
 use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\View\PanelsRenderHook;
@@ -90,7 +91,9 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
-                Dashboard::class,
+                // O nosso painel em vez do do Filament: é o mesmo, mas só abre
+                // a administradores (PainelDeControlo::canAccess).
+                PainelDeControlo::class,
                 Calendario::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
@@ -123,6 +126,9 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
                 EnsureAccountActive::class,
+                // Depois de saber quem é: quem não é administrador não vai ao
+                // painel de controlo, vai aos imóveis.
+                LevaAoQueSePodeVer::class,
             ]);
     }
 }

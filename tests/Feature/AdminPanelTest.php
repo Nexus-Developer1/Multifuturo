@@ -5,7 +5,9 @@
  * a utilizadores autenticados.
  */
 
+use App\Filament\Pages\PainelDeControlo;
 use App\Filament\Resources\Leads\LeadResource;
+use App\Filament\Resources\Properties\PropertyResource;
 use App\Models\Contact;
 use App\Models\Event;
 use App\Models\Lead;
@@ -22,14 +24,32 @@ it('visitantes não autenticados são redirecionados para o login do portal', fu
     $this->get($path)->assertRedirect('/entrar');
 })->with(['/admin', '/admin/properties', '/admin/leads']);
 
-it('um utilizador autenticado vê o painel e as listagens', function () {
-    $user = User::factory()->create();
+it('um administrador vê o painel e as listagens', function () {
+    $user = User::factory()->create(['is_admin' => true]);
     Property::factory()->create(['reference' => 'MF-901', 'city' => 'Cascais']);
     Lead::factory()->create(['name' => 'Pedido Teste']);
 
     $this->actingAs($user)->get('/admin')->assertOk();
     $this->actingAs($user)->get('/admin/properties')->assertOk()->assertSee('MF-901');
     $this->actingAs($user)->get('/admin/leads')->assertOk()->assertSee('Pedido Teste');
+});
+
+it('o painel de controlo é só do administrador; os outros vão aos imóveis', function () {
+    $consultor = User::factory()->create(['is_admin' => false]);
+    Property::factory()->create(['reference' => 'MF-902']);
+
+    // Não bate num 403 à entrada: é levado ao trabalho dele.
+    $this->actingAs($consultor)->get('/admin')
+        ->assertRedirect(PropertyResource::getUrl('index'));
+
+    // E continua a poder trabalhar no resto.
+    $this->actingAs($consultor)->get('/admin/properties')->assertOk()->assertSee('MF-902');
+
+    // A entrada do painel também não lhe aparece na barra lateral.
+    expect(PainelDeControlo::canAccess())->toBeFalse();
+
+    $this->actingAs(User::factory()->create(['is_admin' => true]));
+    expect(PainelDeControlo::canAccess())->toBeTrue();
 });
 
 it('não é possível criar pedidos à mão no backoffice', function () {
