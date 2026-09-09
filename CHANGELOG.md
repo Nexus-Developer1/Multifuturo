@@ -9,6 +9,70 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A base de dados passa de PostgreSQL a MySQL
+
+$${\color{#5D6348}\textsf{2026-09-09 · 13:32}}$$
+
+**Commit:** `985aac8` — `Base de dados: PostgreSQL passa a MySQL 8.4 (esquema, consultas, copias, infraestrutura, CI, testes)`
+
+A agência quer o site no alojamento da Domínios, que só disponibiliza MySQL. O projecto
+inteiro passou a correr sobre **MySQL 8.4** — 36 ficheiros, sem mudar nada do que o
+site faz.
+
+**Esquema.** As colunas `jsonb` do PostgreSQL passam a JSON nativo do MySQL (o Laravel
+traduz sozinho); os `default '{}'` tiveram de passar a expressão `('{}')`, que é a única
+forma que o MySQL aceita numa coluna JSON. O índice GIN das características só existe
+no PostgreSQL — no MySQL o filtro faz-se com `JSON_CONTAINS`, sem índice, o que numa
+carteira de agência não se nota. Duas migrações escreviam SQL só do PostgreSQL (`ALTER
+COLUMN … DROP NOT NULL`, `DROP CONSTRAINT IF EXISTS`) e foram reescritas.
+
+**Consultas.** Tudo o que era dialecto do PostgreSQL foi traduzido: `->>`/`@>`/`::` nos
+campos JSON (`JSON_EXTRACT`, `JSON_UNQUOTE`, `whereJsonContains`), os `NULLS LAST` das
+ordenações (`coluna IS NULL, coluna DESC`), o `to_char` do painel (`DATE_FORMAT`), o
+`regexp_replace … ::bigint` da referência seguinte, e o `upsert` das visitas.
+
+**Cópias de segurança.** `mysqldump` em vez de `pg_dump`, com a palavra-passe por
+variável de ambiente e nunca na linha de comandos; a reposição (`restore.sh`) recria a
+base com a colação portuguesa e entra com o ficheiro por cima.
+
+**Infraestrutura.** Serviço `mysql` no compose local (porta 33060) e no de produção;
+Dockerfile com `pdo_mysql` e o cliente MySQL; `entrypoint` a esperar pela porta 3306;
+CI com MySQL 8.4; modelos de `.env` e o atalho `.\sail.ps1 mysql`.
+
+**E um defeito corrigido de caminho.** A colação passa a `utf8mb4_0900_ai_ci`, que
+ordena os acentos à portuguesa: `Águeda < Álvaro < Amadora < Espinho < Évora`. No
+PostgreSQL, "Évora" ia parar depois de "Zamora".
+
+**Ficheiros** (os principais)
+
+- `database/migrations/` — 10 defaults JSON em expressão, o índice GIN só em pgsql,
+  duas migrações reescritas.
+- `app/Models/Property.php`, `PropertyView.php`; `app/Filament/…/PropertiesTable.php`,
+  `PropertyForm.php`, `DashboardStats.php`; `app/Http/Controllers/PageController.php`,
+  `PropertyController.php`, `SearchSuggestController.php`, `ZoneController.php`;
+  `app/Livewire/PropertyListing.php` — o SQL traduzido.
+- `app/Console/Commands/BackupRun.php`, `deploy/restore.sh` — cópias.
+- `compose.yaml`, `compose.production.yaml`, `docker/production/Dockerfile`,
+  `docker/production/entrypoint.sh`, `.github/workflows/tests.yml`, `.env.example`,
+  `.env.production.example`, `sail.ps1` — infraestrutura.
+- `database/transferir-pgsql-para-mysql.php` — **novo**: o guião da passagem dos dados,
+  tabela a tabela, com os mesmos ids; fica no repositório como registo.
+- `tests/Feature/PropertySchemaTest.php`, `CopiaSegurancaTest.php`, `tests/Pest.php` —
+  os testes que assumiam PostgreSQL.
+- `README.md`, `DEPLOY.md`, `docs/CHECKLIST.md` — documentação.
+
+**Notas**
+
+- Feito e verificado nesta máquina: as 26 migrações correm do zero; os dados passaram
+  com as mesmas contagens (5 imóveis com as 211 fotografias, 32 actividades, 1308
+  valores de referência); o site, o backoffice e o portal respondem; todas as consultas
+  traduzidas foram exercidas uma a uma.
+- 236 testes a passar sobre MySQL; Pint limpo.
+- O servidor faz-se a seguir, com o mesmo guião. O PostgreSQL fica de pé ao lado até os
+  dados estarem confirmados do outro lado.
+
+---
+
 ## As fotografias da composição demoram 2 segundos
 
 $${\color{#5D6348}\textsf{2026-09-09 · 12:36}}$$
