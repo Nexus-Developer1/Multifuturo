@@ -44,7 +44,7 @@ return [
 
     'backoffice' => [
         'name' => 'Backoffice',
-        'description' => 'Fichas de imóveis, dúvidas dos clientes, contactos, calendário, zonas, valores de referência e alertas.',
+        'description' => 'Fichas de imóveis, pedidos do site, clientes, agenda e calendário.',
         'icon' => 'backoffice',
         'route' => 'filament.admin.pages.dashboard',
         'panel' => 'admin',

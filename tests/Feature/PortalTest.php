@@ -187,18 +187,33 @@ it('a recuperação de palavra-passe do Filament continua a existir e é para l�
     $this->get('/admin/password-reset/request')->assertOk();
 });
 
-it('o login e o portal são uma plataforma própria: não mencionam a agência nem ligam ao site', function () {
-    config(['portal.name' => 'Plataforma X']);
+it('o login e o portal têm a marca da agência, como o site', function () {
+    // Decisão de 2026-09-09: o portal deixou de ser uma plataforma neutra e
+    // passou a ter o ADN da Multifuturo — mesma marca, mesma paleta, mesmas
+    // letras. Quem entra tem de reconhecer a casa.
+    foreach (['/entrar', '/portal'] as $url) {
+        $resposta = $url === '/entrar'
+            ? $this->get($url)
+            : $this->actingAs(utilizadorAtivo())->get($url);
 
-    $this->get('/entrar')->assertOk()
-        ->assertSee('Plataforma X')
-        ->assertDontSee('Multifuturo')
-        ->assertDontSee('imóve')
-        ->assertDontSee('images/marca');
+        $resposta->assertOk()
+            ->assertSee('Multifuturo')
+            ->assertSee('images/marca/simbolo.png', false)
+            // Folha própria: o portal nunca carrega a do site.
+            ->assertDontSee('/assets/app-', false)
+            // Nada da marca anterior.
+            ->assertDontSee('Nexus')
+            ->assertDontSee('images/nexus', false);
+    }
+});
 
-    // O cartão "Site" liga ao website — é um módulo; o que não pode haver é a marca da agência no portal em si.
-    $this->actingAs(utilizadorAtivo())->get('/portal')->assertOk()
-        ->assertSee('Plataforma X')
-        ->assertDontSee('Multifuturo')
-        ->assertDontSee('images/marca');
+it('o portal serve as letras do sítio, do nosso servidor', function () {
+    $css = file_get_contents(resource_path('css/portal.css'));
+
+    expect($css)->toContain('/fonts/bodoni-moda-latin.woff2')
+        ->and($css)->toContain('/fonts/inter-latin.woff2')
+        // A paleta da marca, não a verde da versão anterior.
+        ->and($css)->toContain('#5D6348')
+        ->and($css)->not->toContain('#16A34A')
+        ->and($css)->not->toContain('googleapis');
 });

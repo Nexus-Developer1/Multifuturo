@@ -1,8 +1,8 @@
 {{--
-    Layout do portal da equipa. Uma plataforma própria, sem nada da agência:
-    a marca é a da Nexus (o wordmark do Infra-nexus), o visual vem de
-    resources/css/portal.css — que segue a Nexus Technical Suite — e os
-    textos são genéricos: o módulo de imóveis é só um dos cartões.
+    Layout do portal da equipa. A marca e a paleta são as da Multifuturo, as
+    mesmas do site (areia, azeitona, tinta, Bodoni Moda nos títulos); o visual
+    vem de resources/css/portal.css. O layout é que é de aplicação — barra
+    lateral, tabelas, formulários — e não de página editorial.
 
     Props:
       title   — título da página
@@ -18,19 +18,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0A2A18">
+    <meta name="theme-color" content="#282C1E">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title }} · {{ $portal }}</title>
-    {{-- Ícone do portal: o "N" da Nexus em verde, não o da agência. --}}
-    <link rel="icon" href="data:image/svg+xml,{{ rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0A2A18"/><path d="M9 23V9l14 14V9" fill="none" stroke="#22C55E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>') }}">
+    {{-- O mesmo ícone do site: é a mesma casa. --}}
+    <link rel="icon" href="{{ asset('images/marca/favicon.png') }}">
     @vite(['resources/css/portal.css'])
 </head>
 <body>
 @php
-    // O wordmark da Nexus, como na barra lateral do Infra-nexus: logótipo em
-    // cima, "área de trabalho" por baixo em maiúsculas espaçadas.
-    $marca = '<img src="'.asset('images/nexus/nexus.png').'" alt="'.e($portal).'" width="150" height="28" class="p-marca__logo">'
-        .'<span class="p-marca__sub">Área de trabalho</span>';
+    // A marca da agência, com o mesmo desenho do cabeçalho do site: símbolo à
+    // esquerda, nome em serifada maiúscula ao lado.
+    $marca = '<img src="'.asset('images/marca/simbolo.png').'" alt="" width="384" height="317" class="p-marca__simbolo">'
+        .'<span class="p-marca__texto">Multifuturo<span class="p-marca__sub">Propriedades</span></span>';
 @endphp
 @if ($entrada)
     <div class="p-entrada">

@@ -1,60 +1,58 @@
 /*
  * Portal da equipa — folha própria, separada do site.
  *
- * O ADN é o da Nexus Technical Suite (o sistema de desenho do Infra-nexus,
- * em Desktop/portal/public/css/suite.css): verde da marca, Poppins, barra
- * lateral escura em gradiente, raios de 8/12 px. As cores e medidas abaixo
- * são as de lá, escritas com os nossos nomes.
+ * O ADN é o da Multifuturo, o mesmo do site: areia, azeitona e tinta, com a
+ * Bodoni Moda nos títulos e a Inter no texto. Quem entra reconhece a casa.
  *
- * O site é quente (areia, azeitona, serifa); isto é uma aplicação — nada
- * aqui reutiliza as classes do site, de propósito: quem entra tem de
- * perceber que mudou de sítio.
+ * Continua a ser uma folha à parte e não reutiliza as classes do site: aqui
+ * é uma aplicação de trabalho, com barra lateral, tabelas e formulários, e
+ * não uma página editorial. O que é igual é a paleta e a voz, não o layout.
  *
- * A Poppins é servida do nosso servidor, não do Google: é a regra do
+ * As letras são servidas do nosso servidor, nunca do Google: é a regra do
  * projeto e o que a política de cookies promete.
  */
 
-@font-face { font-family: "Poppins"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/poppins-400-latin.woff2") format("woff2"); }
-@font-face { font-family: "Poppins"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/poppins-500-latin.woff2") format("woff2"); }
-@font-face { font-family: "Poppins"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fonts/poppins-600-latin.woff2") format("woff2"); }
-@font-face { font-family: "Poppins"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/poppins-700-latin.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonts/inter-latin.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: italic; font-weight: 100 900; font-display: swap; src: url("/fonts/inter-italic-latin.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 400 900; font-display: swap; src: url("/fonts/bodoni-moda-latin.woff2") format("woff2"); }
 
 :root {
-    /* Superfícies e estrutura (Nexus: --fundo, --superficie, --borda) */
-    --p-fundo: #F8FAFC;
+    /* Superfícies e estrutura — a areia do site */
+    --p-fundo: #FAF7F0;          /* sand-50 */
     --p-superficie: #FFFFFF;
-    --p-borda: #E5E7EB;
-    --p-borda-forte: #D1D5DB;
+    --p-borda: #E5DCC9;          /* sand-200 */
+    --p-borda-forte: #D6C9AE;
 
     /* Texto */
-    --p-texto: #111827;
-    --p-texto-medio: #6B7280;
-    --p-texto-fraco: #9CA3AF;
+    --p-texto: #26261F;          /* ink */
+    --p-texto-medio: #6F6C60;    /* ink-muted */
+    --p-texto-fraco: #96917F;
 
-    /* Barra lateral e painel de marca — o gradiente da Nexus */
-    --p-escuro: #020503;
-    --p-escuro-2: #0A2A18;
-    --p-lateral-fundo: linear-gradient(180deg, #0A2A18 0%, #061008 58%, #020503 100%);
-    --p-lateral-ativo: #0F3D24;
-    --p-lateral-barra: #22C55E;
+    /* Barra lateral e painel de marca — o azeitona escuro do site */
+    --p-escuro: #1C1F14;
+    --p-escuro-2: #282C1E;       /* olive-900 */
+    --p-lateral-fundo: linear-gradient(180deg, #282C1E 0%, #21241A 58%, #1A1C13 100%);
+    --p-lateral-ativo: #3A3F2C;
+    --p-lateral-barra: #B08968;  /* clay-400 — o acento quente da marca */
 
-    /* Verde da marca */
-    --p-acao: #16A34A;
-    --p-acao-escuro: #15803D;
-    --p-acao-tinta: #ECFDF3;
-    --p-acao-claro: #6CE9A6;
+    /* Azeitona da marca */
+    --p-acao: #5D6348;           /* olive-600 */
+    --p-acao-escuro: #4A4F39;    /* olive-700 */
+    --p-acao-tinta: #F2EDE1;     /* sand-100 */
+    --p-acao-claro: #A8AD93;
 
     /* Estados */
-    --p-erro: #DC2626;
-    --p-erro-fundo: #FEE2E2;
-    --p-ok: #16A34A;
-    --p-ok-fundo: #ECFDF3;
+    --p-erro: #8A3B2E;
+    --p-erro-fundo: #F7E9E5;
+    --p-ok: #4E6B3A;
+    --p-ok-fundo: #ECF0E4;
 
     --p-raio: 8px;
     --p-raio-g: 12px;
-    --p-sombra: 0 1px 2px 0 rgba(16, 24, 40, .04), 0 1px 3px 0 rgba(16, 24, 40, .06);
-    --p-sombra-alta: 0 10px 30px rgba(16, 24, 40, .10), 0 2px 6px rgba(16, 24, 40, .06);
-    --p-fonte: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --p-sombra: 0 1px 2px 0 rgba(38, 38, 31, .04), 0 1px 3px 0 rgba(38, 38, 31, .06);
+    --p-sombra-alta: 0 10px 30px rgba(38, 38, 31, .10), 0 2px 6px rgba(38, 38, 31, .06);
+    --p-fonte: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --p-fonte-titulo: "Bodoni Moda", "Didot", "Bodoni MT", Georgia, serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -67,13 +65,21 @@ h1, h2, h3, p { margin: 0; }
 .p-oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ------------------------------------------------------------ marca */
-.p-marca { display: inline-flex; flex-direction: column; align-items: flex-start; gap: .5rem; color: inherit; text-decoration: none; }
-.p-marca__logo { display: block; height: 26px; width: auto; }
+/* O mesmo bloco do cabeçalho do site: símbolo à esquerda, nome em serifada
+   maiúscula ao lado, "Propriedades" por baixo em azeitona. */
+.p-marca { display: inline-flex; align-items: center; gap: .7rem; color: inherit; text-decoration: none; }
 .p-marca:hover { text-decoration: none; }
-.p-marca__sub { display: block; font-size: .6875rem; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--p-texto-fraco); }
-/* Sobre o gradiente escuro, o rótulo da marca é branco esbatido (como na Nexus). */
+.p-marca__simbolo { display: block; height: 30px; width: auto; }
+.p-marca__texto { font-family: var(--p-fonte-titulo); font-size: .95rem; line-height: 1.15; letter-spacing: .16em; text-transform: uppercase; }
+.p-marca__sub { display: block; font-size: .62em; letter-spacing: .22em; text-transform: uppercase; color: var(--p-acao); }
+
+/* Sobre os fundos escuros o símbolo é azeitona sobre azeitona: passa a branco. */
+.p-entrada__marca-painel .p-marca__simbolo,
+.p-lateral__topo .p-marca__simbolo,
+.p-topo-movel .p-marca__simbolo { filter: brightness(0) invert(1); }
 .p-entrada__marca-painel .p-marca__sub,
-.p-lateral__topo .p-marca__sub { color: rgba(255, 255, 255, .40); }
+.p-lateral__topo .p-marca__sub,
+.p-topo-movel .p-marca__sub { color: rgba(255, 255, 255, .55); }
 
 /* ------------------------------------------------------------ entrada (login / verificação) */
 .p-entrada { display: flex; min-height: 100vh; }
@@ -81,15 +87,15 @@ h1, h2, h3, p { margin: 0; }
 .p-entrada__marca-painel {
     position: relative; display: none; width: 50%; flex-direction: column; justify-content: space-between;
     overflow: hidden; padding: 3rem; color: #fff;
-    background: radial-gradient(60rem 40rem at 10% 10%, #124A2B 0%, transparent 60%), var(--p-lateral-fundo);
+    background: radial-gradient(60rem 40rem at 10% 10%, #3A3F2C 0%, transparent 60%), var(--p-lateral-fundo);
 }
 .p-brilho { position: absolute; pointer-events: none; width: 22rem; height: 22rem; border-radius: 50%; filter: blur(70px); }
-/* Os dois halos são verdes da marca — o azul-índigo era da versão anterior. */
-.p-brilho--cima { top: -7rem; right: -6rem; background: rgba(34, 197, 94, .26); }
-.p-brilho--baixo { bottom: -9rem; left: -5rem; background: rgba(22, 163, 74, .18); }
+/* Os dois halos usam o barro e a azeitona da marca. */
+.p-brilho--cima { top: -7rem; right: -6rem; background: rgba(176, 137, 104, .28); }
+.p-brilho--baixo { bottom: -9rem; left: -5rem; background: rgba(93, 99, 72, .30); }
 
 .p-discurso { position: relative; max-width: 28rem; }
-.p-discurso h2 { font-size: 2.1rem; font-weight: 600; letter-spacing: -.03em; line-height: 1.15; }
+.p-discurso h2 { font-family: var(--p-fonte-titulo); font-size: 2.3rem; font-weight: 400; letter-spacing: -.01em; line-height: 1.12; }
 .p-discurso p { margin-top: 1rem; font-size: .95rem; color: rgba(255, 255, 255, .72); }
 .p-lista { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: .9rem; }
 .p-lista li { display: flex; align-items: center; gap: .85rem; font-size: .9rem; color: rgba(255, 255, 255, .85); }
@@ -101,7 +107,7 @@ h1, h2, h3, p { margin: 0; }
 .p-entrada__painel { display: flex; align-items: center; justify-content: center; width: 100%; padding: 3rem 1.5rem; background: var(--p-superficie); }
 .p-entrada__caixa { width: 100%; max-width: 24rem; }
 .p-entrada__marca-estreita { margin-bottom: 2.5rem; }
-.p-entrada__caixa h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -.02em; }
+.p-entrada__caixa h1 { font-family: var(--p-fonte-titulo); font-size: 1.9rem; font-weight: 400; letter-spacing: -.01em; }
 .p-entrada__caixa .p-intro { margin-top: .5rem; font-size: .9rem; color: var(--p-texto-medio); }
 .p-form { margin-top: 2rem; display: grid; gap: 1.1rem; }
 .p-ajuda form { display: inline; }
@@ -115,7 +121,7 @@ h1, h2, h3, p { margin: 0; }
 }
 
 /* ------------------------------------------------------------ campos */
-.p-campo label, .p-campo__cabecalho label { display: block; font-size: .82rem; font-weight: 600; color: #334155; margin-bottom: .4rem; }
+.p-campo label, .p-campo__cabecalho label { display: block; font-size: .82rem; font-weight: 600; color: var(--p-texto); margin-bottom: .4rem; }
 .p-campo__cabecalho { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
 .p-campo__cabecalho a { font-size: .78rem; font-weight: 500; }
 .p-campo input[type="email"], .p-campo input[type="password"], .p-campo input[type="text"] {
@@ -127,12 +133,12 @@ h1, h2, h3, p { margin: 0; }
 .p-campo input[aria-invalid="true"] { border-color: var(--p-erro); }
 .p-campo .p-erro { margin-top: .4rem; font-size: .8rem; color: var(--p-erro); }
 .p-codigo { text-align: center; font-size: 1.9rem !important; font-weight: 600; letter-spacing: .45em; height: 3.6rem !important; }
-.p-caixa { display: flex; align-items: center; gap: .6rem; font-size: .88rem; color: #334155; }
+.p-caixa { display: flex; align-items: center; gap: .6rem; font-size: .88rem; color: var(--p-texto); }
 .p-caixa input { width: 1.05rem; height: 1.05rem; accent-color: var(--p-acao); }
 
 .p-btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; height: 2.9rem; padding: 0 1.25rem; border-radius: var(--p-raio); border: 1px solid transparent; font-weight: 600; font-size: .92rem; cursor: pointer; transition: background .15s, transform .1s, box-shadow .15s; text-decoration: none; }
 .p-btn:hover { text-decoration: none; }
-.p-btn--primario { width: 100%; background: var(--p-acao); color: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, .12); }
+.p-btn--primario { width: 100%; background: var(--p-acao); color: #fff; box-shadow: 0 1px 2px rgba(38, 38, 31, .12); }
 .p-btn--primario:hover { background: var(--p-acao-escuro); }
 .p-btn--primario:active { transform: translateY(1px); }
 .p-btn--ligacao { background: none; border: 0; padding: 0; height: auto; color: var(--p-acao); font-weight: 600; cursor: pointer; }
@@ -141,8 +147,8 @@ h1, h2, h3, p { margin: 0; }
 .p-btn--fantasma:hover { background: rgba(255, 255, 255, .08); }
 
 .p-alerta { display: flex; gap: .6rem; align-items: flex-start; padding: .8rem 1rem; border-radius: var(--p-raio); font-size: .88rem; margin-bottom: 1.25rem; }
-.p-alerta--ok { background: var(--p-ok-fundo); color: #14532D; border: 1px solid #BBF7D0; }
-.p-alerta--erro { background: var(--p-erro-fundo); color: #7F1D1D; border: 1px solid #FECACA; }
+.p-alerta--ok { background: var(--p-ok-fundo); color: #3B5223; border: 1px solid #C9D6B4; }
+.p-alerta--erro { background: var(--p-erro-fundo); color: #6E2E23; border: 1px solid #E3C4BC; }
 
 /* ------------------------------------------------------------ aplicação (portal): barra lateral + área de trabalho */
 .p-app { min-height: 100vh; display: flex; }
@@ -154,7 +160,7 @@ h1, h2, h3, p { margin: 0; }
     color: #fff; transform: translateX(-100%); transition: transform .2s ease;
 }
 .p-lateral--aberta { transform: none; box-shadow: var(--p-sombra-alta); }
-.p-veu { position: fixed; inset: 0; z-index: 20; border: 0; background: rgba(15, 23, 42, .45); }
+.p-veu { position: fixed; inset: 0; z-index: 20; border: 0; background: rgba(38, 38, 31, .45); }
 .p-lateral__topo { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.25rem 1rem; }
 .p-lateral__topo .p-marca { color: #fff; }
 .p-lateral__fechar { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 0; border-radius: 8px; background: transparent; color: rgba(255, 255, 255, .7); cursor: pointer; }
@@ -187,7 +193,7 @@ h1, h2, h3, p { margin: 0; }
 
 .p-principal { flex: 1; }
 .p-largura { max-width: 1180px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; width: 100%; }
-.p-saudacao h1 { font-size: 1.9rem; font-weight: 600; letter-spacing: -.03em; }
+.p-saudacao h1 { font-family: var(--p-fonte-titulo); font-size: 2.1rem; font-weight: 400; letter-spacing: -.01em; }
 .p-saudacao p { margin-top: .4rem; color: var(--p-texto-medio); }
 .p-eyebrow { font-size: .68rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--p-texto-fraco); margin-bottom: .6rem; }
 
@@ -218,13 +224,13 @@ h1, h2, h3, p { margin: 0; }
 
 /* ------------------------------------------------------------ gestão: cabeçalho, tabela, formulário */
 .p-cabecalho { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
-.p-titulo { font-size: 1.7rem; font-weight: 600; letter-spacing: -.03em; }
+.p-titulo { font-family: var(--p-fonte-titulo); font-size: 1.9rem; font-weight: 400; letter-spacing: -.01em; }
 .p-subtitulo { margin-top: .35rem; color: var(--p-texto-medio); }
 .p-eyebrow a { color: inherit; }
 .p-btn--auto { width: auto; }
 .p-btn--neutro { background: #fff; color: var(--p-texto); border-color: var(--p-borda-forte); }
 .p-btn--neutro:hover { background: var(--p-fundo); }
-.p-btn--perigo { background: #fff; color: var(--p-erro); border-color: #FECACA; }
+.p-btn--perigo { background: #fff; color: var(--p-erro); border-color: #E3C4BC; }
 .p-btn--perigo:hover { background: var(--p-erro-fundo); }
 
 .p-tabela-caixa { margin-top: 1.5rem; overflow-x: auto; background: var(--p-superficie); border: 1px solid var(--p-borda); border-radius: var(--p-raio-g); box-shadow: var(--p-sombra); }
@@ -237,8 +243,8 @@ h1, h2, h3, p { margin: 0; }
 .p-tabela__acoes { text-align: right; white-space: nowrap; }
 .p-etiqueta { display: inline-block; padding: .2rem .6rem; border-radius: 999px; font-size: .75rem; font-weight: 600; }
 .p-etiqueta--acao { background: var(--p-acao-tinta); color: var(--p-acao-escuro); }
-.p-etiqueta--ok { background: var(--p-ok-fundo); color: #166534; }
-.p-etiqueta--cinza { background: #F1F5F9; color: #475569; }
+.p-etiqueta--ok { background: var(--p-ok-fundo); color: #3B5223; }
+.p-etiqueta--cinza { background: var(--p-fundo); color: var(--p-texto-medio); }
 
 .p-formulario { margin-top: 1.5rem; display: grid; gap: 1.25rem; max-width: 52rem; }
 .p-seccao { background: var(--p-superficie); border: 1px solid var(--p-borda); border-radius: var(--p-raio-g); box-shadow: var(--p-sombra); padding: 1.5rem; }
@@ -247,7 +253,7 @@ h1, h2, h3, p { margin: 0; }
 @media (min-width: 720px) { .p-grelha-2 { grid-template-columns: 1fr 1fr; } .p-grelha-2__cheio { grid-column: 1 / -1; } }
 .p-ajuda-campo { margin-top: .4rem; font-size: .78rem; color: var(--p-texto-medio); }
 .p-opcional { font-weight: 400; color: var(--p-texto-fraco); }
-.p-campo__rotulo { font-size: .82rem; font-weight: 600; color: #334155; }
+.p-campo__rotulo { font-size: .82rem; font-weight: 600; color: var(--p-texto); }
 .p-modulos-escolha { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--p-borda); }
 .p-modulos-escolha .p-grelha-2 { margin-top: .75rem; }
 .p-opcao { display: flex; gap: .75rem; align-items: flex-start; padding: .9rem 1rem; border: 1px solid var(--p-borda); border-radius: var(--p-raio); background: #fff; cursor: pointer; font-size: .88rem; }
@@ -256,5 +262,5 @@ h1, h2, h3, p { margin: 0; }
 .p-opcao span span { display: block; margin-top: .15rem; font-size: .8rem; color: var(--p-texto-medio); }
 .p-opcao--bloqueada { background: var(--p-fundo); cursor: default; }
 .p-acoes { display: flex; gap: .75rem; align-items: center; }
-.p-perigo { margin-top: 2rem; max-width: 52rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; border: 1px solid #FECACA; border-radius: var(--p-raio-g); background: var(--p-erro-fundo); font-size: .88rem; color: #7F1D1D; }
+.p-perigo { margin-top: 2rem; max-width: 52rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; border: 1px solid #E3C4BC; border-radius: var(--p-raio-g); background: var(--p-erro-fundo); font-size: .88rem; color: #6E2E23; }
 .p-alerta__lista { margin: .4rem 0 0; padding-left: 1.1rem; }

@@ -11,16 +11,17 @@
 | aplicação) registados em config/modules.php.
 |
 | Verificação em duas etapas por email: depois da palavra-passe, um código de
-| seis algarismos enviado para o email da conta. Mesmas regras do Nexus
-| Portal (validade, tentativas, intervalo de reenvio).
+| seis algarismos enviado para o email da conta (validade, tentativas e
+| intervalo de reenvio nas chaves abaixo).
 |
 */
 
 return [
 
-    // Nome da plataforma. Não é o da agência: o portal é uma área de trabalho
-    // própria, onde o módulo de imóveis é só um dos cartões.
-    'name' => env('PORTAL_NAME', 'Nexus'),
+    // Nome da plataforma. É o da agência: o portal é a área de trabalho da
+    // Multifuturo, com a mesma marca do site — o módulo de imóveis é só um
+    // dos cartões, mas a casa é a mesma.
+    'name' => env('PORTAL_NAME', 'Multifuturo Propriedades'),
 
     /*
      | Segunda etapa por email (código de seis algarismos). DESLIGADA a pedido
