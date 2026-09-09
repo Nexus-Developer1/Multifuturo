@@ -9,6 +9,33 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Fundo areia partia o modo noturno do backoffice
+
+$${\color{#5D6348}\textsf{2026-09-09 · 11:01}}$$
+
+**Commit:** `c66c2be` — `Backoffice: fundo areia so no modo claro; o noturno volta ao tema do Filament`
+
+A areia que pus no backoffice há minutos valia nos dois modos. Em noturno o Filament
+escurece a barra de topo, os cartões e as tabelas, mas o fundo ficava areia por baixo
+de tudo: cartões pretos sobre bege e o texto da barra lateral quase invisível.
+
+A regra passou a valer só quando o `<html>` não tem a classe `dark`. Em noturno manda
+o tema do Filament, que é coerente consigo próprio.
+
+**Ficheiros**
+
+- `resources/css/filament/admin/theme.css` — a regra do fundo, com a razão escrita ao
+  lado.
+
+**Notas**
+
+- Verificado no browser nos dois modos, forçando a preferência do sistema: em claro o
+  fundo é `#FAF7F0`; em noturno volta ao escuro do Filament e tudo se lê.
+- O portal e o site não têm modo noturno, por isso não há nada a fazer-lhes.
+- 229 testes a passar.
+
+---
+
 ## Assinatura da NXS e fundo areia no backoffice
 
 $${\color{#5D6348}\textsf{2026-09-09 · 10:53}}$$
