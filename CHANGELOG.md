@@ -9,6 +9,38 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Reposição punha as fotografias na raiz web
+
+$${\color{#5D6348}\textsf{2026-09-09 · 09:40}}$$
+
+**Commit:** `61c893c` — `Deploy: repor as fotografias em storage/app, nao na raiz web`
+
+A preparar a passagem da base de dados local para o servidor, o `restore.sh`
+mostrou-se errado na parte dos ficheiros.
+
+O arquivo das cópias traz `public/` e `private/` na raiz — são as duas pastas de
+`storage/app`, é assim que o `backup:run` as arruma. Mas o `restore.sh` extraía-o
+para `/var/www/html`. Numa reposição a sério, as 224 fotografias e os documentos
+privados iam parar **dentro da raiz web** do site, e nenhuma ficha voltaria a
+encontrar as suas imagens.
+
+Nunca chegou a acontecer: a reposição só se usa no servidor, e o servidor ainda não
+existe. Foi apanhado antes da primeira utilização.
+
+**Ficheiros**
+
+- `deploy/restore.sh` — extrai para `/var/www/html/storage/app`, com a razão escrita
+  ao lado para não voltar a ser "arrumado" para a raiz.
+
+**Notas**
+
+- Verificado a extrair a cópia de hoje para uma pasta temporária: as fotografias
+  ficam em `storage/app/public/imoveis`, os documentos em `storage/app/private`,
+  224 ficheiros ao todo.
+- 227 testes a passar.
+
+---
+
 ## Email geral@multifuturo.pt e menu "Quem somos"
 
 $${\color{#5D6348}\textsf{2026-09-07 · 17:48}}$$
