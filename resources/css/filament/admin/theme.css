@@ -112,7 +112,11 @@
 | reconhecivelmente a mesma casa. As superfícies (barra de topo, cartões,
 | tabelas) continuam brancas, que é o contraste que faz a leitura.
 |
+| SÓ no modo claro. Em noturno o Filament escurece tudo menos o fundo, e a
+| areia ficava por baixo de cartões pretos, com o texto da barra lateral
+| ilegível. Aí manda o tema dele, que é coerente consigo próprio.
+|
 */
-.fi-body {
+html:not(.dark) .fi-body {
     background-color: #FAF7F0;
 }
