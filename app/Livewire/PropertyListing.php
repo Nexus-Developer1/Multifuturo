@@ -173,16 +173,17 @@ class PropertyListing extends Component
                     ->orWhereRaw('LOWER(city) LIKE ?', [$term])
                     ->orWhereRaw('LOWER(locality) LIKE ?', [$term])
                     ->orWhereRaw('LOWER(zone) LIKE ?', [$term])
-                    ->orWhereRaw("LOWER(translations->'pt'->>'title') LIKE ?", [$term]);
+                    ->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(translations, '$.pt.title'))) LIKE ?", [$term]);
             });
         }
 
         PropertyFilters::apply($q, $this->criteria());
 
         return match ($this->sort) {
-            'price_asc' => $q->orderByRaw('price ASC NULLS LAST')->orderByDesc('id'),
-            'price_desc' => $q->orderByRaw('price DESC NULLS LAST')->orderByDesc('id'),
-            default => $q->orderByRaw('crm_updated_at DESC NULLS LAST')->orderByDesc('id'),
+            // "IS NULL" primeiro: os sem valor vão para o fim (o NULLS LAST do PostgreSQL).
+            'price_asc' => $q->orderByRaw('price IS NULL, price ASC')->orderByDesc('id'),
+            'price_desc' => $q->orderByRaw('price IS NULL, price DESC')->orderByDesc('id'),
+            default => $q->orderByRaw('crm_updated_at IS NULL, crm_updated_at DESC')->orderByDesc('id'),
         };
     }
 

@@ -102,8 +102,8 @@ token entrar.
 ## C. Requisitos de produção (para quem alojar)
 
 **Software**
-- PHP **8.3** (ou 8.4) com extensões: `pdo_pgsql`, `pgsql`, `redis`, `mbstring`, `intl`, `xml`, `dom`, `xmlreader`, `gd`, `curl`, `zip`, `bcmath`
-- **PostgreSQL 16** (usa `jsonb` e índices GIN)
+- PHP **8.3** (ou 8.4) com extensões: `pdo_mysql`, `mysqli`, `redis`, `mbstring`, `intl`, `xml`, `dom`, `xmlreader`, `gd`, `curl`, `zip`, `bcmath`
+- **MySQL 8** (usa JSON nativo, restrições CHECK e funções JSON_*; 8.0.19 ou mais recente)
 - **Redis** (cache, sessão e queue)
 - Nginx (ou Caddy) com HTTPS (Let's Encrypt), raiz em `public/`
 - Composer 2, Node 22 (só para compilar assets — pode ser feito no CI)
@@ -114,7 +114,7 @@ token entrar.
 
 **Variáveis de produção** (`.env`)
 - `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://dominio.pt`, `APP_KEY` gerada
-- `DB_*` (PostgreSQL), `REDIS_*`, `CACHE_STORE=redis`, `SESSION_DRIVER=redis`, `QUEUE_CONNECTION=redis`
+- `DB_*` (MySQL, com `DB_COLLATION=utf8mb4_0900_ai_ci`), `REDIS_*`, `CACHE_STORE=redis`, `SESSION_DRIVER=redis`, `QUEUE_CONNECTION=redis`
 - `MAIL_*` (SMTP real), todos os `CASAFARI_*` e `AGENCY_*` acima
 - `CASAFARI_MIN_ITEMS` ajustado ao tamanho da carteira
 

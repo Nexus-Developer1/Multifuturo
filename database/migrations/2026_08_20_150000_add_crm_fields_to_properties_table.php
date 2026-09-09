@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -40,8 +41,8 @@ return new class extends Migration
             $table->string('street_number', 32)->nullable()->after('address');
 
             // Dados internos e anexos
-            $table->jsonb('admin')->default('{}')->after('broker');
-            $table->jsonb('documents')->default('[]')->after('admin');
+            $table->jsonb('admin')->default(new Expression("('{}')"))->after('broker');
+            $table->jsonb('documents')->default(new Expression("('[]')"))->after('admin');
         });
 
         // Vendidos e fora de mercado saem das listagens públicas: índice para o filtro.

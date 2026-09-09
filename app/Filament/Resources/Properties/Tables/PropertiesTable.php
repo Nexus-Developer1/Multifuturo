@@ -111,7 +111,7 @@ class PropertiesTable
                     ->boolean()
                     ->tooltip(fn (Property $record) => data_get($record->admin, 'keys.notes'))
                     ->sortable(query: fn ($query, string $direction) => $query->orderByRaw(
-                        "COALESCE((admin->'keys'->>'has')::boolean, false) ".self::direction($direction)
+                        "COALESCE(JSON_EXTRACT(admin, '$.keys.has') = TRUE, 0) ".self::direction($direction)
                     ))
                     ->visibleFrom('lg'),
 
@@ -162,9 +162,7 @@ class PropertiesTable
                     ->badge()
                     ->color('gray')
                     ->placeholder('—')
-                    ->searchable(query: fn ($query, string $search) => $query->whereRaw(
-                        "admin->'tags' @> ?::jsonb", [json_encode([$search])]
-                    ))
+                    ->searchable(query: fn ($query, string $search) => $query->whereJsonContains('admin->tags', $search))
                     ->visibleFrom('lg'),
 
                 /* --------------------------- fora da grelha do CRM, opcionais */
@@ -174,7 +172,7 @@ class PropertiesTable
                     ->state(fn (Property $record) => $record->title)
                     ->limit(40)
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->searchable(query: fn ($query, $search) => $query->whereRaw("LOWER(translations->'pt'->>'title') LIKE ?", ['%'.mb_strtolower($search).'%'])),
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(translations, '$.pt.title'))) LIKE ?", ['%'.mb_strtolower($search).'%'])),
 
                 TextColumn::make('business_type')
                     ->label('Finalidade')
@@ -244,8 +242,8 @@ class PropertiesTable
                 TernaryFilter::make('keys')
                     ->label('Com chaves')
                     ->queries(
-                        true: fn ($query) => $query->whereRaw("(admin->'keys'->>'has')::boolean is true"),
-                        false: fn ($query) => $query->whereRaw("COALESCE((admin->'keys'->>'has')::boolean, false) is false"),
+                        true: fn ($query) => $query->whereRaw("JSON_EXTRACT(admin, '$.keys.has') = TRUE"),
+                        false: fn ($query) => $query->whereRaw("COALESCE(JSON_EXTRACT(admin, '$.keys.has') = TRUE, 0) = 0"),
                         blank: fn ($query) => $query,
                     ),
             ])

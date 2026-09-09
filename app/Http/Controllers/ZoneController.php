@@ -52,7 +52,7 @@ class ZoneController extends Controller
             ->active()
             ->whereRaw('LOWER(city) = ?', [mb_strtolower($cityName)])
             ->when($localityName, fn ($q) => $q->whereRaw('LOWER(locality) = ?', [mb_strtolower($localityName)]))
-            ->orderByRaw('crm_updated_at DESC NULLS LAST')
+            ->orderByRaw('crm_updated_at IS NULL, crm_updated_at DESC')
             ->paginate(self::PER_PAGE, ['*'], 'page', $page)
             ->withPath(url()->current()));
 

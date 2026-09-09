@@ -24,11 +24,11 @@ class PageController extends Controller
          */
         $featured = PropertyCache::remember('home:featured', function () {
             $max = Property::MAX_FEATURED;
-            $featured = Property::query()->active()->featured()->orderByRaw('crm_updated_at DESC NULLS LAST')->limit($max)->get();
+            $featured = Property::query()->active()->featured()->orderByRaw('crm_updated_at IS NULL, crm_updated_at DESC')->limit($max)->get();
 
             if ($featured->count() < $max) {
                 $featured = $featured->concat(
-                    Property::query()->active()->whereKeyNot($featured->modelKeys())->orderByRaw('crm_updated_at DESC NULLS LAST')->limit($max - $featured->count())->get()
+                    Property::query()->active()->whereKeyNot($featured->modelKeys())->orderByRaw('crm_updated_at IS NULL, crm_updated_at DESC')->limit($max - $featured->count())->get()
                 );
             }
 

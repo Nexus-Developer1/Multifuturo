@@ -104,7 +104,7 @@ class DashboardStats extends StatsOverviewWidget
     {
         $desde = now()->startOfMonth()->subMonths(5);
 
-        return $this->serie($this->contar($query, $coluna, 'YYYY-MM', $desde), 6, fn (int $i) => $desde->copy()->addMonths($i)->format('Y-m'));
+        return $this->serie($this->contar($query, $coluna, '%Y-%m', $desde), 6, fn (int $i) => $desde->copy()->addMonths($i)->format('Y-m'));
     }
 
     /**
@@ -117,7 +117,7 @@ class DashboardStats extends StatsOverviewWidget
     {
         $desde = now()->subDays($dias - 1)->startOfDay();
 
-        return $this->serie($this->contar($query, $coluna, 'YYYY-MM-DD', $desde), $dias, fn (int $i) => $desde->copy()->addDays($i)->format('Y-m-d'));
+        return $this->serie($this->contar($query, $coluna, '%Y-%m-%d', $desde), $dias, fn (int $i) => $desde->copy()->addDays($i)->format('Y-m-d'));
     }
 
     /**
@@ -131,7 +131,7 @@ class DashboardStats extends StatsOverviewWidget
         // A coluna e o formato são escritos aqui no código, nunca vêm de fora.
         return $query->clone()
             ->where($coluna, '>=', $desde)
-            ->selectRaw("to_char({$coluna}, '{$formato}') as periodo, count(*) as total")
+            ->selectRaw("DATE_FORMAT({$coluna}, '{$formato}') as periodo, count(*) as total")
             ->groupBy('periodo')
             ->pluck('total', 'periodo')
             ->map(fn ($n) => (int) $n)

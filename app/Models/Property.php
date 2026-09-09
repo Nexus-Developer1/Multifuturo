@@ -196,7 +196,7 @@ class Property extends Model
             // ao site — "Inativa" e "Pendente" ficam de fora, mesmo que o "Visível no
             // website" tenha ficado ligado. As fichas antigas não têm o campo —
             // COALESCE trata-as como ativas.
-            ->whereRaw("COALESCE(admin->>'status', ?) = ?", [self::STATUS_ACTIVE, self::STATUS_ACTIVE]);
+            ->whereRaw("COALESCE(JSON_UNQUOTE(JSON_EXTRACT(admin, '$.status')), ?) = ?", [self::STATUS_ACTIVE, self::STATUS_ACTIVE]);
     }
 
     /** @param  Builder<Property>  $query */
@@ -245,7 +245,8 @@ class Property extends Model
     }
 
     /**
-     * Filtra por características usando o índice GIN (features @> '["garagem"]').
+     * Filtra por características: a ficha tem de ter todas as pedidas. O
+     * Laravel traduz para o JSON_CONTAINS do MySQL (era o "@>" do PostgreSQL).
      *
      * @param  Builder<Property>  $query
      * @param  array<int, string>  $features
@@ -253,7 +254,7 @@ class Property extends Model
     public function scopeWithFeatures(Builder $query, array $features): Builder
     {
         foreach ($features as $feature) {
-            $query->whereRaw('features @> ?::jsonb', [json_encode([$feature])]);
+            $query->whereJsonContains('features', $feature);
         }
 
         return $query;

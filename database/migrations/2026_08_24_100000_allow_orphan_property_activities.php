@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,17 +18,25 @@ use Illuminate\Support\Facades\DB;
 | referência guardada no detalhe, para o "Actualizações" da dashboard registar
 | que alguém apagou a ficha.
 |
+| Feito pelo Blueprint, não por SQL: o "ALTER COLUMN … DROP NOT NULL" era do
+| PostgreSQL e o MySQL escreve-o de outra maneira. Assim serve aos dois.
+|
 */
 return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement('ALTER TABLE property_activities ALTER COLUMN property_id DROP NOT NULL');
+        Schema::table('property_activities', function (Blueprint $table) {
+            $table->foreignId('property_id')->nullable()->change();
+        });
     }
 
     public function down(): void
     {
         DB::statement('DELETE FROM property_activities WHERE property_id IS NULL');
-        DB::statement('ALTER TABLE property_activities ALTER COLUMN property_id SET NOT NULL');
+
+        Schema::table('property_activities', function (Blueprint $table) {
+            $table->foreignId('property_id')->nullable(false)->change();
+        });
     }
 };

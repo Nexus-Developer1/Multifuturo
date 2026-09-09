@@ -28,7 +28,7 @@ switch ($cmd) {
     "pint"     { docker compose exec -u sail $service ./vendor/bin/pint @rest }
     "shell"    { docker compose exec -u sail $service bash }
     "root"     { docker compose exec -u root $service bash }
-    "psql"     { docker compose exec pgsql psql -U sail -d multifuturo @rest }
+    "mysql"    { docker compose exec mysql sh -c 'mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"' @rest }
     "redis"    { docker compose exec redis redis-cli @rest }
     default    { docker compose exec -u sail $service @Args }
 }

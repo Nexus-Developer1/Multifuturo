@@ -31,18 +31,18 @@ it('não tem nenhuma coluna para dados do proprietário (Owner)', function () {
     }
 });
 
-it('usa jsonb e tem o índice GIN em features', function () {
+it('guarda o conteúdo semiestruturado em JSON e tem os índices das listagens', function () {
+    // Em MySQL o Laravel escreve jsonb() como json — a coluna é JSON nativo, não texto.
     $types = collect(Schema::getColumns('properties'))->pluck('type', 'name');
 
-    expect($types['translations'])->toBe('jsonb')
-        ->and($types['photos'])->toBe('jsonb')
-        ->and($types['features'])->toBe('jsonb')
-        ->and($types['broker'])->toBe('jsonb');
+    expect($types['translations'])->toBe('json')
+        ->and($types['photos'])->toBe('json')
+        ->and($types['features'])->toBe('json')
+        ->and($types['broker'])->toBe('json');
 
     $indexes = collect(Schema::getIndexes('properties'));
 
-    expect($indexes->firstWhere('name', 'properties_features_gin_idx')['type'] ?? null)->toBe('gin')
-        ->and($indexes->firstWhere('name', 'properties_active_business_price_idx')['columns'])->toBe(['is_active', 'business_type', 'price'])
+    expect($indexes->firstWhere('name', 'properties_active_business_price_idx')['columns'])->toBe(['is_active', 'business_type', 'price'])
         ->and($indexes->firstWhere('name', 'properties_city_locality_idx')['columns'])->toBe(['city', 'locality'])
         ->and($indexes->contains(fn ($i) => $i['columns'] === ['slug'] && $i['unique']))->toBeTrue()
         ->and($indexes->contains(fn ($i) => $i['columns'] === ['internal_id'] && $i['unique']))->toBeTrue();
@@ -110,6 +110,8 @@ it('resolve rotas pelo slug e não pelo id', function () {
     expect((new Property)->getRouteKeyName())->toBe('slug');
 });
 
-it('a base de dados de testes é PostgreSQL', function () {
-    expect(DB::connection()->getDriverName())->toBe('pgsql');
+it('a base de dados de testes é MySQL, como a de produção', function () {
+    // O esquema usa JSON nativo, restrições CHECK e funções JSON_* do MySQL:
+    // correr os testes noutro motor (SQLite, por exemplo) não provaria nada.
+    expect(DB::connection()->getDriverName())->toBe('mysql');
 });

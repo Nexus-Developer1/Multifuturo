@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -34,7 +35,7 @@ return new class extends Migration
             $table->string('kind', 16)->default('buyer');       // buyer | owner | both
             $table->string('city', 96)->nullable();
             $table->text('notes')->nullable();
-            $table->jsonb('preferences')->default('{}');        // procura: tipologia, zona, orçamento…
+            $table->jsonb('preferences')->default(new Expression("('{}')"));        // procura: tipologia, zona, orçamento…
             $table->foreignId('assigned_to')->nullable()->constrained('users')->nullOnDelete();
             $table->timestampsTz();
 

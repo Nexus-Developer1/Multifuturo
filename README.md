@@ -11,7 +11,7 @@
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
 ![Livewire](https://img.shields.io/badge/Livewire-3-4E56A6)
 ![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.4-4479A1?logo=mysql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-cache%20%2B%20queue-DC382D?logo=redis&logoColor=white)
 ![Filament](https://img.shields.io/badge/Filament-4-FDAE4B)
 ![Pest](https://img.shields.io/badge/Pest-122%20testes-38B2AC)
@@ -43,7 +43,7 @@
 flowchart LR
     subgraph APP["🏠 multifuturo.test"]
         BO["Backoffice /admin<br><sub>Filament · equipa da agência</sub>"]
-        DB[("PostgreSQL<br><sub>properties · leads · zones</sub>")]
+        DB[("MySQL<br><sub>properties · leads · zones</sub>")]
         CACHE[("Redis<br><sub>cache · queue</sub>")]
         SITE["Site público<br><sub>Livewire · server-rendered</sub>"]
         MAIL["NewLeadReceived<br><sub>email à agência (queue)</sub>"]
@@ -72,7 +72,7 @@ flowchart LR
 ## 🌍 Produção
 
 O deploy está preparado e testado: Docker em produção com Apache (mod_php; o HTTPS termina no Apache do anfitrião),
-fila, agendador, PostgreSQL e Redis — `compose.production.yaml`,
+fila, agendador, MySQL e Redis — `compose.production.yaml`,
 `docker/production/`, `deploy/deploy.sh` e `deploy/restore.sh`. O guia completo, do
 servidor vazio ao site no ar e às atualizações, está em **[DEPLOY.md](DEPLOY.md)**.
 
@@ -87,7 +87,7 @@ Pré-requisito: Docker Desktop a correr. O `./vendor/bin/sail` só corre em
 macOS/Linux/WSL2 — **no Windows** usa o wrapper `sail.ps1`:
 
 ```powershell
-.\sail.ps1 up -d              # arranca app + nginx + fila + agendador + PostgreSQL + Redis + Mailpit
+.\sail.ps1 up -d              # arranca app + nginx + fila + agendador + MySQL + Redis + Mailpit
 .\sail.ps1 artisan migrate    # cria as tabelas
 npm install; npm run build    # assets (ver nota abaixo)
 ```
@@ -101,7 +101,7 @@ Tudo corre em **Docker, na sua máquina** — não há nada online.
 | **Site** | **http://localhost/multifuturo** |
 | **Backoffice** | **http://localhost/multifuturo/admin** |
 | Emails de teste (Mailpit) | http://localhost:8025 |
-| PostgreSQL | `localhost:54320` |
+| MySQL | `localhost:33060` |
 | Redis | `localhost:63790` |
 
 `http://localhost/` reencaminha para `/multifuturo/`.
@@ -148,11 +148,11 @@ Os **testes correm sempre na raiz** (`APP_URL` fixo no `phpunit.xml`).
 | Fila (`queue:work`) | interna, sem porta |
 | Agendador (`schedule:work`) | interna, sem porta |
 | Vite (HMR) | `5173` |
-| PostgreSQL | `54320` † |
+| MySQL | `33060` † |
 | Redis | `63790` † |
 | Mailpit (email de teste) | `8025` (UI) |
 
-† 5432/6379 estavam ocupadas por outros serviços nesta máquina.
+† 3306/6379 podem estar ocupadas por outros serviços nesta máquina.
 
 
 > **Desempenho em Windows:** o Sail serve o site com `php artisan serve`, ou seja pelo
@@ -168,7 +168,7 @@ Os **testes correm sempre na raiz** (`APP_URL` fixo no `phpunit.xml`).
 > partir os binários nativos do container (e vice-versa).
 
 **Atalhos do `sail.ps1`:** `artisan` · `composer` · `npm` · `pest` · `pint` · `tinker` ·
-`shell` (bash no container) · `psql` · `redis` · `logs` · `ps`
+`shell` (bash no container) · `mysql` · `redis` · `logs` · `ps`
 
 </details>
 
@@ -317,11 +317,11 @@ existem em disco. Guardadas em `storage/backups/`, fora de `public/`.
 > `scheduler` do `compose.yaml`; **em produção tem de haver um cron ou processo
 > equivalente** (`php artisan schedule:run` a cada minuto, ou `schedule:work`).
 
-**Restaurar** — descomprimir e passar ao `psql`. O `ON_ERROR_STOP` faz o restauro abortar
+**Restaurar** — descomprimir e passar ao `mysql`. Um erro a meio faz o cliente abortar
 ao primeiro problema, em vez de deixar a base de dados a meio:
 
 ```bash
-gunzip -c storage/backups/2026-08-25_033000/base-de-dados.sql.gz   | psql --host=$DB_HOST --username=$DB_USERNAME --dbname=$DB_DATABASE --set ON_ERROR_STOP=1
+gunzip -c storage/backups/2026-08-25_033000/base-de-dados.sql.gz   | mysql --host=$DB_HOST --user=$DB_USERNAME $DB_DATABASE --set ON_ERROR_STOP=1
 ```
 
 Os ficheiros restauram-se com `tar -xzf ficheiros.tar.gz -C storage/app/`.
@@ -334,13 +334,13 @@ Os ficheiros restauram-se com `tar -xzf ficheiros.tar.gz -C storage/app/`.
 ## ✅ Testes e CI
 
 ```powershell
-.\sail.ps1 pest    # 104 testes · Pest 3 · PostgreSQL "testing"
+.\sail.ps1 pest    # 236 testes · Pest 3 · MySQL "testing"
 .\sail.ps1 pint    # estilo (--test para só verificar)
 ```
 
-- PostgreSQL obrigatório nos testes (o schema usa `jsonb` + GIN; SQLite não serve).
+- MySQL obrigatório nos testes (o schema usa JSON nativo, restrições CHECK e funções JSON_*; SQLite não serve).
 - CI: [`.github/workflows/tests.yml`](.github/workflows/tests.yml) — Pint + Pest com
-  PostgreSQL 16 e Redis em cada push/PR; em falha, as linhas do log saem como annotations.
+  MySQL 8.4 e Redis em cada push/PR; em falha, as linhas do log saem como annotations.
 - Regras críticas cobertas: slugs estáveis · `gmap_visible` · lead gravada antes do email ·
   AMI em produção · XSS · rate limiting · reciclagem e 410 · cópias de segurança.
 

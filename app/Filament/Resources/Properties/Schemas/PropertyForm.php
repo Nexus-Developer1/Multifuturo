@@ -120,7 +120,8 @@ class PropertyForm
     {
         $last = Property::query()
             ->where('reference', 'like', 'MF-%')
-            ->orderByRaw("NULLIF(regexp_replace(reference, '[^0-9]', '', 'g'), '')::bigint desc nulls last")
+            // Só os algarismos da referência, por ordem numérica; sem algarismos vai para o fim.
+            ->orderByRaw("NULLIF(REGEXP_REPLACE(reference, '[^0-9]', ''), '') IS NULL, CAST(NULLIF(REGEXP_REPLACE(reference, '[^0-9]', ''), '') AS UNSIGNED) DESC")
             ->value('reference');
 
         $number = $last ? ((int) preg_replace('/[^0-9]/', '', $last)) + 1 : 1;

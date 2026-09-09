@@ -22,7 +22,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement('ALTER TABLE leads DROP CONSTRAINT IF EXISTS leads_crm_status_check');
+        // O MySQL não aceita "IF EXISTS" numa restrição, mas nele ela existe
+        // sempre — foi criada na migração das leads. O "IF EXISTS" só faz falta
+        // no PostgreSQL, onde há bases antigas sem ela.
+        DB::statement(DB::getDriverName() === 'mysql'
+            ? 'ALTER TABLE leads DROP CHECK leads_crm_status_check'
+            : 'ALTER TABLE leads DROP CONSTRAINT IF EXISTS leads_crm_status_check');
 
         Schema::table('leads', function (Blueprint $table) {
             $table->dropIndex(['crm_status', 'created_at']);

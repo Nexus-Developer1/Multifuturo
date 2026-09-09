@@ -168,7 +168,7 @@ em baixo — os contentores novos substituem os antigos.
 |---|---|
 | Código | `/srv/multifuturo` |
 | Configuração | `/srv/multifuturo/.env` |
-| Base de dados | volume Docker `multifuturo_pgsql` |
+| Base de dados | volume Docker `multifuturo_mysql` |
 | Fotografias das fichas | volume `multifuturo_storage_public` |
 | Documentos das fichas (privados) | volume `multifuturo_storage_private` |
 | Cópias de segurança | volume `multifuturo_backups` (`/var/lib/docker/volumes/multifuturo_backups/_data`) |
@@ -176,7 +176,7 @@ em baixo — os contentores novos substituem os antigos.
 | Logs | `docker compose -f compose.production.yaml logs -f app` (ou `queue`, `scheduler`) |
 
 Os cinco serviços: `app` (Apache + PHP, a aplicação e os estáticos), `queue`
-(emails), `scheduler` (cópias), `pgsql`, `redis`. Todos arrancam
+(emails), `scheduler` (cópias), `mysql`, `redis`. Todos arrancam
 sozinhos com o servidor (`restart: unless-stopped`).
 
 ---
@@ -259,7 +259,7 @@ e `sudo systemctl reload apache2`.
 **Alojamento com painel (cPanel/Plesk):** a mesma ideia — o painel gere o
 certificado e cria-se um proxy do domínio para `http://127.0.0.1:8080`. Se o
 alojamento não permitir Docker de todo, este projeto precisa de PHP 8.3 (com
-pdo_pgsql, redis, intl, gd, zip, bcmath, exif, pcntl), PostgreSQL 16 e Redis
+pdo_mysql, redis, intl, gd, zip, bcmath, exif, pcntl), MySQL 8 e Redis
 no próprio alojamento — raro num alojamento partilhado; nesse caso, um VPS
 pequeno é o caminho.
 

@@ -48,8 +48,8 @@ class SearchSuggestController extends Controller
             }
 
             $props = (clone $ativo)
-                ->where(fn ($w) => $w->whereRaw('LOWER(reference) LIKE ?', [$term])->orWhereRaw("LOWER(translations->'pt'->>'title') LIKE ?", [$term]))
-                ->orderByRaw('crm_updated_at DESC NULLS LAST')
+                ->where(fn ($w) => $w->whereRaw('LOWER(reference) LIKE ?', [$term])->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(translations, '$.pt.title'))) LIKE ?", [$term]))
+                ->orderByRaw('crm_updated_at IS NULL, crm_updated_at DESC')
                 ->limit(4)
                 ->get();
 

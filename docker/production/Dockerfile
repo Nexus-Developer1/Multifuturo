@@ -18,20 +18,16 @@
 # ---------------------------------------------------------------- base
 FROM php:8.3-apache AS base
 
-# Extensões: PostgreSQL, Redis (phpredis), intl (datas e números em pt-PT),
+# Extensões: MySQL, Redis (phpredis), intl (datas e números em pt-PT),
 # gd (imagens), zip/bcmath/exif/pcntl (Laravel, Filament, fila), opcache.
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN install-php-extensions pdo_pgsql pgsql redis intl gd zip bcmath exif pcntl opcache
+RUN install-php-extensions pdo_mysql redis intl gd zip bcmath exif pcntl opcache
 
-# pg_dump/psql 16 para as cópias de segurança (backup:run, restore.sh): o Debian
-# traz o cliente 15, que recusa um servidor 16 — vem do repositório do PostgreSQL.
+# mysqldump/mysql para as cópias de segurança (backup:run, restore.sh). O
+# Debian traz o cliente da MariaDB, que fala com um servidor MySQL 8 sem
+# problema — só as colunas JSON saem no ficheiro como texto, e entram na mesma.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl ca-certificates \
-    && install -d /usr/share/postgresql-common/pgdg \
-    && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
-    && echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] http://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends postgresql-client-16 \
+    && apt-get install -y --no-install-recommends curl ca-certificates default-mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Apache: raiz em public/, .htaccess do Laravel a mandar, cabeçalhos e compressão.

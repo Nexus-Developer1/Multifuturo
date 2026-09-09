@@ -38,7 +38,9 @@ class PropertyView extends Model
                 'updated_at' => now(),
             ]],
             ['property_id', 'viewed_on'],
-            ['views' => DB::raw('property_views.views + 1'), 'updated_at' => DB::raw('EXCLUDED.updated_at')]
+            // No "ON DUPLICATE KEY UPDATE" do MySQL, "views" é a linha que já lá
+            // está; o updated_at vai como valor, sem o EXCLUDED do PostgreSQL.
+            ['views' => DB::raw('views + 1'), 'updated_at' => now()]
         );
     }
 

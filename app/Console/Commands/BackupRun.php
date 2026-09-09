@@ -67,32 +67,28 @@ class BackupRun extends Command
         $bd = config("database.connections.{$ligacao}");
         $ficheiro = $pasta.DIRECTORY_SEPARATOR.'base-de-dados.sql.gz';
 
-        // --clean --if-exists: o ficheiro restaura por cima sem obrigar a
-        // apagar a base de dados primeiro.
-        //
-        // O grep tira parâmetros de sessão que um pg_dump mais recente escreve
-        // e um servidor mais antigo não conhece (transaction_timeout, do
-        // PostgreSQL 17). São valores por omissão: retirá-los não muda nada, e
-        // sem isso um restauro feito da forma segura (ON_ERROR_STOP) abortava
-        // logo na primeira linha.
+        // --add-drop-table: o ficheiro restaura por cima sem obrigar a apagar
+        // a base de dados primeiro. --single-transaction: uma fotografia
+        // coerente sem bloquear as tabelas. A palavra-passe vai por variável
+        // de ambiente (MYSQL_PWD), nunca na linha de comandos, que qualquer
+        // processo da máquina consegue ler.
         $processo = Process::fromShellCommandline(
-            'pg_dump --clean --if-exists --no-owner --no-privileges '
-            .'--host=$PGHOST --port=$PGPORT --username=$PGUSER --dbname=$PGDATABASE '
-            ."| grep -v '^SET transaction_timeout' "
+            'mysqldump --single-transaction --quick --add-drop-table --default-character-set=utf8mb4 '
+            .'--host=$DB_HOST --port=$DB_PORT --user=$DB_USER $DB_NAME '
             .'| gzip -9 > '.escapeshellarg($ficheiro)
         );
         $processo->setEnv([
-            'PGHOST' => $bd['host'],
-            'PGPORT' => (string) $bd['port'],
-            'PGUSER' => $bd['username'],
-            'PGPASSWORD' => $bd['password'],
-            'PGDATABASE' => $bd['database'],
+            'DB_HOST' => $bd['host'],
+            'DB_PORT' => (string) $bd['port'],
+            'DB_USER' => $bd['username'],
+            'MYSQL_PWD' => $bd['password'],
+            'DB_NAME' => $bd['database'],
         ]);
         $processo->setTimeout(600);
         $processo->run();
 
         if (! $processo->isSuccessful() || ! File::exists($ficheiro) || File::size($ficheiro) < 100) {
-            throw new \RuntimeException(trim($processo->getErrorOutput()) ?: 'pg_dump não produziu nada.');
+            throw new \RuntimeException(trim($processo->getErrorOutput()) ?: 'mysqldump não produziu nada.');
         }
 
         return $ficheiro;

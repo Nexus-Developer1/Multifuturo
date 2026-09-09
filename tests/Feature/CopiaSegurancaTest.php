@@ -29,19 +29,16 @@ it('a cópia guarda a estrutura e os dados de todas as tabelas', function () {
 
     $conteudo = gzdecode(File::get($sql));
 
-    // Estrutura e blocos de dados de cada tabela que interessa. As linhas em
-    // si não dá para verificar aqui: os testes correm dentro de uma transação
-    // e o pg_dump liga-se por fora, logo não vê o que ainda não foi
-    // confirmado. O restauro real está verificado à mão e descrito no README.
-    expect($conteudo)->toContain('CREATE TABLE')
-        ->toContain('COPY public.properties')
-        ->toContain('COPY public.leads')
-        ->toContain('COPY public.users')
-        // --clean --if-exists: restaura por cima sem apagar a base primeiro.
-        ->toContain('DROP TABLE IF EXISTS')
-        // A linha que um servidor mais antigo não entende foi retirada, senão
-        // um restauro com ON_ERROR_STOP abortava logo.
-        ->not->toContain('SET transaction_timeout');
+    // A estrutura de cada tabela que interessa. As linhas em si não dá para
+    // verificar aqui: os testes correm dentro de uma transação e o mysqldump
+    // liga-se por fora, logo não vê o que ainda não foi confirmado — e uma
+    // tabela vazia não produz INSERT nenhum. O restauro real está verificado
+    // à mão e descrito no README.
+    expect($conteudo)->toContain('CREATE TABLE `properties`')
+        ->toContain('CREATE TABLE `leads`')
+        ->toContain('CREATE TABLE `users`')
+        // --add-drop-table: restaura por cima sem apagar a base primeiro.
+        ->toContain('DROP TABLE IF EXISTS');
 });
 
 it('a pasta tem o carimbo da data e da hora', function () {

@@ -24,7 +24,7 @@ class PropertyController extends Controller
             ->where('business_type', $property->business_type)
             ->when($property->city, fn ($q) => $q->orderByRaw('CASE WHEN LOWER(city) = ? THEN 0 ELSE 1 END', [mb_strtolower($property->city)]))
             ->when($property->property_type, fn ($q) => $q->orderByRaw('CASE WHEN LOWER(property_type) = ? THEN 0 ELSE 1 END', [mb_strtolower($property->property_type)]))
-            ->orderByRaw('crm_updated_at DESC NULLS LAST')
+            ->orderByRaw('crm_updated_at IS NULL, crm_updated_at DESC')
             ->limit(3)
             ->get());
 

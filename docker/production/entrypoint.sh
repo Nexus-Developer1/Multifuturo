@@ -24,7 +24,7 @@ wait_for() {
     done
 }
 
-wait_for "${DB_HOST:-pgsql}" "${DB_PORT:-5432}" "PostgreSQL"
+wait_for "${DB_HOST:-mysql}" "${DB_PORT:-3306}" "MySQL"
 wait_for "${REDIS_HOST:-redis}" "${REDIS_PORT:-6379}" "Redis"
 
 # Ligação /public/storage → storage/app/public (fotografias das fichas).

@@ -6,7 +6,7 @@
 #   app        Apache + PHP (a aplicação e os estáticos)
 #   queue      fila: emails dos pedidos
 #   scheduler  agendador: cópias de segurança, importação mensal do INE
-#   pgsql      PostgreSQL 16
+#   mysql      MySQL 8.4
 #   redis      cache, sessões e fila
 #
 # Só o app expõe uma porta (HTTP_PORT). O HTTPS termina à frente — no
@@ -31,7 +31,7 @@ services:
             - 'storage_private:/var/www/html/storage/app/private'
             - 'backups:/var/www/html/storage/backups'
         depends_on:
-            pgsql:
+            mysql:
                 condition: service_healthy
             redis:
                 condition: service_healthy
@@ -75,17 +75,22 @@ services:
         networks:
             - multifuturo
 
-    pgsql:
-        image: 'postgres:16-alpine'
+    mysql:
+        image: 'mysql:8.4'
         restart: unless-stopped
         environment:
-            POSTGRES_DB: '${DB_DATABASE:?DB_DATABASE em falta no .env}'
-            POSTGRES_USER: '${DB_USERNAME:?DB_USERNAME em falta no .env}'
-            POSTGRES_PASSWORD: '${DB_PASSWORD:?DB_PASSWORD em falta no .env}'
+            MYSQL_DATABASE: '${DB_DATABASE:?DB_DATABASE em falta no .env}'
+            MYSQL_USER: '${DB_USERNAME:?DB_USERNAME em falta no .env}'
+            MYSQL_PASSWORD: '${DB_PASSWORD:?DB_PASSWORD em falta no .env}'
+            # A root só existe dentro do contentor (sem porta exposta); fica com a mesma palavra-passe.
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+        # utf8mb4 + colação 0900_ai_ci: acentos ordenados como em português
+        # (Águeda antes de Amadora) e comparações sem distinguir maiúsculas.
+        command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_0900_ai_ci']
         volumes:
-            - 'pgsql:/var/lib/postgresql/data'
+            - 'mysql:/var/lib/mysql'
         healthcheck:
-            test: ['CMD', 'pg_isready', '-q', '-d', '${DB_DATABASE}', '-U', '${DB_USERNAME}']
+            test: ['CMD-SHELL', 'MYSQL_PWD="$$MYSQL_PASSWORD" mysqladmin ping -h 127.0.0.1 -u "$$MYSQL_USER" --silent']
             interval: 10s
             timeout: 5s
             retries: 5
@@ -113,7 +118,7 @@ networks:
 
 # Os dados. Apagar um destes volumes é apagar dados de produção.
 volumes:
-    pgsql:            # base de dados
+    mysql:            # base de dados
     redis:            # fila e sessões
     storage_public:   # fotografias das fichas
     storage_private:  # documentos das fichas (nunca servidos diretamente)

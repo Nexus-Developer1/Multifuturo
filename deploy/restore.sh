@@ -36,13 +36,14 @@ $COMPOSE exec -T app php artisan down --retry=60 || true
 $COMPOSE stop queue scheduler >/dev/null
 
 echo "→ Base de dados"
+# A palavra-passe vai por MYSQL_PWD, nunca na linha de comandos. A base é
+# recriada vazia com a colação portuguesa e o ficheiro entra por cima.
 $COMPOSE exec -T app sh -c '
     set -e
     f=$(ls storage/backups/'"$CARIMBO"'/*.sql.gz | head -1)
-    export PGPASSWORD="$DB_PASSWORD"
-    psql -h "$DB_HOST" -U "$DB_USERNAME" -d postgres -q -c "DROP DATABASE IF EXISTS \"$DB_DATABASE\";"
-    psql -h "$DB_HOST" -U "$DB_USERNAME" -d postgres -q -c "CREATE DATABASE \"$DB_DATABASE\";"
-    gunzip -c "$f" | grep -v "^SET transaction_timeout" | psql -h "$DB_HOST" -U "$DB_USERNAME" -d "$DB_DATABASE" -q -v ON_ERROR_STOP=1
+    export MYSQL_PWD="$DB_PASSWORD"
+    mysql -h "$DB_HOST" -P "${DB_PORT:-3306}" -u "$DB_USERNAME" -e "DROP DATABASE IF EXISTS \`$DB_DATABASE\`; CREATE DATABASE \`$DB_DATABASE\` CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;"
+    gunzip -c "$f" | mysql -h "$DB_HOST" -P "${DB_PORT:-3306}" -u "$DB_USERNAME" "$DB_DATABASE"
 '
 
 echo "→ Ficheiros carregados"

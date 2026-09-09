@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -23,7 +24,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('leads', function (Blueprint $table) {
-            $table->jsonb('replies')->default('[]')->after('internal_notes');
+            $table->jsonb('replies')->default(new Expression("('[]')"))->after('internal_notes');
             $table->timestamp('replied_at')->nullable()->after('replies');
         });
     }

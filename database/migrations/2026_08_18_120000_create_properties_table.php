@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -70,9 +71,9 @@ return new class extends Migration
             $table->string('floorplan_url', 2048)->nullable();
 
             // Conteúdo semiestruturado.
-            $table->jsonb('translations')->default('{}');  // { "pt": { "title": …, "description": … } }
-            $table->jsonb('photos')->default('[]');        // [ { "url": …, "order": n }, … ]
-            $table->jsonb('features')->default('[]');      // [ "elevador", "garagem", … ] — GIN abaixo
+            $table->jsonb('translations')->default(new Expression("('{}')"));  // { "pt": { "title": …, "description": … } }
+            $table->jsonb('photos')->default(new Expression("('[]')"));        // [ { "url": …, "order": n }, … ]
+            $table->jsonb('features')->default(new Expression("('[]')"));      // [ "elevador", "garagem", … ] — GIN abaixo
             $table->jsonb('broker')->nullable();           // { "name": …, "photo": … } — sem contactos
 
             // Publicação e sincronização.
@@ -94,8 +95,13 @@ return new class extends Migration
             $table->index(['is_active', 'crm_updated_at'], 'properties_active_crm_updated_idx');
         });
 
-        // Índice GIN para filtrar por características (features @> '["garagem"]').
-        DB::statement('CREATE INDEX properties_features_gin_idx ON properties USING GIN (features jsonb_path_ops)');
+        // Índice GIN para filtrar por características — só existe no PostgreSQL.
+        // No MySQL o filtro faz-se com JSON_CONTAINS sem índice: com a carteira
+        // de uma agência (dezenas de fichas) não se nota, e se um dia se notar
+        // acrescenta-se uma coluna gerada com índice.
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('CREATE INDEX properties_features_gin_idx ON properties USING GIN (features jsonb_path_ops)');
+        }
     }
 
     public function down(): void

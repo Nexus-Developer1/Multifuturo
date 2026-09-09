@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->string('name', 120)->nullable();
             $table->string('locale', 5)->default('pt');
             $table->string('listing', 8);                       // buy | rent (a listagem de onde veio)
-            $table->jsonb('criteria')->default('{}');
+            $table->jsonb('criteria')->default(new Expression("('{}')"));
             $table->string('token', 64)->unique();              // liga confirmar / cancelar
             $table->timestampTz('confirmed_at')->nullable();    // double opt-in
             $table->timestampTz('unsubscribed_at')->nullable();
