@@ -9,6 +9,43 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A conta passa a viver no portal
+
+$${\color{#5D6348}\textsf{2026-09-09 · 11:31}}$$
+
+**Commit:** `46e2955` — `Portal: a conta (perfil e palavra-passe) passa a viver no portal`
+
+O "Perfil e palavra-passe" estava na barra lateral do portal mas levava ao perfil do
+Filament, dentro do backoffice: saía-se do portal para mudar o nome ou a palavra-passe.
+Passou a ser uma página do portal, em `/conta`, com o desenho de lá.
+
+**E corrigia um buraco.** O perfil do Filament vive dentro do módulo backoffice: quem
+só tivesse acesso ao **Site** não conseguia mudar a sua própria palavra-passe — apanhava
+um 403. Agora consegue, porque a conta é da pessoa e não de um módulo.
+
+**Ficheiros**
+
+- `app/Http/Controllers/Portal/ProfileController.php` — **novo**. Nome, email e
+  palavra-passe da própria pessoa, e só dela: os módulos, o estado e a qualidade de
+  administrador continuam na Equipa, com o administrador.
+- `resources/views/portal/profile.blade.php` — **novo**. Duas secções, "Quem sou" e
+  "Palavra-passe", com o desenho do portal.
+- `routes/web.php` — `/conta`, dentro do grupo com sessão.
+- `resources/views/components/layouts/portal.blade.php` — a ligação da barra lateral
+  aponta para aqui e acende-se quando se está nela.
+- `app/Providers/Filament/AdminPanelProvider.php` — fora o `->profile()` do Filament.
+  A recuperação por email fica.
+- `tests/Feature/PortalTest.php` — quatro testes novos.
+
+**Notas**
+
+- A palavra-passe nova pede repetição, e mudá-la **não deita a própria pessoa fora**:
+  a sessão guarda o hash e é preciso atualizá-lo a seguir a gravar. Deixar em branco
+  mantém a que estava.
+- 234 testes a passar.
+
+---
+
 ## Painel de controlo só para administradores
 
 $${\color{#5D6348}\textsf{2026-09-09 · 11:21}}$$
