@@ -8,6 +8,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\Portal\LoginController;
 use App\Http\Controllers\Portal\MfaController;
 use App\Http\Controllers\Portal\PortalController;
+use App\Http\Controllers\Portal\ProfileController;
 use App\Http\Controllers\Portal\TeamController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\RobotsController;
@@ -59,6 +60,11 @@ Route::middleware('guest')->group(function (): void {
 Route::middleware(['auth', EnsureAccountActive::class])->group(function (): void {
     Route::get('/portal', [PortalController::class, 'index'])->name('portal');
     Route::post('/sair', [LoginController::class, 'destroy'])->name('logout');
+
+    // A minha conta — no portal, não no backoffice: quem só tem o módulo Site
+    // também tem de poder mudar a sua palavra-passe.
+    Route::get('/conta', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/conta', [ProfileController::class, 'update'])->name('profile.update');
 
     // Gestão — só administradores. A equipa e os acessos vivem aqui, não no backoffice.
     Route::middleware('can:admin')->prefix('gestao')->name('team.')->group(function (): void {

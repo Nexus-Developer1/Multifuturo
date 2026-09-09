@@ -55,9 +55,10 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotificationsPolling('30s')
             // Sem ->login(): a entrada é a do portal. Quem chegar aqui sem sessão
             // vai parar a /entrar (redirectGuestsTo, bootstrap/app.php).
-            // Cada pessoa muda o seu nome e a sua palavra-passe sem depender de
-            // ninguém; e quem se esquecer dela recupera-a por email.
-            ->profile(isSimple: false)
+            // Sem ->profile(): a conta (nome, email, palavra-passe) trata-se no
+            // portal, em /conta. É da pessoa, não deste módulo — e quem só tem
+            // acesso ao Site apanhava aqui um 403.
+            // Quem se esquecer da palavra-passe recupera-a por email.
             ->passwordReset()
             // Voltar à página de escolha dos módulos a partir do menu da pessoa.
             ->userMenuItems([

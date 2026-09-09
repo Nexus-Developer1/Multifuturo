@@ -89,7 +89,7 @@
                 </a>
 
                 <p class="p-lateral__grupo">A minha conta</p>
-                <a class="p-nav" href="{{ route('filament.admin.auth.profile') }}">
+                <a class="p-nav {{ request()->routeIs('profile.*') ? 'p-nav--ativo' : '' }}" href="{{ route('profile.edit') }}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
                     <span>Perfil e palavra-passe</span>
                 </a>

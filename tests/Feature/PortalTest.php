@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 
 function utilizadorAtivo(array $overrides = []): User
 {
@@ -235,4 +236,73 @@ it('o portal serve as letras do sítio, do nosso servidor', function () {
         ->and($css)->toContain('#5D6348')
         ->and($css)->not->toContain('#16A34A')
         ->and($css)->not->toContain('googleapis');
+});
+
+/*
+|--------------------------------------------------------------------------
+| A minha conta
+|--------------------------------------------------------------------------
+*/
+
+it('a conta trata-se no portal, não no backoffice', function () {
+    // Estava no perfil do Filament, dentro do módulo backoffice: quem só tinha
+    // o Site apanhava um 403 para mudar a sua própria palavra-passe.
+    $soSite = utilizadorAtivo();
+    $soSite->syncModules(['site']);
+
+    $this->actingAs($soSite)->get('/conta')->assertOk()->assertSee('Perfil e palavra-passe');
+
+    // E o portal aponta para aqui, não para o backoffice.
+    $this->actingAs($soSite)->get('/portal')->assertOk()
+        ->assertSee(route('profile.edit'), false)
+        ->assertDontSee('/admin/profile', false);
+
+    // A página do Filament deixou de existir.
+    expect(Route::has('filament.admin.auth.profile'))->toBeFalse();
+});
+
+it('cada pessoa muda o seu nome, email e palavra-passe — e não fica de fora', function () {
+    $pessoa = utilizadorAtivo();
+
+    $this->actingAs($pessoa)->put('/conta', [
+        'name' => 'Ana Maria Silva',
+        'email' => 'ana.maria@multifuturo.test',
+        'password' => 'nova-palavra-passe',
+        'password_confirmation' => 'nova-palavra-passe',
+    ])->assertRedirect(route('profile.edit'))->assertSessionHas('status');
+
+    $pessoa->refresh();
+
+    expect($pessoa->name)->toBe('Ana Maria Silva')
+        ->and($pessoa->email)->toBe('ana.maria@multifuturo.test')
+        ->and(Hash::check('nova-palavra-passe', $pessoa->password))->toBeTrue();
+
+    // Mudar a palavra-passe não deita a própria pessoa fora da sessão.
+    $this->get('/portal')->assertOk();
+});
+
+it('a conta em branco mantém a palavra-passe, e a repetição tem de bater certo', function () {
+    $pessoa = utilizadorAtivo();
+
+    // Sem palavra-passe nova: fica a que estava.
+    $this->actingAs($pessoa)->put('/conta', ['name' => 'Ana Silva', 'email' => $pessoa->email])
+        ->assertSessionHasNoErrors();
+    expect(Hash::check('segredo-123', $pessoa->refresh()->password))->toBeTrue();
+
+    // Repetição diferente: recusa.
+    $this->actingAs($pessoa)->put('/conta', [
+        'name' => 'Ana Silva',
+        'email' => $pessoa->email,
+        'password' => 'nova-palavra-passe',
+        'password_confirmation' => 'outra-coisa',
+    ])->assertSessionHasErrors('password');
+    expect(Hash::check('segredo-123', $pessoa->refresh()->password))->toBeTrue();
+});
+
+it('ninguém fica com o email de outra pessoa', function () {
+    utilizadorAtivo(['email' => 'ocupado@multifuturo.test']);
+    $pessoa = utilizadorAtivo(['email' => 'livre@multifuturo.test']);
+
+    $this->actingAs($pessoa)->put('/conta', ['name' => 'Ana', 'email' => 'ocupado@multifuturo.test'])
+        ->assertSessionHasErrors('email');
 });
