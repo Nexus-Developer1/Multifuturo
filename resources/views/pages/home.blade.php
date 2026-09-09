@@ -137,8 +137,8 @@
                              data-parallax="0.1" class="absolute inset-x-0 w-full object-cover">
                     </div>
                 </x-site.reveal>
-                {{-- A pequena entra logo a seguir à grande, sem se fazer esperar. --}}
-                <x-site.reveal tipo="wipe" atraso="120" class="col-span-4 lg:col-start-9 lg:col-span-4 lg:-mb-16">
+                {{-- A pequena entra um pouco depois da grande, para não abrirem em bloco. --}}
+                <x-site.reveal tipo="wipe" atraso="200" class="col-span-4 lg:col-start-9 lg:col-span-4 lg:-mb-16">
                     <div class="parallax-frame relative aspect-square">
                         <img src="{{ $composicao[1] }}" alt="" width="900" height="900" loading="lazy" decoding="async"
                              data-parallax="0.22" class="absolute inset-x-0 w-full object-cover">
