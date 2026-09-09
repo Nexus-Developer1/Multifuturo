@@ -119,3 +119,22 @@ it('o ícone e o logótipo do backoffice resolvem-se a cada pedido, não no arra
         ->assertSee(asset('images/marca/favicon-192.png'), false)
         ->assertSee(asset('images/marca/simbolo.png'), false);
 });
+
+it('o número ao lado das dúvidas conta só o que falta responder', function () {
+    // Contava os últimos sete dias, respondidos ou não: ficava um número ao
+    // lado do menu com a caixa toda tratada.
+    expect(LeadResource::getNavigationBadge())->toBeNull();
+
+    $porResponder = Lead::factory()->create(['replied_at' => null]);
+    Lead::factory()->create(['replied_at' => now()]);
+    // Antigo e por responder: continua a contar — não desaparece com a idade.
+    Lead::factory()->create(['replied_at' => null, 'created_at' => now()->subMonths(2)]);
+
+    expect(LeadResource::getNavigationBadge())->toBe('2');
+
+    $porResponder->forceFill(['replied_at' => now()])->save();
+    expect(LeadResource::getNavigationBadge())->toBe('1');
+
+    Lead::query()->update(['replied_at' => now()]);
+    expect(LeadResource::getNavigationBadge())->toBeNull();
+});

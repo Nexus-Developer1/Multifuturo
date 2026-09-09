@@ -44,11 +44,24 @@ class LeadResource extends Resource
         return false;
     }
 
+    /**
+     * O número ao lado do menu é o que falta fazer: pedidos por responder.
+     *
+     * Contava os últimos sete dias, respondidos ou não — ficava lá um número
+     * mesmo com a caixa toda tratada, e ninguém sabia o que ele queria dizer.
+     * Sem nada por responder não aparece número nenhum.
+     */
     public static function getNavigationBadge(): ?string
     {
-        $count = Lead::query()->whereDate('created_at', '>=', now()->subDays(7))->count();
+        $porResponder = Lead::query()->whereNull('replied_at')->count();
 
-        return $count > 0 ? (string) $count : null;
+        return $porResponder > 0 ? (string) $porResponder : null;
+    }
+
+    /** Âmbar enquanto houver pedidos à espera: é um aviso, não um total. */
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
     }
 
     public static function form(Schema $schema): Schema
