@@ -85,9 +85,13 @@ class PageController extends Controller
         ]);
     }
 
+    /**
+     * A agência tem o mesmo conteúdo das páginas legais (lang/…/legal.php) mas
+     * molde próprio: é uma página de apresentação, não um documento.
+     */
     public function about(): View
     {
-        return $this->legal('about');
+        return $this->legal('about', 'pages.about');
     }
 
     public function contact(): View
@@ -114,11 +118,11 @@ class PageController extends Controller
      * Documento legal/institucional a partir de lang/pt/legal.php, com os dados
      * da agência substituídos nos textos.
      */
-    private function legal(string $key): View
+    private function legal(string $key, string $view = 'pages.legal'): View
     {
         $agency = config('agency');
 
-        return view('pages.legal', [
+        return view($view, [
             'key' => $key,
             'replacements' => [
                 'name' => $agency['name'],

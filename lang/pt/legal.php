@@ -185,6 +185,12 @@ return [
         'lead' => 'Mais do que concretizar negócios, queremos construir relações de confiança duradouras.',
         'sections' => [
             [
+                // O 'layout' só é lido pela página da agência (pages/about.blade.php)
+                // e diz como a secção se apresenta: prose (rótulo à esquerda, texto
+                // à direita), steps (parágrafos numerados), statement (faixa escura)
+                // e contacts (morada e contactos, com ligações). As páginas legais
+                // ignoram esta chave e continuam a mostrar tudo como texto corrido.
+                'layout' => 'prose',
                 'title' => 'Quem somos',
                 'paragraphs' => [
                     'Na MULTIFUTURO, somos o resultado da paixão pelo setor imobiliário de duas pessoas com conhecimento sólido e experiência comprovada, colocando essa experiência ao serviço de cada cliente.',
@@ -192,6 +198,7 @@ return [
                 ],
             ],
             [
+                'layout' => 'steps',
                 'title' => 'Como trabalhamos',
                 'paragraphs' => [
                     'Na Multifuturo, proporcionamos uma análise informada e abrangente de cada imóvel, considerando não apenas os seus aspetos estéticos e técnicos, mas também fatores determinantes como a localização, o estado de conservação, a envolvente e o potencial de valorização futura.',
@@ -202,6 +209,7 @@ return [
                 ],
             ],
             [
+                'layout' => 'statement',
                 'title' => 'A nossa história',
                 'paragraphs' => [
                     'Queremos estar presentes nos momentos mais importantes da vida dos nossos clientes: na compra da primeira casa, numa mudança familiar ou profissional, na procura de uma nova oportunidade ou na realização de um investimento.',
@@ -209,6 +217,11 @@ return [
                 ],
             ],
             [
+                // A morada e os contactos vêm de config('agency') e são desenhados
+                // pela própria secção, com ligações para telefonar e escrever. Os
+                // parágrafos ficam aqui para as páginas legais e para quem leia o
+                // ficheiro: são a mesma informação, em texto corrido.
+                'layout' => 'contacts',
                 'title' => 'Onde estamos',
                 'paragraphs' => [
                     ':address',
