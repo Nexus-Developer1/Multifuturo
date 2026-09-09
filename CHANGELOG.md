@@ -9,6 +9,48 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Os filtros voltam a mostrar o que encontram
+
+$${\color{#5D6348}\textsf{2026-09-09 · 15:32}}$$
+
+**Commit:** `62ed498` — `Site: resultados dos filtros voltam a aparecer e listas dependentes deixam de vir em branco`
+
+Dois defeitos, os dois do lado do browser e os dois à vista ao filtrar a listagem. Nenhum
+tinha que ver com a passagem para MySQL: o servidor devolvia sempre os imóveis certos.
+
+**Os cartões apareciam invisíveis.** Depois de escolher um filtro, os imóveis
+encontrados entravam na página mas com opacidade zero — invisíveis e, ainda assim,
+clicáveis. A animação de entrada só se aplica a quem é observado, e o `motion.js`
+voltava a observar o que entrava de novo a partir de um evento `livewire:update` que não
+existe no Livewire 3. Como o evento nunca chegava, nada corria depois de filtrar. Passa a
+usar o gancho `morphed`, que é o que o Livewire dispara quando acaba de trocar o DOM.
+
+**As listas dependentes vinham em branco.** A lista de freguesias, que muda com o
+concelho, mostrava uma linha vazia em vez do nome. A lista desenhada lia as opções
+directamente do `<select>` escondido, e o Alpine não tem como saber que os nós do DOM
+mudaram — quando o Livewire os troca, ficavam ligações de itens já desligados a ser
+avaliadas, e a consola enchia-se de `i is not defined`. As opções passam a ser uma cópia
+reactiva do `<select>`, com a chave pelo valor em vez do índice, e o estado desactivado
+passa a viver no componente em vez de ser lido do DOM.
+
+**Ficheiros**
+
+- `resources/js/motion.js` — o gancho do Livewire e a função que volta a observar.
+- `resources/js/app.js` — o componente `listbox`: opções reactivas, rótulo e estado
+  desactivado a partir delas.
+- `resources/views/components/site/select.blade.php` — chave pelo valor, `disabled` do
+  componente.
+
+**Notas**
+
+- Verificado no browser, com a cadeia completa: distrito Porto, concelho Matosinhos,
+  freguesia Leça da Palmeira, um imóvel, cartão a opacidade 1 e consola limpa.
+- Antes desta correcção a mesma sequência dava a freguesia em branco e seis erros de
+  JavaScript.
+- 236 testes a passar e Pint limpo.
+
+---
+
 ## A composição da página inicial abre em 2,5 segundos
 
 $${\color{#5D6348}\textsf{2026-09-09 · 14:21}}$$
