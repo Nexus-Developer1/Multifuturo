@@ -1,5 +1,5 @@
 # Testes e estilo em cada push/PR. Mesma stack dos testes locais:
-# PHP 8.3, PostgreSQL 16 (jsonb/GIN), Redis. Sem segredos — .env.example chega.
+# PHP 8.3, MySQL 8.4 (JSON nativo), Redis. Sem segredos — .env.example chega.
 name: Testes
 
 on:

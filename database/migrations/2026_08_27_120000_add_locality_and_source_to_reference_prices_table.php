@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
 |
 | locality: '' é o concelho inteiro; um nome é uma freguesia dentro dele (o
 | INE publica o valor mediano das vendas por freguesia). Usa-se '' e não NULL
-| para o índice único funcionar — no PostgreSQL dois NULL nunca são iguais.
+| para o índice único funcionar — dois NULL nunca são iguais entre si.
 | 191 caracteres porque o INE traz nomes como "União das freguesias de
 | Cardosas, Vale de Cambra e São Miguel", que rebentam os 96 habituais.
 |
