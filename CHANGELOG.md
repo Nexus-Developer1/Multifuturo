@@ -8,6 +8,32 @@ criados/alterados e o que cada um faz. Horas em Europe/Lisbon. Os commits que ap
 atualizam este ficheiro não têm entrada própria.
 
 ---
+
+## A composição da página inicial abre em 2,5 segundos
+
+$${\color{#5D6348}\textsf{2026-09-09 · 14:21}}$$
+
+**Commit:** `31fb9fa` — `Site: composicao da pagina inicial passa a abrir em 2,5 segundos`
+
+As duas fotografias grandes da página inicial descobrem-se de baixo para cima. O tempo
+dessa abertura passa de 2 para **2,5 segundos**, a pedido do cliente. Só muda a duração
+da transição do `clip-path`; a curva continua a mesma, e a segunda fotografia mantém o
+seu atraso de arranque, para não abrirem as duas ao mesmo tempo.
+
+**Ficheiros**
+
+- `resources/css/app.css` — `.reveal--wipe`, duração da transição e o comentário que a
+  explica.
+
+**Notas**
+
+- Com "reduzir movimento" ligado no sistema, as fotografias continuam a aparecer de
+  imediato, sem animação nenhuma.
+- 236 testes a passar e Pint limpo.
+
+---
+
+
 ## O PostgreSQL sai de cena — no servidor e aqui
 
 $${\color{#5D6348}\textsf{2026-09-09 · 14:01}}$$
@@ -51,30 +77,6 @@ como rede de segurança, junto com a cópia em `pg_dump` feita antes da passagem
   site viver no servidor da empresa, isto já não é um bloqueio.
 
 ---
-## A composição da página inicial abre em 2,5 segundos
-
-$${\color{#5D6348}\textsf{2026-09-09 · 14:21}}$$
-
-**Commit:** `31fb9fa` — `Site: composicao da pagina inicial passa a abrir em 2,5 segundos`
-
-As duas fotografias grandes da página inicial descobrem-se de baixo para cima. O tempo
-dessa abertura passa de 2 para **2,5 segundos**, a pedido do cliente. Só muda a duração
-da transição do `clip-path`; a curva continua a mesma, e a segunda fotografia mantém o
-seu atraso de arranque, para não abrirem as duas ao mesmo tempo.
-
-**Ficheiros**
-
-- `resources/css/app.css` — `.reveal--wipe`, duração da transição e o comentário que a
-  explica.
-
-**Notas**
-
-- Com "reduzir movimento" ligado no sistema, as fotografias continuam a aparecer de
-  imediato, sem animação nenhuma.
-- 236 testes a passar e Pint limpo.
-
----
-
 
 ## O guião da passagem dos dados aprende a exportar e importar
 
@@ -168,6 +170,7 @@ PostgreSQL, "Évora" ia parar depois de "Zamora".
   dados estarem confirmados do outro lado.
 
 ---
+
 ## As fotografias da composição demoram 2 segundos
 
 $${\color{#5D6348}\textsf{2026-09-09 · 12:36}}$$
