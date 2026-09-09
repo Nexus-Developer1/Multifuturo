@@ -256,6 +256,16 @@ function listbox() {
         activo: -1,
         // Cópia reactiva do <select>: sem ela, o rótulo do botão não mudava ao escolher.
         indice: 0,
+        desactivado: false,
+        /*
+         * As opções TÊM de ser dados nossos, não os nós do <select>. Lidos
+         * directamente do DOM, o Alpine não tem como saber que mudaram — e o
+         * Livewire troca-os por baixo sempre que uma lista depende de outra (o
+         * concelho muda as freguesias). Ficavam linhas em branco na lista e
+         * "i is not defined" na consola, porque as ligações de um item já
+         * desligado continuavam a ser avaliadas.
+         */
+        opcoes: [],
 
         init() {
             this.pronto = true;
@@ -269,23 +279,23 @@ function listbox() {
         },
 
         sincronizar() {
+            this.opcoes = [...this.nativo.options].map((o) => ({ value: o.value, text: o.text }));
             this.indice = this.nativo.selectedIndex;
+            this.desactivado = this.nativo.disabled;
+            // A lista encolheu (mudou o concelho): o item sob o cursor pode já não existir.
+            if (this.activo >= this.opcoes.length) this.activo = this.opcoes.length - 1;
         },
 
         get nativo() {
             return this.$refs.nativo;
         },
 
-        get opcoes() {
-            return [...this.nativo.options];
-        },
-
         get rotulo() {
-            return this.nativo.options[this.indice]?.text ?? '';
+            return this.opcoes[this.indice]?.text ?? '';
         },
 
         abrir() {
-            if (this.nativo.disabled) return;
+            if (this.desactivado) return;
             this.sincronizar();
             this.aberto = true;
             this.activo = this.indice;

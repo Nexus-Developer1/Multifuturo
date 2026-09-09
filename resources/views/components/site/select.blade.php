@@ -46,7 +46,7 @@
             @keydown.space.prevent="confirmar()"
             :aria-expanded="aberto ? 'true' : 'false'"
             aria-label="{{ $label }}"
-            :disabled="$refs.nativo?.disabled"
+            :disabled="desactivado"
             aria-haspopup="listbox"
             class="field-line mt-1 flex items-center justify-between gap-2 text-left disabled:opacity-50">
         <span class="truncate" x-text="rotulo">{{ $placeholder ?? '' }}</span>
@@ -65,7 +65,10 @@
         @keydown.home.prevent="activo = 0"
         @keydown.end.prevent="activo = opcoes.length - 1"
         class="absolute inset-x-0 top-full z-30 mt-2 max-h-72 overflow-y-auto rounded-lg border border-sand-200 bg-white py-1.5 shadow-xl shadow-ink/10">
-        <template x-for="(opcao, i) in opcoes" :key="i">
+        {{-- Chave pelo valor, não pelo índice: quando a lista muda (as freguesias
+             mudam com o concelho), o Alpine tem de refazer os itens em vez de
+             reaproveitar os antigos com o conteúdo trocado. --}}
+        <template x-for="(opcao, i) in opcoes" :key="opcao.value">
             <li role="option" :aria-selected="indice === i ? 'true' : 'false'"
                 @click="escolher(i)" @mouseenter="activo = i"
                 class="flex cursor-pointer items-center justify-between gap-3 px-4 py-2.5 text-sm transition-colors"

@@ -162,11 +162,20 @@ document.addEventListener('DOMContentLoaded', arrancar);
 
 /*
  * O Livewire troca pedaços da página (filtros, mais resultados): o que entrar
- * de novo tem de ser observado, senão ficava invisível para sempre.
+ * de novo tem de ser observado, senão fica invisível para sempre — presente,
+ * clicável, e com opacidade zero.
+ *
+ * O gancho é o 'morphed', que corre depois de o Livewire acabar de trocar o
+ * DOM. Não existe evento 'livewire:update' na versão 3; enquanto se escutou
+ * esse nome, nada disto corria depois de filtrar.
  */
-document.addEventListener('livewire:navigated', arrancar);
-document.addEventListener('livewire:update', () => {
+function reobservar() {
     escalonar();
     observarRevelacoes();
     if (!quieto.matches) medirParallax();
+}
+
+document.addEventListener('livewire:navigated', arrancar);
+document.addEventListener('livewire:init', () => {
+    window.Livewire.hook('morphed', reobservar);
 });
