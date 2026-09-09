@@ -9,6 +9,46 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A página da agência deixa de parecer um documento
+
+$${\color{#5D6348}\textsf{2026-09-09 · 16:05}}$$
+
+**Commit:** `a5d498b` — `Site: pagina da agencia ganha molde proprio em vez do das paginas legais`
+
+"A agência" era desenhada pelo mesmo molde da política de privacidade: índice ao lado,
+uma coluna estreita e catorze parágrafos seguidos. Lia-se como um documento legal, não
+como a apresentação de uma agência. Passa a ter vista própria.
+
+**O texto não mudou.** Nem uma palavra. O que mudou foi a forma como cada secção se
+mostra, escolhida por uma chave `layout` no ficheiro de idioma:
+
+- **Quem somos** — rótulo à esquerda, texto à direita, com a primeira frase em corpo
+  maior a apresentar a agência.
+- **Como trabalhamos** — faixa clara, os cinco parágrafos numerados de 01 a 05 e postos
+  em duas colunas, com o mesmo traço das três razões da página inicial. Eram cinco ideias
+  distintas amontoadas num bloco só.
+- **A nossa história** — faixa escura, o parágrafo grande a fechar a apresentação e a
+  frase final em voz mais baixa por baixo.
+- **Onde estamos** — a morada e o email desenhados, com ligação para escrever e botões
+  para os contactos e para os imóveis, em vez das duas linhas de texto corrido.
+
+As páginas legais continuam exactamente como estavam: usam o molde de sempre e ignoram a
+chave nova.
+
+**Ficheiros**
+
+- `resources/views/pages/about.blade.php` — **novo**, a vista da agência.
+- `lang/pt/legal.php` — a chave `layout` em cada uma das quatro secções.
+- `app/Http/Controllers/PageController.php` — a agência aponta para a vista nova; o
+  método partilhado passa a aceitar qual a vista a usar.
+
+**Notas**
+
+- Verificado em ecrã largo e em telemóvel, e as páginas legais continuam a responder.
+- 236 testes a passar e Pint limpo.
+
+---
+
 ## Os filtros voltam a mostrar o que encontram
 
 $${\color{#5D6348}\textsf{2026-09-09 · 15:32}}$$
