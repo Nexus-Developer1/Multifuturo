@@ -46,10 +46,13 @@ $COMPOSE exec -T app sh -c '
 '
 
 echo "→ Ficheiros carregados"
+# O arquivo traz "public/" e "private/" na raiz, que são as pastas de
+# storage/app (ver BackupRun::arquivarFicheiros). Extrair para /var/www/html
+# punha as fotografias dentro da raiz web — tem de ser para storage/app.
 $COMPOSE exec -T app sh -c '
     set -e
     f=$(ls storage/backups/'"$CARIMBO"'/*.tar.gz | head -1)
-    tar -xzf "$f" -C /var/www/html
+    tar -xzf "$f" -C /var/www/html/storage/app
 '
 
 echo "→ Caches e arranque"
