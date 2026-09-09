@@ -446,7 +446,7 @@
         transform: none;
     }
     /*
-     * Imagem que se descobre de baixo para cima, em 2 segundos: são as duas
+     * Imagem que se descobre de baixo para cima, em 2,5 segundos: são as duas
      * fotografias grandes da página inicial e o cliente quis vê-las a abrir
      * com calma. Só anima o clip-path — a opacidade e a posição já estão no
      * sítio, não há nada a animar nelas.
@@ -455,7 +455,7 @@
         opacity: 1;
         transform: none;
         clip-path: inset(0 0 100% 0);
-        transition: clip-path 2s cubic-bezier(0.22, 1, 0.36, 1);
+        transition: clip-path 2.5s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .js .reveal.is-visible {
         opacity: 1;
