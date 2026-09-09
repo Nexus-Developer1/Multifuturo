@@ -137,7 +137,11 @@
                 </div>
             </main>
 
-            <footer class="p-rodape">{{ $portal }} · acesso reservado</footer>
+            <footer class="p-rodape">
+                <span>{{ $portal }} · acesso reservado</span>
+                {{-- Assinatura de quem construiu: discreta, ganha contraste ao passar o rato. --}}
+                <span class="p-assinatura">By Nexus IT Solutions</span>
+            </footer>
         </div>
     </div>
 

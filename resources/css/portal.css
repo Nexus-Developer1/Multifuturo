@@ -220,7 +220,10 @@ h1, h2, h3, p { margin: 0; }
 .p-vazio p { margin-top: .4rem; font-size: .88rem; color: var(--p-texto-medio); }
 
 .p-nota { margin-top: 2.5rem; font-size: .85rem; color: var(--p-texto-medio); }
-.p-rodape { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 2rem; font-size: .75rem; color: var(--p-texto-fraco); }
+.p-rodape { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem 2rem; font-size: .75rem; color: var(--p-texto-fraco); display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 1.5rem; }
+/* Quem construiu: lá está, sem dar nas vistas. Fica legível ao passar o rato. */
+.p-assinatura { font-size: .7rem; letter-spacing: .08em; color: color-mix(in srgb, var(--p-texto-fraco) 55%, transparent); transition: color .2s; }
+.p-assinatura:hover { color: var(--p-texto-medio); }
 
 /* ------------------------------------------------------------ gestão: cabeçalho, tabela, formulário */
 .p-cabecalho { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }

@@ -201,10 +201,21 @@ it('o login e o portal têm a marca da agência, como o site', function () {
             ->assertSee('images/marca/simbolo.png', false)
             // Folha própria: o portal nunca carrega a do site.
             ->assertDontSee('/assets/app-', false)
-            // Nada da marca anterior.
-            ->assertDontSee('Nexus')
+            // A identidade visual anterior não volta.
             ->assertDontSee('images/nexus', false);
     }
+});
+
+it('o portal assina discretamente quem o construiu', function () {
+    // Pedido da NXS: uma assinatura de autoria, "meio escondida", no rodapé do
+    // portal. Não aparece no site público nem no login — só na área de trabalho.
+    // Sem sessão primeiro: com ela, o /entrar reencaminha para o portal.
+    $this->get('/entrar')->assertOk()->assertDontSee('By Nexus IT Solutions');
+    $this->get(route('home'))->assertOk()->assertDontSee('By Nexus IT Solutions');
+
+    $this->actingAs(utilizadorAtivo())->get('/portal')->assertOk()
+        ->assertSee('By Nexus IT Solutions')
+        ->assertSee('p-assinatura', false);
 });
 
 it('o portal serve as letras do sítio, do nosso servidor', function () {

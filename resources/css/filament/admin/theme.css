@@ -101,3 +101,18 @@
 .fi-select-input-value-remove-btn {
     display: none;
 }
+
+/*
+|--------------------------------------------------------------------------
+| Fundo do painel — a mesma areia do portal e do site
+|--------------------------------------------------------------------------
+|
+| O Filament pinta o fundo no <body> (.fi-body) com um cinzento quase branco.
+| Aqui passa à areia da marca, para o backoffice, o portal e o site serem
+| reconhecivelmente a mesma casa. As superfícies (barra de topo, cartões,
+| tabelas) continuam brancas, que é o contraste que faz a leitura.
+|
+*/
+.fi-body {
+    background-color: #FAF7F0;
+}
