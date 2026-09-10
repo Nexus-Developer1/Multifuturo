@@ -9,6 +9,54 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Contactos com toda a informação e o mapa do escritório
+
+$${\color{#5D6348}\textsf{2026-09-10 · 11:56}}$$
+
+**Commit:** `715dafa` — `Site: pagina de contactos com a informacao completa e o mapa do escritorio`
+
+A página de contactos tinha a morada, o email e pouco mais. Passa a ter as quatro formas
+de falar com a agência, cada uma com o seu ícone e o seu rótulo:
+
+- **Morada**, que abre o mapa no sítio certo.
+- **Telemóvel**, que liga com um toque.
+- **WhatsApp**, que abre a conversa.
+- **E-mail**, que abre o programa de correio.
+
+Os endereços saem em forma de serem clicados: o `tel:` e o `wa.me` levam o número só com
+dígitos, sem espaços nem sinais, que é o que os telemóveis entendem.
+
+**Ao lado, o mapa do escritório.** É o mesmo Leaflet da ficha do imóvel: a biblioteca vem
+do nosso servidor e só os quadrados do mapa vêm do openstreetmap.org. Por baixo fica uma
+ligação para traçar o caminho. Em ecrã estreito o mapa desce para baixo da informação —
+quem chega ao telemóvel quer primeiro o número, não o mapa.
+
+**Nada está escrito na página.** Tudo vem da configuração da agência, e uma linha sem
+valor não deixa buraco nenhum: simplesmente não aparece. Sem coordenadas não há mapa e a
+página continua de pé. Entraram três definições novas: `AGENCY_WHATSAPP`, `AGENCY_LAT` e
+`AGENCY_LON`, esta última obtida com o mesmo geocodificador que o backoffice usa nos
+imóveis.
+
+**Uma consequência a saber.** A morada passa a incluir o código postal, tal como me foi
+dada. Como o rodapé e as páginas legais lêem a mesma configuração, a morada mudou também
+lá — é a mesma casa, escrita por inteiro.
+
+**Ficheiros**
+
+- `resources/views/pages/contact.blade.php` — a página.
+- `config/agency.php` — WhatsApp e coordenadas.
+- `lang/pt/ui.php`, `lang/en/ui.php` — os rótulos nos dois idiomas.
+- `.env.example`, `.env.production.example` — as definições novas.
+- `tests/Feature/ContactosTest.php` — **novo**: seis testes.
+
+**Notas**
+
+- Verificado no browser: o mapa carrega com o marcador na Rua de Brito Capelo, as quatro
+  linhas aparecem e a consola fica limpa.
+- 267 testes a passar e Pint limpo.
+
+---
+
 ## O painel fica alinhado, com dados ou sem eles
 
 $${\color{#5D6348}\textsf{2026-09-10 · 11:43}}$$
