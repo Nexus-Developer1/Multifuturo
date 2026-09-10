@@ -22,8 +22,21 @@ return [
     'ami' => env('AGENCY_AMI'),
 
     'phone' => env('AGENCY_PHONE'),
+
+    // Número do WhatsApp em formato internacional ("+351 912 345 678"). Sem
+    // valor, a linha do WhatsApp não aparece na página de contactos.
+    'whatsapp' => env('AGENCY_WHATSAPP'),
+
     'email' => env('AGENCY_EMAIL'),
     'address' => env('AGENCY_ADDRESS'),
+
+    /*
+    | Onde fica o escritório, para o mapa da página de contactos. Sem as duas
+    | coordenadas não há mapa — a morada continua lá, e mais nada muda.
+    | Obtêm-se com o mesmo geocodificador que o backoffice usa nos imóveis.
+    */
+    'lat' => env('AGENCY_LAT'),
+    'lon' => env('AGENCY_LON'),
 
     'social' => [
         'facebook' => env('AGENCY_FACEBOOK'),

@@ -57,6 +57,13 @@ return [
 
     'contact' => [
         'note' => 'Respondemos, em regra, no próprio dia útil. Se preferir, deixe o número de telefone e ligamos nós.',
+        'info' => 'Informações de contacto',
+        'address' => 'Morada',
+        'phone' => 'Telemóvel',
+        'whatsapp' => 'WhatsApp',
+        'email' => 'E-mail',
+        'map' => 'Onde estamos',
+        'directions' => 'Ver como chegar',
     ],
 
     'errors' => [
