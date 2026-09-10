@@ -9,6 +9,37 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O painel fica alinhado, com dados ou sem eles
+
+$${\color{#5D6348}\textsf{2026-09-10 · 11:43}}$$
+
+**Commit:** `39f5f7b` — `Backoffice: quadros do painel ficam todos com a mesma altura, tenham ou nao dados`
+
+A altura de cada quadro vinha do que ele tinha lá dentro. Os das leads ficavam pelos 290
+pixels, o das actualizações passava dos 750, e a agenda vazia deixava um buraco branco ao
+lado das actualizações cheias. O painel parecia desmontado, e mudava de forma conforme o
+dia tivesse ou não pedidos.
+
+Agora todos os quadros de tabela ocupam a mesma caixa e o que varia fica lá dentro: a
+lista rola, e a mensagem de "sem registos" assenta ao meio em vez de encostada ao topo.
+
+**Um pormenor que se via.** Sem registos, o Filament desenha as duas coisas ao mesmo
+tempo: a tabela, só com os nomes das colunas, e a mensagem por baixo. Com as duas a
+esticar ficava uma faixa branca com um risco a separar o nada do nada. A tabela passa a
+ficar do tamanho do seu cabeçalho e é a mensagem que ocupa a caixa.
+
+**Ficheiros**
+
+- `resources/css/filament/admin/theme.css` — a altura dos quadros e a arrumação por
+  dentro.
+
+**Notas**
+
+- Verificado nos dois temas, com quadros cheios e vazios lado a lado.
+- 261 testes a passar e Pint limpo.
+
+---
+
 ## Os quadros do painel deixam de crescer
 
 $${\color{#5D6348}\textsf{2026-09-10 · 11:31}}$$
