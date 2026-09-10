@@ -9,6 +9,57 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Um botão para traduzir os textos dos imóveis
+
+$${\color{#5D6348}\textsf{2026-09-10 · 09:51}}$$
+
+**Commit:** `669a00a` — `Backoffice: botao para traduzir os textos dos imoveis do portugues (DeepL)`
+
+Os imóveis tinham o separador inglês vazio em todas as fichas, e o site mostrava
+português a quem escolhia English. Agora cada bloco de idioma do separador **Descrições**
+tem um botão **"Traduzir do português"**.
+
+**O que o botão faz, e o que não faz.** Preenche os campos que estão vazios no seu bloco
+e pára aí. Não grava, não publica, e nunca escreve por cima de texto já escrito — para
+refazer uma tradução, apaga-se primeiro o campo. O texto formatado do website vai com as
+etiquetas protegidas, para a formatação não ser traduzida como se fosse texto, e as
+palavras-chave são traduzidas uma a uma. Sem chave no `.env`, o botão nem aparece e o
+resto do backoffice não dá por isso.
+
+**O glossário do ramo.** A tradução automática engana-se no vocabulário imobiliário, e
+isto foi medido, não suposto: sem glossário o DeepL traduziu "moradia com terraço" como
+*house with a garden* e "marquise" como *awning*. Com os termos carregados, sai *terrace*
+e *enclosed balcony*. Os pares vivem em `config/deepl.php` e carregam-se com
+`php artisan deepl:glossario`.
+
+Mesmo assim engana-se de vez em quando. É por isso que o botão deixa o texto no
+formulário à espera de ser lido, em vez de gravar sozinho.
+
+**Um detalhe que custou a encontrar.** Em JSON, o DeepL recusa `preserve_formatting`
+quando lhe chega a palavra "1" e responde 400 sem explicar. Tem de ir booleano.
+
+**Ficheiros**
+
+- `app/Services/Translator.php` — **novo**: o cliente do serviço, com o glossário
+  procurado pelo nome e guardado em cache, e cada erro do serviço traduzido para uma
+  frase que se percebe.
+- `app/Console/Commands/DeeplGlossary.php` — **novo**: `deepl:glossario`, carrega e lista.
+- `config/deepl.php` — **novo**: chave, idioma de destino e os 51 termos do ramo.
+- `app/Filament/Resources/Properties/Schemas/PropertyForm.php` — o botão em cada bloco de
+  idioma, que trata dos campos do seu bloco sejam eles quais forem.
+- `tests/Feature/TraducaoAutomaticaTest.php` — **novo**: 14 testes, todos com os pedidos
+  simulados.
+- `.env.example`, `.env.production.example`, `README.md` — configuração e instruções.
+
+**Notas**
+
+- Ensaiado no backoffice a sério, com a chave real: cinco campos preenchidos de uma vez
+  numa ficha, "Apartamento T2" traduzido como "2-bedroom apartment".
+- A chave vive no `.env` do servidor e nunca no repositório.
+- 250 testes a passar e Pint limpo.
+
+---
+
 ## A página da agência deixa de parecer um documento
 
 $${\color{#5D6348}\textsf{2026-09-09 · 16:05}}$$
