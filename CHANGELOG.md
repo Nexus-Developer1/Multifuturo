@@ -9,6 +9,42 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Um guia do backoffice para a equipa
+
+$${\color{#5D6348}\textsf{2026-09-10 · 15:42}}$$
+
+**Commit:** `3aab65a` — `Docs: guia do backoffice para a equipa da agencia`
+
+O projecto está operacional e a agência pediu um guia de utilização. Fica em
+`docs/GUIA-BACKOFFICE.md`, escrito para quem trabalha na agência e não para quem
+programa: um ecrã por secção, o que se faz lá e o que acontece a seguir.
+
+**O que cobre**
+
+- Entrar, o código de verificação e a recuperação da palavra-passe.
+- O Portal e os seus módulos.
+- O Painel de Controlo, quadro a quadro.
+- Os imóveis: a lista e os seus interruptores, a ficha separador a separador, as
+  fotografias e os documentos, a tradução para inglês e as suas duas regras, a
+  reciclagem, e o que fica registado sozinho.
+- As dúvidas dos clientes e as três maneiras de responder.
+- Clientes, agenda e calendário.
+- Equipa e acessos, só para administradores, e a conta de cada um.
+- O que o sistema faz de madrugada sem ninguém lhe tocar.
+- O que fazer quando algo não corre bem, e a quem pedir ajuda.
+
+Cada afirmação foi confirmada no código antes de entrar no guia — inclusive uma que ia
+errada: as características de interior, exterior e proximidade são listas fixas de caixas,
+não texto livre com sugestões.
+
+**Ficheiros**
+
+- `docs/GUIA-BACKOFFICE.md` — **novo**.
+- `README.md` — aponta para o guia; a ligação das issues passa para o repositório
+  actual.
+
+---
+
 ## As redes sociais entram no rodapé
 
 $${\color{#5D6348}\textsf{2026-09-10 · 12:52}}$$
