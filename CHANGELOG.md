@@ -9,6 +9,49 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A carteira inteira traduzida de uma vez
+
+$${\color{#5D6348}\textsf{2026-09-10 · 10:01}}$$
+
+**Commit:** `a1c75a5` — `Backoffice: comando imoveis:traduzir para o atraso acumulado da carteira`
+
+O botão do formulário trata de uma ficha de cada vez e deixa o texto à espera de ser
+lido. Para uma carteira que nunca teve uma linha em inglês, isso é trabalho a mais. Há
+agora um comando que percorre os imóveis e enche o que falta:
+
+```
+php artisan imoveis:traduzir --simular     o que faria, sem gastar tradução
+php artisan imoveis:traduzir               tudo o que falta
+php artisan imoveis:traduzir --referencia=MF26-001
+php artisan imoveis:traduzir --forcar      por cima do que já está traduzido
+```
+
+**Este grava**, ao contrário do botão, e o que fica gravado aparece no site. Por isso
+di-lo no fim, nunca escreve por cima do que já está traduzido a não ser que se peça, e
+tem uma simulação para ver o que faria antes de fazer.
+
+**O que continua em português, em qualquer idioma.** O tipo de imóvel e as
+características. São texto livre guardado uma só vez, sem versão por idioma: numa ficha
+inglesa lê-se "Apartamento" no topo e "aquecimento central a gás" na lista. Resolve-se
+passando as características a lista fechada, com um código traduzido como o resto do
+site. Fica registado no README para não se perder.
+
+**Ficheiros**
+
+- `app/Console/Commands/PropertiesTranslate.php` — **novo**: o comando.
+- `tests/Feature/TraducaoAutomaticaTest.php` — mais três testes: preenche, simula sem
+  gravar, e respeita o que já lá está.
+- `README.md` — o comando e a ressalva do que não se traduz.
+
+**Notas**
+
+- Corrido nesta máquina sobre os cinco imóveis: cinco campos por ficha, vinte e cinco ao
+  todo. A ficha de Leça da Palmeira passou a abrir com "One-bedroom apartment" e a
+  descrição em inglês.
+- 253 testes a passar e Pint limpo.
+
+---
+
 ## Um botão para traduzir os textos dos imóveis
 
 $${\color{#5D6348}\textsf{2026-09-10 · 09:51}}$$
