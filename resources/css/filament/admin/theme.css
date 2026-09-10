@@ -141,11 +141,62 @@ html:not(.dark) .fi-body {
 | repetir a paleta dele aqui.
 |
 */
+/*
+ * Todos os quadros de tabela do painel com a mesma altura, tenham ou não
+ * conteúdo. Antes, a altura vinha do que lá estava dentro: os quadros das leads
+ * ficavam pelos 290px, as actualizações passavam dos 750, e a agenda vazia
+ * deixava um buraco branco ao lado das actualizações cheias. Agora o cartão
+ * ocupa sempre a mesma caixa e o que varia fica lá dentro.
+ */
+.fi-wi-table {
+    height: 28rem;
+}
+
+.fi-wi-table > .fi-ta,
+.fi-wi-table > .fi-ta > .fi-ta-ctn {
+    height: 100%;
+}
+
+/* Cabeçalho em cima, rodapé em baixo, e o miolo a ocupar o que sobra. */
+.fi-wi-table .fi-ta-ctn,
+.fi-wi-table .fi-ta-main {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.fi-wi-table .fi-ta-main {
+    flex: 1 1 auto;
+}
+
+.fi-wi-table .fi-ta-content-ctn,
+.fi-wi-table .fi-ta-empty-state {
+    /* min-height: 0 é o que deixa um filho de flex encolher e rolar. */
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
 .fi-wi-table .fi-ta-content-ctn {
-    max-height: 22rem;
     overflow-y: auto;
     /* O rolamento pára no quadro em vez de arrastar a página atrás dele. */
     overscroll-behavior: contain;
+}
+
+/* O estado vazio deixa de ficar encostado ao topo: assenta no meio da caixa. */
+.fi-wi-table .fi-ta-empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*
+ * Sem registos, o Filament desenha as duas coisas: a tabela (só com os nomes
+ * das colunas) e a mensagem por baixo. Se ambas esticassem, ficava uma faixa
+ * branca com um risco a separar o nada do nada. Aqui a tabela fica do tamanho
+ * do seu cabeçalho e é a mensagem que ocupa a caixa.
+ */
+.fi-wi-table .fi-ta-main:has(.fi-ta-empty-state) .fi-ta-content-ctn {
+    flex: 0 0 auto;
 }
 
 /*
