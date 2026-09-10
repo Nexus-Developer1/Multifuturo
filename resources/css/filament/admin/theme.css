@@ -120,3 +120,53 @@
 html:not(.dark) .fi-body {
     background-color: #FAF7F0;
 }
+
+/*
+|--------------------------------------------------------------------------
+| Quadros do painel com rolamento próprio
+|--------------------------------------------------------------------------
+|
+| Os quadros de tabela do Painel de Controlo cresciam com o conteúdo: as
+| actualizações e a agenda passavam dos 750px e empurravam tudo o que vinha
+| por baixo, deixando a página desequilibrada ao lado dos quadros das leads.
+| Agora a lista rola por dentro e o quadro fica com uma altura previsível.
+|
+| Só nos quadros do painel (.fi-wi-table). As tabelas dos ecrãs de gestão —
+| imóveis, pedidos, clientes — continuam a rolar com a página, que é o que se
+| espera de um ecrã cujo assunto é a própria lista.
+|
+| O cabeçalho fica preso ao topo enquanto se rola. O fundo dele é `inherit`
+| até acima, em vez de uma cor escrita à mão: assim vem sempre do que o
+| Filament pinta no contentor, e o modo noturno continua certo sem eu ter de
+| repetir a paleta dele aqui.
+|
+*/
+.fi-wi-table .fi-ta-content-ctn {
+    max-height: 22rem;
+    overflow-y: auto;
+    /* O rolamento pára no quadro em vez de arrastar a página atrás dele. */
+    overscroll-behavior: contain;
+}
+
+/*
+ * O cabeçalho preso tem de ser opaco, senão as linhas passam-lhe por baixo e
+ * lêem-se através dele. O fundo vem da cadeia toda por `inherit`, a partir do
+ * contentor que o Filament pinta: branco no modo claro, escuro no noturno, sem
+ * eu repetir aqui a paleta dele. A tabela e o <thead> entram na cadeia porque
+ * nascem transparentes — sem eles, o `inherit` do <th> não encontrava cor
+ * nenhuma. Os selectores são propositadamente específicos, para ganharem às
+ * regras do próprio Filament.
+ */
+.fi-wi-table .fi-ta-main,
+.fi-wi-table .fi-ta-content-ctn,
+.fi-wi-table .fi-ta-content-ctn table.fi-ta-table,
+.fi-wi-table .fi-ta-content-ctn table.fi-ta-table > thead,
+.fi-wi-table .fi-ta-content-ctn table.fi-ta-table > thead > tr > th {
+    background-color: inherit;
+}
+
+.fi-wi-table .fi-ta-content-ctn table.fi-ta-table > thead > tr > th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
