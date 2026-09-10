@@ -28,7 +28,7 @@
 
 <br>
 
-[**📘 Guia do backoffice**](docs/GUIA-BACKOFFICE.md) (para a equipa da agência) · [**📋 O que falta para ir online**](docs/CHECKLIST.md) · [**📜 Changelog por commit**](CHANGELOG.md) · [🐛 Issues](https://github.com/Nexus-Developer1/Multifuturo/issues)
+[**📘 Guia do backoffice**](docs/GUIA-BACKOFFICE.pdf) (PDF com imagens, para a equipa da agência · [fonte](docs/GUIA-BACKOFFICE.md)) · [**📋 O que falta para ir online**](docs/CHECKLIST.md) · [**📜 Changelog por commit**](CHANGELOG.md) · [🐛 Issues](https://github.com/Nexus-Developer1/Multifuturo/issues)
 
 </div>
 
