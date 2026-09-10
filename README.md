@@ -180,6 +180,7 @@ Copiar `.env.example` → `.env` e preencher por grupo:
 |---|---|---|
 | 🏢 Agência | `AGENCY_NAME` · **`AGENCY_AMI`** · `AGENCY_PHONE/EMAIL/ADDRESS` · redes sociais · `AGENCY_COMPLAINTS_BOOK_URL` · `AGENCY_PRIVACY_POLICY_VERSION` · `AGENCY_HERO_IMAGE` | `config/agency.php` |
 | 🍪 Cookies | `CONSENT_COOKIE` · `CONSENT_DAYS` · `CONSENT_VERSION` | `config/consent.php` |
+| 🌐 Tradução | `DEEPL_KEY` · `DEEPL_TARGET` (por omissão `EN-GB`) | `config/deepl.php` |
 
 > [!WARNING]
 > Três regras que não são óbvias:
@@ -220,6 +221,30 @@ gráfico de visualizações dos últimos 30 dias.
 
 Automatismos: `internal_id` (`BO-…`), `slug` (estável — nunca recalculado ao editar) e
 `payload_hash` são gerados na criação; a **cache do site é invalidada** em cada gravação.
+
+### 🌐 Tradução automática dos textos (DeepL)
+
+Com mais do que um idioma ligado, cada bloco de idioma do separador **Descrições** tem um
+botão **"Traduzir do português"**. Preenche os campos que estão vazios nesse bloco e pára
+aí: não grava, não publica e **nunca escreve por cima** de texto já escrito (para refazer
+uma tradução, apaga-se primeiro o campo). O texto formatado do website vai com as
+etiquetas protegidas; as palavras-chave são traduzidas uma a uma.
+
+Sem `DEEPL_KEY` no `.env` o botão não aparece e mais nada muda. As chaves gratuitas
+terminam em `:fx` e falam com outro endereço, tratado sozinho.
+
+O **glossário** (`config/deepl.php`) impõe o vocabulário do ramo. Carrega-se uma vez, e
+outra vez sempre que os termos mudarem:
+
+```powershell
+.\sail.ps1 artisan deepl:glossario            # carrega os termos
+.\sail.ps1 artisan deepl:glossario --listar   # o que já está na conta
+```
+
+Sem ele, o DeepL traduziu "moradia com terraço" como *house with a garden* e "marquise"
+como *awning*. Com ele, sai *terrace* e *enclosed balcony*. Mesmo assim a máquina engana-se
+de vez em quando — **o texto é para ser lido antes de gravar**, e é por isso que o botão
+não publica nada.
 **Criar um utilizador** (não há registo público):
 
 ```powershell

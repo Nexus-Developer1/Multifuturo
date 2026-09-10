@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Properties\Schemas;
 
 use App\Enums\BusinessType;
 use App\Models\Property;
+use App\Services\Translator;
 use App\Support\Geocoder;
 use App\Support\Locales;
 use Closure;
@@ -28,6 +29,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
+use Throwable;
 
 /**
  * Registo de imóvel — organizado como o CRM que substitui:
@@ -1027,19 +1029,163 @@ class PropertyForm
     private static function porIdioma(Closure $campos): array
     {
         $locales = Locales::enabled();
+        $origem = Locales::default();
 
         if (count($locales) === 1) {
             return $campos($locales[0]);
         }
 
-        return array_map(
-            fn (string $loc) => Section::make(Locales::label($loc))
-                ->schema($campos($loc))
+        return array_map(function (string $loc) use ($campos, $origem): Section {
+            $componentes = $campos($loc);
+
+            $seccao = Section::make(Locales::label($loc))
+                ->schema($componentes)
                 ->compact()
                 ->collapsible()
-                ->collapsed($loc !== Locales::default()),
-            $locales
-        );
+                ->collapsed($loc !== $origem);
+
+            // No idioma de partida não há de onde traduzir.
+            if ($loc === $origem) {
+                return $seccao;
+            }
+
+            // As chaves ficam presas aqui: cada botão trata dos campos do seu
+            // bloco, sejam eles quais forem, sem ter de os repetir à mão.
+            $chaves = self::chavesTraduziveis($componentes);
+
+            // O mesmo bloco de idioma aparece nos quatro sub-separadores das
+            // Descrições. A chave distingue-os pelo primeiro campo de cada um.
+            return $seccao->key('idioma-'.$loc.'-'.(array_key_first($chaves) ?? 'sem-campos'))->headerActions([
+                Action::make('traduzir_'.$loc)
+                    ->label('Traduzir do '.mb_strtolower(Locales::label($origem)))
+                    ->icon('heroicon-m-language')
+                    ->color('gray')
+                    ->link()
+                    // Sem chave do serviço, o botão nem aparece.
+                    ->visible(fn (): bool => app(Translator::class)->available())
+                    ->action(fn (callable $get, callable $set) => self::traduzirCampos($chaves, $origem, $loc, $get, $set)),
+            ]);
+        }, $locales);
+    }
+
+    /**
+     * Nome curto de cada campo do bloco e se o seu conteúdo é HTML — o editor
+     * formatado tem de ir com as etiquetas protegidas, senão vinham traduzidas
+     * como se fossem texto.
+     *
+     * @param  array<int, mixed>  $componentes
+     * @return array<string, bool>
+     */
+    private static function chavesTraduziveis(array $componentes): array
+    {
+        $chaves = [];
+
+        foreach ($componentes as $componente) {
+            if (! $componente instanceof Field) {
+                continue;
+            }
+
+            $partes = explode('.', $componente->getName());
+            $chaves[(string) end($partes)] = $componente instanceof RichEditor;
+        }
+
+        return $chaves;
+    }
+
+    /**
+     * Preenche os campos vazios de um idioma a partir do idioma de partida.
+     *
+     * Nunca escreve por cima de texto já escrito: para refazer uma tradução,
+     * apaga-se primeiro o campo. O que sai fica no formulário à espera de ser
+     * lido — nada é gravado nem publicado por esta acção.
+     *
+     * @param  array<string, bool>  $campos
+     */
+    private static function traduzirCampos(array $campos, string $de, string $para, callable $get, callable $set): void
+    {
+        // A chave leva tudo o que é preciso para recompor: tipo de conteúdo,
+        // campo, posição na lista (as palavras-chave são várias) e se é lista.
+        $pedidos = [];
+
+        foreach ($campos as $chave => $html) {
+            if (! Property::isBlankText($get("translations.{$para}.{$chave}"))) {
+                continue;
+            }
+
+            $valor = $get("translations.{$de}.{$chave}");
+
+            if (Property::isBlankText($valor)) {
+                continue;
+            }
+
+            $lista = is_array($valor);
+
+            foreach ((array) $valor as $i => $texto) {
+                if (is_string($texto) && trim($texto) !== '') {
+                    $pedidos[($html ? 'h' : 't').'|'.$chave.'|'.$i.'|'.($lista ? 'l' : 's')] = $texto;
+                }
+            }
+        }
+
+        if ($pedidos === []) {
+            Notification::make()
+                ->title('Não havia nada para traduzir')
+                ->body('Os campos deste bloco já têm texto, ou o idioma de partida está vazio.')
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        $tradutor = app(Translator::class);
+        $alvo = $para === 'en' ? (string) config('deepl.target') : mb_strtoupper($para);
+        $traduzidos = [];
+
+        try {
+            // Um pedido para o texto simples e outro para o HTML: o tratamento
+            // das etiquetas é definido por pedido, não por texto.
+            foreach (['t' => false, 'h' => true] as $prefixo => $html) {
+                $grupo = array_filter(
+                    $pedidos,
+                    fn (string $k): bool => str_starts_with($k, $prefixo.'|'),
+                    ARRAY_FILTER_USE_KEY
+                );
+
+                if ($grupo !== []) {
+                    $traduzidos += $tradutor->translateMany($grupo, $alvo, mb_strtoupper($de), $html);
+                }
+            }
+        } catch (Throwable $e) {
+            Notification::make()
+                ->title('A tradução não foi feita')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+
+            return;
+        }
+
+        $resultado = [];
+
+        foreach ($traduzidos as $k => $texto) {
+            [, $chave, $i, $tipo] = explode('|', $k);
+
+            if ($tipo === 'l') {
+                $resultado[$chave][(int) $i] = $texto;
+            } else {
+                $resultado[$chave] = $texto;
+            }
+        }
+
+        foreach ($resultado as $chave => $texto) {
+            $set("translations.{$para}.{$chave}", is_array($texto) ? array_values($texto) : $texto);
+        }
+
+        Notification::make()
+            ->title(count($resultado) === 1 ? 'Um campo traduzido' : count($resultado).' campos traduzidos')
+            ->body('Leia o texto antes de gravar — a tradução automática engana-se no vocabulário do ramo.')
+            ->success()
+            ->send();
     }
 
     /**
