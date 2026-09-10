@@ -9,6 +9,36 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O rodapé cola-se à faixa que fecha a página
+
+$${\color{#5D6348}\textsf{2026-09-10 · 12:42}}$$
+
+**Commit:** `bb213d5` — `Site: rodape cola-se a pagina quando ela acaba numa faixa`
+
+Na página da agência, entre a faixa escura de "A nossa história" e o rodapé, ficava um
+risco cor de areia. Era a margem do rodapé, que faz sentido a seguir a conteúdo normal
+mas não entre duas faixas escuras: parecia uma página que tinha ficado a meio.
+
+Quando o último bloco da página é uma faixa, a margem vai a zero. Nas outras páginas
+nada muda.
+
+**O que custou a encontrar.** A primeira versão da regra não pegou. A margem do rodapé é
+um utilitário do Tailwind, que vive numa camada acima da dos componentes, onde eu tinha
+posto a regra — e entre camadas manda a ordem, não a especificidade. A regra passou para
+a camada dos utilitários e fica lá explicado porquê.
+
+**Ficheiros**
+
+- `resources/css/app.css` — a regra, na camada certa.
+- `resources/views/components/site/footer.blade.php` — a classe que a regra apanha.
+
+**Notas**
+
+- Verificado na agência (faixa a fechar) e nos contactos (sem faixa), que mantém a margem.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## A agência sem "Onde estamos", os contactos sem abertura
 
 $${\color{#5D6348}\textsf{2026-09-10 · 12:31}}$$
