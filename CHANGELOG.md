@@ -9,6 +9,34 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Os contactos ficam sem formulário
+
+$${\color{#5D6348}\textsf{2026-09-10 · 12:03}}$$
+
+**Commit:** `f6117bc` — `Site: pagina de contactos deixa de ter formulario`
+
+Retirada a faixa escura com o "Fale connosco" da página de contactos, a pedido da agência.
+Quem lá chega tem o telemóvel, o WhatsApp e o email à vista, e é por aí que fala connosco.
+
+**Uma consequência a saber.** O site deixa de ter um formulário de contacto geral. Os
+pedidos passam a nascer todos na ficha de um imóvel, que continua a ter o seu. Quem quiser
+falar sobre outra coisa — vender uma casa, por exemplo — usa o telefone ou o email.
+
+**Ficheiros**
+
+- `resources/views/pages/contact.blade.php` — a faixa saiu.
+- `tests/Feature/AccessibilityTest.php`, `tests/Feature/LeadsTest.php` — o teste das caixas
+  de consentimento e o do honeypot passam a olhar para a ficha do imóvel, que é onde o
+  formulário vive agora.
+- `tests/Feature/ContactosTest.php` — um teste novo, que trava a reintrodução do
+  formulário nos contactos sem se dar por isso.
+
+**Notas**
+
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## Contactos com toda a informação e o mapa do escritório
 
 $${\color{#5D6348}\textsf{2026-09-10 · 11:56}}$$
