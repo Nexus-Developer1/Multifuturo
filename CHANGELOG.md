@@ -9,6 +9,31 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## As redes sociais entram no rodapé
+
+$${\color{#5D6348}\textsf{2026-09-10 · 12:52}}$$
+
+**Commit:** `7e3cad1` — `Config: Facebook e Instagram da agencia nos modelos de configuracao`
+
+O rodapé já tinha um bloco "Siga-nos" à espera dos endereços; só agora os houve. O
+Facebook e o Instagram da agência aparecem em todas as páginas, por baixo das ligações
+dos imóveis. Foram postos no `.env` desta máquina e no do servidor, e os contentores
+recriados para os lerem; nos modelos de configuração ficam também.
+
+No Instagram fica o endereço limpo, `instagram.com/multi_futuro`. A ligação que veio
+trazia um parâmetro de rastreio, que serve para a rede saber quem partilhou e não faz
+falta a quem visita.
+
+**Ficheiros**
+
+- `.env.example`, `.env.production.example`
+
+**Notas**
+
+- Confirmado no servidor: as duas ligações aparecem no rodapé e abrem em separador novo.
+
+---
+
 ## A licença AMI chegou: 27737
 
 $${\color{#5D6348}\textsf{2026-09-10 · 12:48}}$$
