@@ -9,6 +9,41 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Os quadros do painel deixam de crescer
+
+$${\color{#5D6348}\textsf{2026-09-10 · 11:31}}$$
+
+**Commit:** `236a205` — `Backoffice: quadros do painel com rolamento proprio em vez de crescerem`
+
+No Painel de Controlo, os quadros das Actualizações e da Agenda cresciam com o conteúdo.
+Passavam dos 750 pixels, empurravam tudo o que vinha por baixo e ficavam desalinhados dos
+quadros das leads, ao lado, que têm 290. Agora a lista rola por dentro e o quadro fica com
+uma altura previsível, 470 pixels, com o cabeçalho da tabela preso ao topo enquanto se
+rola.
+
+Só nos quadros do painel. As tabelas dos ecrãs de gestão — imóveis, pedidos, clientes —
+continuam a rolar com a página, que é o que se espera de um ecrã cujo assunto é a própria
+lista.
+
+**O modo noturno esteve quase a partir-se outra vez.** O cabeçalho preso precisa de ser
+opaco, senão as linhas passam-lhe por baixo e lêem-se através dele. O fundo vem por
+`inherit` da cadeia toda, a partir do contentor que o Filament pinta, em vez de uma cor
+escrita à mão — assim serve os dois temas sem eu repetir aqui a paleta dele. A tabela e o
+`<thead>` nascem transparentes e tiveram de entrar na cadeia: sem isso, o cabeçalho ficava
+a cinco por cento de opacidade em noturno. Medido e corrigido antes de sair daqui.
+
+**Ficheiros**
+
+- `resources/css/filament/admin/theme.css` — altura máxima, rolamento e o cabeçalho preso.
+
+**Notas**
+
+- Verificado nos dois temas, com o quadro rolado a meio: no claro e no noturno o cabeçalho
+  tapa as linhas como deve.
+- 261 testes a passar e Pint limpo.
+
+---
+
 ## As características também passam a falar inglês
 
 $${\color{#5D6348}\textsf{2026-09-10 · 10:16}}$$
