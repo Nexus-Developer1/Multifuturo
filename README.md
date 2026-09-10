@@ -245,6 +245,21 @@ Sem ele, o DeepL traduziu "moradia com terraço" como *house with a garden* e "m
 como *awning*. Com ele, sai *terrace* e *enclosed balcony*. Mesmo assim a máquina engana-se
 de vez em quando — **o texto é para ser lido antes de gravar**, e é por isso que o botão
 não publica nada.
+
+Para o atraso acumulado — a carteira inteira sem uma linha no outro idioma — há um comando.
+Ao contrário do botão, este **grava**, e o que fica gravado aparece no site:
+
+```powershell
+.\sail.ps1 artisan imoveis:traduzir --simular    # o que faria, sem gastar tradução
+.\sail.ps1 artisan imoveis:traduzir              # tudo o que falta
+.\sail.ps1 artisan imoveis:traduzir --referencia=MF26-001
+.\sail.ps1 artisan imoveis:traduzir --forcar     # por cima do que já está traduzido
+```
+
+> [!NOTE]
+> Continuam em português, em qualquer idioma, o **tipo de imóvel** e as **características**:
+> são texto livre guardado uma só vez, sem versão por idioma. Resolve-se passando as
+> características a lista fechada, com um código traduzido como o resto do site.
 **Criar um utilizador** (não há registo público):
 
 ```powershell

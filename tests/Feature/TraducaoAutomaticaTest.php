@@ -184,6 +184,65 @@ it('o botão nunca escreve por cima do que já está traduzido', function () {
     Http::assertSent(fn (Request $r) => $r['text'] === ['Uma casa bonita.']);
 });
 
+/*
+|--------------------------------------------------------------------------
+| O comando para a carteira inteira
+|--------------------------------------------------------------------------
+*/
+
+it('o comando preenche os imóveis que estão sem tradução', function () {
+    Http::fake(['*' => Http::response(respostaDeepl(['Casa boa', 'Descrição.']))]);
+
+    $imovel = Property::factory()->create([
+        'reference' => 'MF-TESTE-TRAD',
+        'translations' => ['pt' => ['title' => 'Casa boa', 'description' => 'Descrição.']],
+    ]);
+
+    $this->artisan('imoveis:traduzir', ['--referencia' => 'MF-TESTE-TRAD'])
+        ->assertSuccessful();
+
+    $traducoes = $imovel->fresh()->translations;
+
+    expect($traducoes['en']['title'])->toBe('[EN] Casa boa')
+        ->and($traducoes['en']['description'])->toBe('[EN] Descrição.')
+        ->and($traducoes['pt']['title'])->toBe('Casa boa');
+});
+
+it('a simulação não grava nada nem gasta tradução', function () {
+    Http::fake();
+
+    $imovel = Property::factory()->create([
+        'reference' => 'MF-TESTE-SIM',
+        'translations' => ['pt' => ['title' => 'Casa boa']],
+    ]);
+
+    $this->artisan('imoveis:traduzir', ['--referencia' => 'MF-TESTE-SIM', '--simular' => true])
+        ->assertSuccessful();
+
+    expect($imovel->fresh()->translations)->not->toHaveKey('en');
+
+    Http::assertNothingSent();
+});
+
+it('o comando também respeita o que já está traduzido', function () {
+    Http::fake(['*' => Http::response(respostaDeepl(['Descrição.']))]);
+
+    $imovel = Property::factory()->create([
+        'reference' => 'MF-TESTE-RESP',
+        'translations' => [
+            'pt' => ['title' => 'Casa boa', 'description' => 'Descrição.'],
+            'en' => ['title' => 'Written by a person'],
+        ],
+    ]);
+
+    $this->artisan('imoveis:traduzir', ['--referencia' => 'MF-TESTE-RESP'])->assertSuccessful();
+
+    expect($imovel->fresh()->translations['en']['title'])->toBe('Written by a person');
+
+    // O comando também pergunta o consumo do plano no fim: só interessa a tradução.
+    Http::assertSent(fn (Request $r) => ! str_contains($r->url(), '/translate') || $r['text'] === ['Descrição.']);
+});
+
 it('sem chave não há botão de tradução no formulário', function () {
     config()->set('deepl.key', null);
 
