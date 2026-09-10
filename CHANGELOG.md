@@ -9,6 +9,33 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A agência sem "Onde estamos", os contactos sem abertura
+
+$${\color{#5D6348}\textsf{2026-09-10 · 12:31}}$$
+
+**Commit:** `9e37bdf` — `Site: agencia sem o bloco "Onde estamos"; contactos sem a abertura`
+
+Três coisas saíram a pedido da agência.
+
+- **Na página da agência**, a secção "Onde estamos", com a morada, os contactos e os dois
+  botões. A informação vive agora na página de contactos, e repeti-la aqui era ruído. A
+  secção saiu também do ficheiro de idioma, e com ela o ramo que a desenhava.
+- **Na página de contactos**, o título grande de abertura. A página começa logo na
+  informação e no mapa. O `h1` fica só para leitores de ecrã, que precisam dele para
+  situar a página.
+
+**Ficheiros**
+
+- `resources/views/pages/about.blade.php`, `lang/pt/legal.php` — a secção e o ramo.
+- `resources/views/pages/contact.blade.php` — a abertura.
+
+**Notas**
+
+- Verificado nas duas páginas, em ecrã largo e em telemóvel.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## O rodapé encurta a sério
 
 $${\color{#5D6348}\textsf{2026-09-10 · 12:22}}$$
