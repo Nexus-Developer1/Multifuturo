@@ -57,7 +57,6 @@ return [
     ],
 
     'contact' => [
-        'note' => 'As a rule, we reply within the same working day. If you prefer, leave your phone number and we will call you.',
         'info' => 'Contact details',
         'address' => 'Address',
         'phone' => 'Mobile',

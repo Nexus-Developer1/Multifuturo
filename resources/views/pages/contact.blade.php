@@ -1,6 +1,7 @@
 {{--
-    Contactos: as formas de falar com a agência, o mapa do escritório, e o
-    formulário na faixa escura do costume.
+    Contactos: as formas de falar com a agência e o mapa do escritório. Sem
+    formulário e sem promessa de prazo de resposta — as duas coisas saíram a
+    pedido da agência.
 
     Tudo o que aparece vem de config('agency') — nada está escrito aqui. Uma
     linha sem valor no .env não deixa buraco nenhum: simplesmente não aparece.
@@ -64,14 +65,11 @@
 @endphp
 <x-layouts.app :title="__('ui.nav.contact')" :canonical="route('contact')">
 
-    {{-- Abertura: só tipografia e espaço. --}}
-    <section class="container-site grid gap-8 pt-20 pb-14 sm:pt-28 lg:grid-cols-[3fr_2fr] lg:items-end lg:gap-16">
+    {{-- Abertura: só o título. A promessa de resposta saiu a pedido da agência. --}}
+    <section class="container-site pt-14 pb-10 sm:pt-20">
         <x-site.reveal>
             <p class="eyebrow">{{ config('agency.name') }}</p>
             <h1 class="display mt-3">{{ __('ui.nav.contact') }}</h1>
-        </x-site.reveal>
-        <x-site.reveal atraso="150" class="lg:pb-3">
-            <p class="max-w-md leading-relaxed text-ink-muted">{{ __('ui.contact.note') }}</p>
         </x-site.reveal>
     </section>
 
@@ -79,8 +77,8 @@
         Contactos à esquerda, mapa à direita. Em ecrã estreito o mapa vai para
         baixo: quem chega ao telemóvel quer primeiro o número, não o mapa.
     --}}
-    <section class="container-site pb-20 sm:pb-24">
-        <div class="grid gap-12 border-t border-sand-200 pt-12 lg:grid-cols-2 lg:gap-16">
+    <section class="container-site pb-14 sm:pb-16">
+        <div class="grid gap-10 border-t border-sand-200 pt-10 lg:grid-cols-2 lg:gap-16">
             <x-site.reveal>
                 <h2 class="label">{{ __('ui.contact.info') }}</h2>
 
@@ -104,12 +102,12 @@
                             </span>
                             <span class="min-w-0">
                                 @if ($linha['url'])
-                                    <a class="link break-words text-lg leading-relaxed"
+                                    <a class="link wrap-break-word text-lg leading-relaxed"
                                         href="{{ $linha['url'] }}"
                                         @if ($linha['externo']) target="_blank" rel="noopener" @endif
                                     >{{ $linha['texto'] }}</a>
                                 @else
-                                    <span class="break-words text-lg leading-relaxed">{{ $linha['texto'] }}</span>
+                                    <span class="wrap-break-word text-lg leading-relaxed">{{ $linha['texto'] }}</span>
                                 @endif
                                 <span class="mt-1 block text-sm text-ink-muted">{{ $linha['rotulo'] }}</span>
                             </span>
@@ -123,7 +121,7 @@
                     <h2 class="label">{{ __('ui.contact.map') }}</h2>
                     <div x-data="propertyMap(@js($leaflet), {{ (float) $lat }}, {{ (float) $lon }})"
                         class="mt-8 overflow-hidden rounded-xl border border-sand-200 bg-sand-100">
-                        <div x-ref="map" class="h-80 w-full sm:h-[26rem]" role="img" aria-label="{{ __('ui.contact.map') }}" data-map></div>
+                        <div x-ref="map" class="h-80 w-full sm:h-104" role="img" aria-label="{{ __('ui.contact.map') }}" data-map></div>
                         {{-- Sem JavaScript fica a ligação, que é o que interessa a quem quer chegar cá. --}}
                         <noscript>
                             <p class="p-4 text-sm">

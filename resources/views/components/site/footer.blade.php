@@ -9,14 +9,14 @@
     $agency = config('agency');
     $social = array_filter($agency['social'] ?? []);
 @endphp
-<footer class="mt-24 bg-olive-900 text-sand-100 print:hidden">
-    <div class="container-site flex flex-col gap-12 py-16 md:flex-row md:items-start md:justify-between">
+<footer class="mt-16 bg-olive-900 text-sand-100 print:hidden">
+    <div class="container-site flex flex-col gap-10 py-12 md:flex-row md:items-start md:justify-between">
         <div class="max-w-sm">
             {{-- No rodapé há altura para o logótipo completo. A imagem é verde
                  sobre fundo escuro: leva um filtro para ficar em bege claro. --}}
             <a href="{{ route('home') }}" class="inline-block" aria-label="{{ $agency['name'] }}">
                 <img src="{{ asset('images/marca/logotipo.png') }}" alt="{{ $agency['name'] }}"
-                     width="588" height="540" class="h-24 w-auto brightness-0 invert opacity-90">
+                     width="588" height="540" class="h-20 w-auto brightness-0 invert opacity-90">
             </a>
             <p class="mt-4 max-w-sm text-sm leading-relaxed text-sand-200">
                 {{ $agency['name'] }}
@@ -66,7 +66,7 @@
     </div>
 
     <div class="border-t border-olive-700">
-        <div class="container-site py-6 text-center text-xs text-sand-200">
+        <div class="container-site py-5 text-center text-xs text-sand-200">
             {{ __('ui.footer.rights', ['year' => now()->year, 'name' => $agency['name']]) }}
         </div>
     </div>
