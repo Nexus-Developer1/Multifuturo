@@ -9,6 +9,39 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Contactos mais curta, e sem a promessa de resposta
+
+$${\color{#5D6348}\textsf{2026-09-10 · 12:14}}$$
+
+**Commit:** `7feadc6` — `Site: contactos sem a promessa de resposta, e menos espaco em branco`
+
+Saiu a frase "Respondemos, em regra, no próprio dia útil. Se preferir, deixe o número de
+telefone e ligamos nós." Deixou de fazer sentido depois de o formulário sair, e deixou de
+ser usada em lado nenhum — a chave saiu também dos dois ficheiros de idioma, para não
+ficar lá texto que ninguém lê.
+
+**A página estava alta de mais para o que tem.** Encolheram os espaços da abertura e do
+bloco de contactos, e o rodapé ficou um pouco mais baixo: menos margem por cima, o
+logotipo mais pequeno e menos folga entre as colunas. A página passa de 1599 para 1423
+pixels, cerca de um nono mais curta.
+
+O rodapé é o mesmo em todo o site, por isso **todas as páginas ficam um pouco mais
+curtas**, não só esta.
+
+**Ficheiros**
+
+- `resources/views/pages/contact.blade.php` — a frase saiu e os espaços encolheram.
+- `resources/views/components/site/footer.blade.php` — margem, folgas e logótipo.
+- `lang/pt/ui.php`, `lang/en/ui.php` — a chave que deixou de ser usada.
+
+**Notas**
+
+- De caminho, duas classes passaram à forma canónica do Tailwind 4, como o linter do
+  projecto pedia.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## Os contactos ficam sem formulário
 
 $${\color{#5D6348}\textsf{2026-09-10 · 12:03}}$$
