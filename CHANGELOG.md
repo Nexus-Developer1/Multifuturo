@@ -9,6 +9,33 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A licença AMI chegou: 27737
+
+$${\color{#5D6348}\textsf{2026-09-10 · 12:48}}$$
+
+**Commit:** `9ad71a1` — `Config: licenca AMI 27737 nos modelos de configuracao`
+
+O número da licença de mediação imobiliária chegou e entrou em todo o lado onde a lei o
+pede: o rodapé de todas as páginas, em português e em inglês, e os textos da política de
+privacidade e dos termos e condições, que o citam por extenso. O "por atribuir" que estava
+no rodapé desde o primeiro dia desapareceu.
+
+O número foi posto directamente no `.env` desta máquina e no do servidor, e os
+contentores foram recriados para o lerem. Nos modelos de configuração fica também, para a
+próxima instalação já nascer com ele.
+
+**Ficheiros**
+
+- `.env.example`, `.env.production.example`
+
+**Notas**
+
+- Confirmado no servidor nas três páginas: contactos em português e inglês, e termos.
+- Isto também levanta a barreira que impedia a aplicação de arrancar em modo de
+  produção sem AMI.
+
+---
+
 ## O rodapé cola-se à faixa que fecha a página
 
 $${\color{#5D6348}\textsf{2026-09-10 · 12:42}}$$
