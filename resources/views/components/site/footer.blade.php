@@ -10,26 +10,19 @@
     $social = array_filter($agency['social'] ?? []);
 @endphp
 <footer class="mt-16 bg-olive-900 text-sand-100 print:hidden">
-    <div class="container-site flex flex-col gap-10 py-12 md:flex-row md:items-start md:justify-between">
+    <div class="container-site flex flex-col gap-8 py-10 md:flex-row md:items-start md:justify-between">
         <div class="max-w-sm">
             {{-- No rodapé há altura para o logótipo completo. A imagem é verde
                  sobre fundo escuro: leva um filtro para ficar em bege claro. --}}
             <a href="{{ route('home') }}" class="inline-block" aria-label="{{ $agency['name'] }}">
                 <img src="{{ asset('images/marca/logotipo.png') }}" alt="{{ $agency['name'] }}"
-                     width="588" height="540" class="h-20 w-auto brightness-0 invert opacity-90">
+                     width="588" height="540" class="h-14 w-auto brightness-0 invert opacity-90">
             </a>
             <p class="mt-4 max-w-sm text-sm leading-relaxed text-sand-200">
                 {{ $agency['name'] }}
                 @if ($agency['address'])<br>{{ $agency['address'] }}@endif
                 @if ($agency['phone'])<br><a href="tel:{{ preg_replace('/\s+/', '', $agency['phone']) }}" class="hover:text-sand-50">{{ $agency['phone'] }}</a>@endif
                 @if ($agency['email'])<br><a href="mailto:{{ $agency['email'] }}" class="hover:text-sand-50">{{ $agency['email'] }}</a>@endif
-            </p>
-            <p class="mt-6 text-sm font-medium text-sand-50" data-testid="ami">
-                @if (filled($agency['ami']))
-                    {{ __('ui.footer.ami', ['number' => $agency['ami']]) }}
-                @else
-                    {{ __('ui.footer.ami_missing') }}
-                @endif
             </p>
         </div>
 
@@ -65,9 +58,22 @@
         </div>
     </div>
 
+    {{--
+        Barra de baixo: a licença AMI e os direitos na mesma linha. O AMI vivia
+        numa linha própria dentro da coluna da esquerda, que dava ao rodapé um
+        bloco a mais de altura sem ganhar nada em leitura — aqui continua bem
+        visível, que é o que a lei exige.
+    --}}
     <div class="border-t border-olive-700">
-        <div class="container-site py-5 text-center text-xs text-sand-200">
-            {{ __('ui.footer.rights', ['year' => now()->year, 'name' => $agency['name']]) }}
+        <div class="container-site flex flex-col items-center gap-2 py-4 text-xs text-sand-200 sm:flex-row sm:justify-between">
+            <p class="font-medium text-sand-50" data-testid="ami">
+                @if (filled($agency['ami']))
+                    {{ __('ui.footer.ami', ['number' => $agency['ami']]) }}
+                @else
+                    {{ __('ui.footer.ami_missing') }}
+                @endif
+            </p>
+            <p>{{ __('ui.footer.rights', ['year' => now()->year, 'name' => $agency['name']]) }}</p>
         </div>
     </div>
 </footer>
