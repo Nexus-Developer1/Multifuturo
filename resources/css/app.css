@@ -367,6 +367,7 @@
     .band {
         @apply py-20 sm:py-28;
     }
+
     .band-sand {
         @apply bg-sand-100;
     }
@@ -433,6 +434,16 @@
 |
 */
 @layer utilities {
+    /*
+     * Quando a página acaba numa faixa, o rodapé cola-se a ela: a margem que
+     * o separa do conteúdo normal deixava um risco de areia entre duas faixas
+     * escuras, como se a página tivesse ficado a meio. Tem de estar nesta
+     * camada — o mt-16 do rodapé também é utilitário e ganharia à de componentes.
+     */
+    main:has(> .band:last-child) + .rodape {
+        margin-top: 0;
+    }
+
     .js .reveal {
         opacity: 0;
         transform: translateY(1.75rem);
