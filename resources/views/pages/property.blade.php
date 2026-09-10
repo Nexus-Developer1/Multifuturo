@@ -177,7 +177,7 @@
                                         @foreach ($itens as $feature)
                                             <li class="flex items-start gap-2.5">
                                                 <svg class="mt-1 h-3.5 w-3.5 shrink-0 text-olive-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4 12.5 5 5L20 6.5"/></svg>
-                                                <span class="first-letter:uppercase">{{ $feature }}</span>
+                                                <span class="first-letter:uppercase">{{ \App\Support\Features::label($feature) }}</span>
                                             </li>
                                         @endforeach
                                     </ul>

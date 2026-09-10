@@ -256,10 +256,28 @@ Ao contrário do botão, este **grava**, e o que fica gravado aparece no site:
 .\sail.ps1 artisan imoveis:traduzir --forcar     # por cima do que já está traduzido
 ```
 
+### 🏷️ Características noutros idiomas
+
+As características (`features`) são texto livre guardado **uma só vez, em português**: é
+esse texto que fica na base de dados e que os filtros procuram. O que muda por idioma é
+apenas como se lê, por um dicionário em `lang/{idioma}/features.php`, aplicado por
+`App\Support\Features::label()` na ficha e no painel de filtros. Uma característica que
+ainda não esteja no dicionário sai em português — melhor do que sair vazia.
+
+```powershell
+.\sail.ps1 artisan caracteristicas:traduzir --simular   # o que falta traduzir
+.\sail.ps1 artisan caracteristicas:traduzir             # enche o dicionário
+```
+
+O comando lê as características que **existem mesmo na carteira**, traduz as que faltam e
+escreve o ficheiro. **O que já lá estiver escrito nunca é substituído**, para as correcções
+à mão sobreviverem — e há sempre correcções a fazer: o DeepL traduziu "aquecimento" como
+*warm-up*, "furo" como *hole* e alternou entre *proximity:* e *nearby:* para o mesmo
+prefixo. Um teste avisa quando aparece uma característica sem tradução.
+
 > [!NOTE]
-> Continuam em português, em qualquer idioma, o **tipo de imóvel** e as **características**:
-> são texto livre guardado uma só vez, sem versão por idioma. Resolve-se passando as
-> características a lista fechada, com um código traduzido como o resto do site.
+> Continua em português, em qualquer idioma, o **tipo de imóvel** (`property_type`) — é uma
+> lista fixa do CRM, e resolve-se do mesmo modo se vier a ser preciso.
 **Criar um utilizador** (não há registo público):
 
 ```powershell

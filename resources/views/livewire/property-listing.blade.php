@@ -92,7 +92,7 @@
                             @if (count($features) === 0)
                                 {{ __('ui.listing.any_features') }}
                             @elseif (count($features) === 1)
-                                {{ $features[0] }}
+                                {{ \App\Support\Features::label($features[0]) }}
                             @else
                                 {{ trans_choice('ui.listing.features_selected', count($features), ['count' => count($features)]) }}
                             @endif
@@ -106,7 +106,7 @@
                             @foreach ($opts['features'] as $f)
                                 <label class="flex items-center gap-2">
                                     <input type="checkbox" name="caracteristicas[]" value="{{ $f }}" wire:model.live="features" @checked(in_array($f, $features, true)) class="h-5 w-5 shrink-0 accent-olive-600">
-                                    <span class="capitalize">{{ $f }}</span>
+                                    <span class="capitalize">{{ \App\Support\Features::label($f) }}</span>
                                 </label>
                             @endforeach
                         </div>
@@ -116,7 +116,7 @@
                             @foreach ($opts['features'] as $f)
                                 <label class="flex items-center gap-2">
                                     <input type="checkbox" name="caracteristicas[]" value="{{ $f }}" @checked(in_array($f, $features, true)) class="h-5 w-5 shrink-0 accent-olive-600">
-                                    <span class="capitalize">{{ $f }}</span>
+                                    <span class="capitalize">{{ \App\Support\Features::label($f) }}</span>
                                 </label>
                             @endforeach
                         </div>
