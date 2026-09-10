@@ -69,6 +69,14 @@ it('uma linha sem valor não deixa buraco', function () {
         ->and($html)->toContain('geral@multifuturo.pt');
 });
 
+it('não tem formulário: fala-se por telefone, WhatsApp ou email', function () {
+    $html = $this->get(route('contact'))->assertOk()->getContent();
+
+    expect($html)->not->toContain('name="message"')
+        ->and($html)->not->toContain('leads.store')
+        ->and($html)->toContain('href="tel:912178876"');
+});
+
 it('em inglês as etiquetas mudam e os contactos ficam iguais', function () {
     $this->get(route('contact', ['locale' => 'en']))
         ->assertOk()

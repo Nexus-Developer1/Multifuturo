@@ -115,8 +115,9 @@ it('os alvos de toque do site têm a altura mínima recomendada', function () {
     $this->get(route('buy'))->assertOk()->assertSee('h-11 w-11', escape: false);
 
     // Botões e campos herdam min-h-11 do CSS base; as caixas de consentimento
-    // passaram de 16px para 20px.
-    $this->get(route('contact'))->assertOk()->assertSee('h-5 w-5 shrink-0 accent-olive-600', escape: false);
+    // passaram de 16px para 20px. O formulário vive na ficha do imóvel — a
+    // página de contactos deixou de o ter.
+    $this->get(route('property.show', $p))->assertOk()->assertSee('h-5 w-5 shrink-0 accent-olive-600', escape: false);
 
-    $this->get(route('property.show', $p))->assertOk();
+    $this->get(route('contact'))->assertOk();
 });

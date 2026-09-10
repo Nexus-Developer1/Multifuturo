@@ -220,7 +220,9 @@ it('aplica rate limiting por IP', function () {
 it('as páginas com formulário trazem honeypot e consentimentos desmarcados', function () {
     $p = Property::factory()->create();
 
-    foreach ([route('contact'), route('property.show', $p)] as $url) {
+    // A página de contactos deixou de ter formulário: a ficha do imóvel é a
+    // única que o traz.
+    foreach ([route('property.show', $p)] as $url) {
         $html = $this->get($url)->assertOk()->getContent();
 
         expect($html)->toContain('name="website"')

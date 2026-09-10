@@ -139,12 +139,10 @@
         </div>
     </section>
 
-    {{-- Faixa escura com o formulário, como na referência: campos só com uma linha. --}}
-    <section class="band band-dark">
-        <div class="container-site">
-            <x-site.reveal class="mx-auto max-w-3xl">
-                <x-lead-form source="contact" tone="linha" />
-            </x-site.reveal>
-        </div>
-    </section>
+    {{--
+        Não há formulário nesta página, por decisão da agência: quem chega aqui
+        tem o telemóvel, o WhatsApp e o email à vista, e é por aí que se fala
+        connosco. O formulário continua na ficha de cada imóvel, que é onde a
+        pergunta costuma nascer.
+    --}}
 </x-layouts.app>
