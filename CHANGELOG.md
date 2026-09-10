@@ -9,6 +9,36 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O rodapé encurta a sério
+
+$${\color{#5D6348}\textsf{2026-09-10 · 12:22}}$$
+
+**Commit:** `3c7a17b` — `Site: rodape encurtado a serio, com a licenca AMI na barra de baixo`
+
+A redução anterior mexeu só em folgas e não se notou. Esta mexe na estrutura: o rodapé
+perde um bloco inteiro.
+
+**A licença AMI sai da coluna da esquerda**, onde ocupava uma linha própria com margem por
+cima, e passa para a barra de baixo, ao lado dos direitos reservados. Continua bem
+visível, que é o que a Lei n.º 15/2013 exige — apenas noutro sítio, e a ganhar companhia
+em vez de ficar sozinha a fechar uma coluna.
+
+Com isso, mais o logótipo menor e menos folga na fila principal, o rodapé passa de 469
+para **321 pixels**, menos um terço. É o mesmo em todo o site, por isso todas as páginas
+encurtam.
+
+**Ficheiros**
+
+- `resources/views/components/site/footer.blade.php`
+
+**Notas**
+
+- Verificado em ecrã largo e em telemóvel, com o aviso dos cookies aceite para não tapar
+  a barra de baixo.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## Contactos mais curta, e sem a promessa de resposta
 
 $${\color{#5D6348}\textsf{2026-09-10 · 12:14}}$$
