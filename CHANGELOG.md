@@ -9,6 +9,43 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O guia do backoffice em PDF, com os ecrãs fotografados
+
+$${\color{#5D6348}\textsf{2026-09-10 · 15:58}}$$
+
+**Commit:** `985043b` — `Docs: guia do backoffice em PDF, com fotografias de cada ecra`
+
+A agência quis o guia em PDF e com imagens. Fica em `docs/GUIA-BACKOFFICE.pdf`: 26
+páginas, capa com o logótipo, uma secção por ecrã e dezoito fotografias do backoffice a
+sério — a entrada, o portal, o painel, a lista de imóveis, a ficha separador a separador,
+o botão de tradução, as dúvidas dos clientes na lista e abertas, os clientes, a agenda, o
+calendário, a equipa e a conta.
+
+**Como se fez, e como se refaz.** Dois scripts ficam em `docs/guia/`. O primeiro entra no
+backoffice com um browser sem janela e fotografa cada ecrã, sempre em modo claro e com a
+barra lateral aberta. O segundo lê o Markdown do guia, mete cada fotografia a seguir ao
+título certo e imprime em PDF pelo próprio browser — sem nenhuma dependência nova. Quando
+o backoffice mudar, correm-se os dois e o guia acompanha.
+
+Para as fotografias dos pedidos, dos clientes e da agenda não saírem vazias, foram criados
+um pedido, um cliente e um evento de exemplo, todos marcados "(demo)", e apagados no fim:
+a base ficou como estava.
+
+**Ficheiros**
+
+- `docs/GUIA-BACKOFFICE.pdf` — **novo**.
+- `docs/guia/ecras.mjs`, `docs/guia/pdf.mjs` — **novos**: os geradores.
+- `README.md` — aponta para o PDF, com o Markdown como fonte.
+
+**Notas**
+
+- Um pormenor do caminho: o Edge só imprime em PDF com um perfil próprio; sem ele
+  entrega o pedido à janela já aberta do utilizador e sai sem escrever nada.
+- De caminho fecharam-se 334 processos do browser sem janela que ficaram vivos das
+  capturas de ecrã das últimas semanas.
+
+---
+
 ## Um guia do backoffice para a equipa
 
 $${\color{#5D6348}\textsf{2026-09-10 · 15:42}}$$
