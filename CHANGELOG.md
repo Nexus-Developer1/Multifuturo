@@ -9,6 +9,55 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## As características também passam a falar inglês
+
+$${\color{#5D6348}\textsf{2026-09-10 · 10:16}}$$
+
+**Commit:** `c84828f` — `Site: caracteristicas dos imoveis passam a ler-se no idioma servido`
+
+Na ficha em inglês os títulos dos grupos já estavam traduzidos — General, Interior,
+Exterior, Surroundings — mas por baixo lia-se "Vídeo porteiro", "Terraço", "Vista mar".
+As características são texto livre guardado uma só vez, sem versão por idioma.
+
+**O que se guarda continua a ser o português.** É esse texto que os filtros procuram e o
+que fica na base de dados, e por isso nada do que já funcionava foi tocado. O que muda por
+idioma é só a forma como se lê: um dicionário em `lang/{idioma}/features.php`, aplicado na
+ficha e no painel de filtros. Uma característica que ainda não esteja no dicionário sai em
+português, que é melhor do que sair vazia.
+
+**O dicionário faz-se sozinho, mas não se governa sozinho.** O comando
+`caracteristicas:traduzir` lê as características que existem mesmo na carteira, traduz as
+que faltam e escreve o ficheiro. O que já lá estiver escrito nunca é substituído, para as
+correcções à mão sobreviverem.
+
+E precisam de sobreviver. Das 48 características da carteira, tive de corrigir 18: o DeepL
+traduziu "aquecimento" como *warm-up*, "furo" como *hole*, "closet" como *wardrobe* — que
+é roupeiro — e alternou entre *proximity:* e *nearby:* para o mesmo prefixo português.
+Um teste avisa quando aparecer uma característica nova sem tradução.
+
+**Ficheiros**
+
+- `app/Support/Features.php` — `label()` e `key()`: como uma característica se lê e como
+  se endereça no dicionário.
+- `app/Console/Commands/FeaturesTranslate.php` — **novo**: o comando.
+- `lang/en/features.php` — **novo**: as 48 características, com o original em comentário
+  ao lado de cada uma.
+- `resources/views/pages/property.blade.php`,
+  `resources/views/livewire/property-listing.blade.php` — a ficha e as caixas dos filtros.
+- `tests/Feature/CaracteristicasTraduzidasTest.php` — **novo**: oito testes.
+- `README.md` — como se usa e o que ainda fica por traduzir.
+
+**Notas**
+
+- A ficha de Leça da Palmeira em inglês passou a ler-se de uma ponta à outra: *video
+  intercom*, *mains sewerage*, *gas central heating*, *short walk to the beach*, *nearby:
+  pharmacy*. As duas listas, portuguesa e inglesa, coincidem uma a uma.
+- Continua em português o **tipo de imóvel** no topo da ficha. É uma lista fixa do CRM e
+  resolve-se do mesmo modo, se vier a ser preciso.
+- 261 testes a passar e Pint limpo.
+
+---
+
 ## A carteira inteira traduzida de uma vez
 
 $${\color{#5D6348}\textsf{2026-09-10 · 10:01}}$$
