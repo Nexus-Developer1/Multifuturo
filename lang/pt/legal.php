@@ -187,9 +187,9 @@ return [
             [
                 // O 'layout' só é lido pela página da agência (pages/about.blade.php)
                 // e diz como a secção se apresenta: prose (rótulo à esquerda, texto
-                // à direita), steps (parágrafos numerados), statement (faixa escura)
-                // e contacts (morada e contactos, com ligações). As páginas legais
-                // ignoram esta chave e continuam a mostrar tudo como texto corrido.
+                // à direita), steps (parágrafos numerados) e statement (faixa escura).
+                // As páginas legais ignoram esta chave e continuam a mostrar tudo
+                // como texto corrido.
                 'layout' => 'prose',
                 'title' => 'Quem somos',
                 'paragraphs' => [
@@ -214,18 +214,6 @@ return [
                 'paragraphs' => [
                     'Queremos estar presentes nos momentos mais importantes da vida dos nossos clientes: na compra da primeira casa, numa mudança familiar ou profissional, na procura de uma nova oportunidade ou na realização de um investimento.',
                     'Na Multifuturo, crescemos com os nossos clientes e acreditamos que as melhores histórias são construídas em conjunto.',
-                ],
-            ],
-            [
-                // A morada e os contactos vêm de config('agency') e são desenhados
-                // pela própria secção, com ligações para telefonar e escrever. Os
-                // parágrafos ficam aqui para as páginas legais e para quem leia o
-                // ficheiro: são a mesma informação, em texto corrido.
-                'layout' => 'contacts',
-                'title' => 'Onde estamos',
-                'paragraphs' => [
-                    ':address',
-                    ':contact_line',
                 ],
             ],
         ],

@@ -11,8 +11,6 @@
       steps      faixa clara, cada parágrafo numerado como as razões da página
                  inicial: cinco ideias distintas deixam de ser um bloco só
       statement  faixa escura, o texto grande que fecha a apresentação
-      contacts   morada e contactos desenhados, com ligações para telefonar e
-                 escrever, em vez das linhas de texto que as páginas legais usam
 
     Uma secção sem 'layout' cai em 'prose', para nada desaparecer se um dia se
     acrescentar outra ao ficheiro de idioma.
@@ -20,9 +18,6 @@
 @php
     $doc = __("legal.{$key}");
     $t = fn (string $s) => trans_replace($s, $replacements);
-    $telefone = (string) config('agency.phone');
-    $email = (string) config('agency.email');
-    $morada = (string) config('agency.address');
 @endphp
 <x-layouts.app :title="$doc['title']" :description="$t($doc['lead'])" :canonical="url()->current()">
 
@@ -75,30 +70,6 @@
                             <p class="{{ $loop->first ? 'editorial mt-6 max-w-4xl' : 'mt-8 max-w-2xl leading-relaxed text-sand-200' }}">{{ $t($paragraph) }}</p>
                         </x-site.reveal>
                     @endforeach
-                </div>
-            </section>
-
-        @elseif ($layout === 'contacts')
-            <section class="container-site py-20 sm:py-24">
-                <div class="grid gap-8 border-t border-sand-200 pt-12 lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] lg:gap-16">
-                    <h2 class="label">{{ $section['title'] }}</h2>
-                    <x-site.reveal class="max-w-3xl">
-                        @if ($morada !== '')
-                            <p class="font-serif text-xl leading-relaxed sm:text-2xl">{{ $morada }}</p>
-                        @endif
-                        <div class="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-lg">
-                            @if ($telefone !== '')
-                                <a class="link" href="tel:{{ preg_replace('/\s+/', '', $telefone) }}">{{ $telefone }}</a>
-                            @endif
-                            @if ($email !== '')
-                                <a class="link" href="mailto:{{ $email }}">{{ $email }}</a>
-                            @endif
-                        </div>
-                        <div class="mt-10 flex flex-wrap gap-4">
-                            <a class="btn-primary" href="{{ route('contact') }}">{{ __('ui.nav.contact') }}</a>
-                            <a class="btn-secondary" href="{{ route('buy') }}">{{ __('ui.home_sections.featured_all') }}</a>
-                        </div>
-                    </x-site.reveal>
                 </div>
             </section>
 

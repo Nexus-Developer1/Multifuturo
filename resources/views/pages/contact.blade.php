@@ -65,20 +65,16 @@
 @endphp
 <x-layouts.app :title="__('ui.nav.contact')" :canonical="route('contact')">
 
-    {{-- Abertura: só o título. A promessa de resposta saiu a pedido da agência. --}}
-    <section class="container-site pt-14 pb-10 sm:pt-20">
-        <x-site.reveal>
-            <p class="eyebrow">{{ config('agency.name') }}</p>
-            <h1 class="display mt-3">{{ __('ui.nav.contact') }}</h1>
-        </x-site.reveal>
-    </section>
-
     {{--
+        Sem abertura, a pedido da agência: a página começa logo nos contactos.
+        O título fica só para leitores de ecrã, que precisam de um h1.
+
         Contactos à esquerda, mapa à direita. Em ecrã estreito o mapa vai para
         baixo: quem chega ao telemóvel quer primeiro o número, não o mapa.
     --}}
-    <section class="container-site pb-14 sm:pb-16">
-        <div class="grid gap-10 border-t border-sand-200 pt-10 lg:grid-cols-2 lg:gap-16">
+    <section class="container-site pt-14 pb-14 sm:pt-20 sm:pb-16">
+        <h1 class="sr-only">{{ __('ui.nav.contact') }}</h1>
+        <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
             <x-site.reveal>
                 <h2 class="label">{{ __('ui.contact.info') }}</h2>
 
