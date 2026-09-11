@@ -519,3 +519,33 @@
         top: 0;
     }
 }
+
+/*
+|--------------------------------------------------------------------------
+| Texto corrido justificado
+|--------------------------------------------------------------------------
+|
+| Todo o texto corrido do site vai justificado, a pedido da agência: as
+| descrições dos imóveis, a página da agência, as páginas legais, as zonas.
+| A justificação só mexe nas linhas que não são a última, por isso frases de
+| uma linha, etiquetas e botões ficam como estavam.
+|
+| Ficam de fora os blocos onde justificar estraga em vez de arrumar: a frase
+| grande editorial (.editorial), as frases com quebra equilibrada
+| (.text-balance) e tudo o que está dentro de uma caixa centrada.
+|
+| A hifenização automática evita os buracos entre palavras que a
+| justificação abre nas colunas estreitas do telemóvel; usa o idioma do
+| <html lang>, por isso parte as palavras à portuguesa ou à inglesa.
+|
+| Na camada base: qualquer utilitário posto no próprio elemento
+| (text-left, text-center…) continua a mandar.
+|
+*/
+@layer base {
+    main p:not(.editorial, .text-balance, .text-center *),
+    main li:not(.text-center *) {
+        text-align: justify;
+        hyphens: auto;
+    }
+}
