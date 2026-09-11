@@ -9,6 +9,35 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O logótipo com o nome também no telemóvel
+
+$${\color{#5D6348}\textsf{2026-09-11 · 09:34}}$$
+
+**Commit:** `1c06084` — `Site: logotipo com o nome tambem no telemovel`
+
+No telemóvel, o cabeçalho mostrava só o símbolo "M". O nome — MULTIFUTURO, com
+PROPRIEDADES por baixo em verde azeitona — estava escondido abaixo dos 640 pixels. Passa a
+aparecer em todos os tamanhos de ecrã, com o mesmo desenho do computador, só mais pequeno.
+
+**Como cabe.** A linha do cabeçalho tem de levar o logótipo, o seletor PT/EN e o botão do
+menu. O nome encolhe no telemóvel (cerca de 12,5 pixels em vez de 16), nunca parte em
+mais de duas linhas, e o espaço entre os elementos do cabeçalho aperta um pouco. Nos
+ecrãs de menos de 360 pixels — os telemóveis mais pequenos — o nome e o símbolo encolhem
+mais um pouco: sem isso, a 320 pixels o botão do menu ficava cortado na borda direita. No
+computador fica exactamente como estava.
+
+**Ficheiros**
+
+- `resources/views/components/site/header.blade.php`
+
+**Notas**
+
+- Medido de 320 a 414 pixels de largura: o nome aparece sempre e nada transborda. De
+  360 pixels para cima sobra espaço entre o nome e o PT/EN.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## A abertura passa-se com o dedo, e perde as setas no telemóvel
 
 $${\color{#5D6348}\textsf{2026-09-11 · 09:22}}$$
