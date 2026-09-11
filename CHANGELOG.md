@@ -9,6 +9,36 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Um só seletor de idioma no telemóvel
+
+$${\color{#5D6348}\textsf{2026-09-11 · 08:54}}$$
+
+**Commit:** `4c1ce50` — `Site: menu do telemovel sem o seletor de idioma repetido`
+
+No telemóvel o seletor PT/EN aparecia duas vezes: no cabeçalho e, ao abrir o menu, outra
+vez no fundo da lista. Saiu o de dentro do menu, a pedido da agência. O do cabeçalho fica,
+e fica visível em todos os tamanhos de ecrã.
+
+**Um defeito que estava por trás.** O seletor do cabeçalho tinha ordem para aparecer só
+em ecrã largo, mas nunca obedeceu: o componente põe `inline-flex` e o `hidden` que vinha
+de fora perdia para ele na folha de estilos. Era por isso que se viam dois. Em vez de
+corrigir a regra e deixar o telemóvel sem forma de mudar de idioma, o seletor do
+cabeçalho passou a estar visível de propósito, e a variante "compacta" do componente, que
+só o menu usava, saiu com ele.
+
+**Ficheiros**
+
+- `resources/views/components/site/header.blade.php` — o seletor sai do menu; o do
+  cabeçalho perde a regra que não funcionava.
+- `resources/views/components/site/language-switcher.blade.php` — sem a variante compacta.
+
+**Notas**
+
+- Verificado a 390 pixels: o menu passa de 412 para 350 pixels e o cabeçalho mantém o PT/EN.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## O guia do backoffice em PDF, com os ecrãs fotografados
 
 $${\color{#5D6348}\textsf{2026-09-10 · 15:58}}$$
