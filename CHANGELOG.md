@@ -9,6 +9,44 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A comparação de imóveis arrumada no telemóvel
+
+$${\color{#5D6348}\textsf{2026-09-11 · 10:03}}$$
+
+**Commit:** `7930eb8` — `Site: comparacao de imoveis em grelha, arrumada no telemovel`
+
+Ao comparar dois imóveis no telemóvel, a página ficava torta: cada imóvel aparecia cortado
+e era preciso deslizar para o lado. A comparação era uma tabela com 704 pixels de largura
+mínima, e a coluna dos rótulos, presa à esquerda, comia quase metade do ecrã.
+
+**Agora é uma grelha.** No telemóvel, os imóveis ficam lado a lado em colunas iguais — duas
+ou três, conforme se compara — sem nada a deslizar. Cada linha comparada leva o rótulo por
+cima, a toda a largura, e os valores por baixo, cada um alinhado com a coluna do seu imóvel.
+A partir de ecrã largo o rótulo passa para uma coluna à esquerda, como numa tabela. Os
+leitores de ecrã continuam a lê-la como tabela.
+
+**Retoques de caminho.**
+
+- As comodidades aparecem uma por linha, começadas por maiúscula como na ficha, e no idioma
+  da página — na versão inglesa saíam em português.
+- Os títulos dos imóveis param nas três linhas, porque as colunas do telemóvel são estreitas.
+- A barra "Comparar" que acompanha o site deixa de aparecer na própria página de comparação,
+  onde já não servia para nada.
+
+**Ficheiros**
+
+- `resources/views/pages/compare.blade.php` — a grelha.
+- `app/Http/Controllers/CompareController.php` — as comodidades traduzidas e uma por linha.
+- `resources/views/components/layouts/app.blade.php` — a barra fora da página de comparação.
+
+**Notas**
+
+- Medido a 390 e a 1440 pixels, com dois e com três imóveis: nada transborda, as colunas têm
+  a mesma largura e os valores ficam alinhados com o imóvel ao pixel.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## Todo o texto corrido do site justificado
 
 $${\color{#5D6348}\textsf{2026-09-11 · 09:48}}$$
