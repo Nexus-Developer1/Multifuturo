@@ -52,10 +52,6 @@
             <div class="p-entrada__caixa">
                 <div class="p-marca p-entrada__marca-estreita">{!! $marca !!}</div>
 
-                @if (session('status'))
-                    <div class="p-alerta p-alerta--ok" role="status">{{ session('status') }}</div>
-                @endif
-
                 {{ $slot }}
             </div>
         </main>
@@ -125,9 +121,6 @@
 
             <main class="p-principal">
                 <div class="p-largura">
-                    @if (session('status'))
-                        <div class="p-alerta p-alerta--ok" role="status">{{ session('status') }}</div>
-                    @endif
                     {{ $slot }}
                 </div>
             </main>
@@ -153,7 +146,38 @@
         })();
     </script>
 @endif
+@if (session('status'))
+    {{-- Aviso de confirmação ("Sessão terminada.", "Conta atualizada."…) no
+         canto da página, por cima de tudo, em vez de empurrar o conteúdo. Sai
+         sozinho (script abaixo) ou no X. Os erros dos formulários continuam
+         junto do formulário, onde é preciso corrigi-los. --}}
+    <div class="p-aviso" role="status" data-aviso>
+        <svg class="p-aviso__icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+        <p>{{ session('status') }}</p>
+        <button type="button" class="p-aviso__fechar" data-fechar-aviso aria-label="Fechar aviso">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+    </div>
+@endif
 <script>
+    // O aviso do canto: sai sozinho depois de dar tempo para o ler — 4 s e mais
+    // um pouco por letra, até 12 s — ou no X. Com o rato em cima, espera.
+    (function () {
+        var aviso = document.querySelector('[data-aviso]');
+        if (!aviso) return;
+        var relogio, tempo = Math.min(12000, 4000 + aviso.textContent.trim().length * 60);
+        function fechar() {
+            clearTimeout(relogio);
+            aviso.classList.add('p-aviso--a-sair');
+            setTimeout(function () { aviso.remove(); }, 300);
+        }
+        function armar() { clearTimeout(relogio); relogio = setTimeout(fechar, tempo); }
+        aviso.querySelector('[data-fechar-aviso]').addEventListener('click', fechar);
+        aviso.addEventListener('mouseenter', function () { clearTimeout(relogio); });
+        aviso.addEventListener('mouseleave', armar);
+        armar();
+    })();
+
     // O "olho" dos campos de palavra-passe (x-portal.password): troca o campo
     // entre password e text. Ao submeter, volta tudo a password, para o browser
     // não guardar a palavra-passe no histórico de texto dos formulários.

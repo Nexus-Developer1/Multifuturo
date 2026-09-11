@@ -162,6 +162,33 @@ h1, h2, h3, p { margin: 0; }
 .p-btn--fantasma { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .25); height: 2.4rem; padding: 0 .9rem; font-size: .85rem; }
 .p-btn--fantasma:hover { background: rgba(255, 255, 255, .08); }
 
+/* Aviso de confirmação no canto superior direito, por cima de tudo. No telemóvel
+   ocupa a largura, com margem; a partir daí fica encostado à direita, até 24rem. */
+.p-aviso {
+    position: fixed; z-index: 50; top: 1rem; right: 1rem; left: 1rem; margin-left: auto; max-width: 24rem;
+    display: flex; align-items: flex-start; gap: .65rem;
+    padding: .85rem .75rem .85rem 1rem; border-radius: var(--p-raio-g); font-size: .88rem;
+    background: var(--p-ok-fundo); color: #3B5223; border: 1px solid #C9D6B4; box-shadow: var(--p-sombra-alta);
+    animation: p-aviso-entrar .35s ease both;
+    transition: opacity .3s ease, transform .3s ease;
+}
+.p-aviso p { flex: 1; padding-top: .05rem; }
+.p-aviso__icone { width: 1.2rem; height: 1.2rem; flex-shrink: 0; color: var(--p-ok); }
+.p-aviso__fechar {
+    display: grid; place-items: center; flex-shrink: 0; width: 1.75rem; height: 1.75rem; margin: -.2rem 0;
+    padding: 0; border: 0; border-radius: 6px; background: transparent; color: inherit; opacity: .6; cursor: pointer;
+    transition: opacity .15s, background .15s;
+}
+.p-aviso__fechar:hover { opacity: 1; background: rgba(59, 82, 35, .08); }
+.p-aviso__fechar:focus-visible { opacity: 1; outline: 2px solid var(--p-acao); outline-offset: 1px; }
+.p-aviso__fechar svg { width: 1rem; height: 1rem; }
+.p-aviso--a-sair { opacity: 0; transform: translateY(-.5rem); }
+@keyframes p-aviso-entrar { from { opacity: 0; transform: translateY(-.5rem); } }
+@media (prefers-reduced-motion: reduce) {
+    .p-aviso { animation: none; }
+    .p-aviso--a-sair { transform: none; }
+}
+
 .p-alerta { display: flex; gap: .6rem; align-items: flex-start; padding: .8rem 1rem; border-radius: var(--p-raio); font-size: .88rem; margin-bottom: 1.25rem; }
 .p-alerta--ok { background: var(--p-ok-fundo); color: #3B5223; border: 1px solid #C9D6B4; }
 .p-alerta--erro { background: var(--p-erro-fundo); color: #6E2E23; border: 1px solid #E3C4BC; }

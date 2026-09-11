@@ -11,10 +11,6 @@
         </div>
     </div>
 
-    @if (session('status'))
-        <div class="p-alerta p-alerta--ok" role="status">{{ session('status') }}</div>
-    @endif
-
     @if ($errors->any())
         <div class="p-alerta p-alerta--erro" role="alert">
             <div><strong>Não foi possível guardar.</strong>

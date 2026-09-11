@@ -196,6 +196,28 @@ it('a recuperação de palavra-passe do Filament continua a existir e é para l�
     $this->get('/admin/password-reset/request')->assertOk();
 });
 
+it('os avisos de confirmação aparecem no canto, uma só vez', function () {
+    // Pedido da agência (2026-09-11): "Sessão terminada." no canto da página, em
+    // vez de empurrar o formulário. No perfil, "Conta atualizada." saía duas
+    // vezes — uma do layout e outra da própria página.
+    $pessoa = utilizadorAtivo();
+
+    $this->actingAs($pessoa)->post('/sair');
+    $login = $this->get('/entrar')->assertOk()
+        ->assertSee('class="p-aviso" role="status" data-aviso', false)
+        ->getContent();
+    expect(substr_count($login, 'Sessão terminada.'))->toBe(1);
+
+    $this->actingAs($pessoa)->put('/conta', ['name' => $pessoa->name, 'email' => $pessoa->email])
+        ->assertRedirect(route('profile.edit'));
+    $perfil = $this->get('/conta')->assertOk()->assertSee('class="p-aviso"', false)->getContent();
+    expect(substr_count($perfil, 'Conta atualizada.'))->toBe(1);
+
+    // Sem nada para dizer, não há aviso. (O script do aviso vai sempre na página,
+    // por isso procura-se a marcação do aviso e não o data-aviso.)
+    $this->get('/conta')->assertOk()->assertDontSee('class="p-aviso"', false);
+});
+
 it('os campos de palavra-passe do portal têm o olho para a mostrar', function () {
     // Pedido da agência (2026-09-11): ver o que se escreveu antes de submeter.
     // O botão aponta para o campo e começa desligado; o campo continua password.
