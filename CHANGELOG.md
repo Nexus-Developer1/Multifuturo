@@ -9,6 +9,31 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## As páginas de zona sem os botões de comprar e arrendar
+
+$${\color{#5D6348}\textsf{2026-09-11 · 09:39}}$$
+
+**Commit:** `d4cf71b` — `Site: paginas de zona sem os botoes de comprar e arrendar`
+
+No topo de cada página de concelho e de freguesia havia dois botões — "Comprar em Vila
+Nova de Famalicão" e "Arrendar em Vila Nova de Famalicão" — que levavam à listagem já
+filtrada por essa zona. Saíram, a pedido da agência. A página de zona continua a mostrar
+os imóveis da zona e as suas freguesias.
+
+Os dois textos deixaram de ser usados em lado nenhum, por isso saíram também dos
+ficheiros de idioma, em português e em inglês.
+
+**Ficheiros**
+
+- `resources/views/pages/zone.blade.php` — os botões.
+- `lang/pt/ui.php`, `lang/en/ui.php` — as duas chaves.
+
+**Notas**
+
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## O logótipo com o nome também no telemóvel
 
 $${\color{#5D6348}\textsf{2026-09-11 · 09:34}}$$
