@@ -9,6 +9,37 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## As fotografias da página inicial trocam de tamanho ao toque
+
+$${\color{#5D6348}\textsf{2026-09-11 · 09:06}}$$
+
+**Commit:** `410a442` — `Site: composicao da pagina inicial troca de tamanho ao toque, em telemovel`
+
+Na página inicial há duas fotografias lado a lado, uma grande e uma pequena. Em telemóvel,
+tocar em qualquer delas troca-lhes o tamanho: a pequena passa a grande e a grande a
+pequena. Tocar outra vez volta ao princípio.
+
+**Como está feito.** Em telemóvel a grelha deixa de ser de doze colunas e passa a duas, a
+grande com o dobro da pequena. A troca inverte as proporções, e o browser anima a
+passagem em 0,7 segundos com a mesma curva do resto do site. As alturas acompanham
+sozinhas, porque cada moldura tem a sua proporção fixa. Com "reduzir movimento" ligado no
+sistema, a troca é imediata.
+
+Em ecrã largo a composição fica exactamente como estava — desencontrada, com a pequena
+encostada à direita — e o toque não faz nada. O cursor só vira mão onde a troca existe.
+
+**Ficheiros**
+
+- `resources/views/pages/home.blade.php` — o estado da troca e o toque nas fotografias.
+- `resources/css/app.css` — a grelha de duas colunas e a transição, só abaixo de ecrã largo.
+
+**Notas**
+
+- Verificado com toques simulados a 390 e a 1440 pixels de largura.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## Um só seletor de idioma no telemóvel
 
 $${\color{#5D6348}\textsf{2026-09-11 · 08:54}}$$
