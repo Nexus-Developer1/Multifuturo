@@ -9,6 +9,46 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Os avisos do portal passam para o canto da página
+
+$${\color{#5D6348}\textsf{2026-09-11 · 11:10}}$$
+
+**Commit:** `3be6121` — `Portal: avisos de confirmacao no canto da pagina, e sem repetir no perfil`
+
+Os avisos de confirmação do portal apareciam por cima do formulário e empurravam-no para
+baixo. Agora aparecem no canto superior direito, por cima de tudo, e saem sozinhos. Isto
+vale para "Sessão terminada.", "Conta atualizada.", as contas criadas, atualizadas e
+apagadas em Equipa e acessos, e "Enviámos um novo código para o seu email.".
+
+**Como se comporta.**
+
+- Sai sozinho depois de dar tempo para o ler: cerca de 5 segundos nas mensagens curtas e
+  mais nas compridas, até 12. Com o rato em cima, espera.
+- Tem um X para o fechar logo.
+- No telemóvel ocupa a largura do ecrã, com margem; no computador fica encostado à direita.
+- Quem pediu ao sistema menos movimento vê-o aparecer e sair sem deslizar.
+- Os erros dos formulários continuam junto do formulário, onde é preciso corrigi-los.
+
+**De caminho.** No perfil, "Conta atualizada." aparecia duas vezes, uma vinda do layout e
+outra da própria página. Agora aparece uma vez.
+
+**Ficheiros**
+
+- `resources/views/components/layouts/portal.blade.php` — o aviso, uma só vez para todas
+  as páginas, e o script que o fecha.
+- `resources/css/portal.css` — o desenho e a posição do aviso.
+- `resources/views/portal/profile.blade.php` — sem o aviso repetido.
+- `tests/Feature/PortalTest.php` — teste novo: o aviso aparece e só uma vez.
+
+**Notas**
+
+- Verificado a 390 e a 1440 pixels, com a mensagem curta e com a comprida: fica a 16
+  pixels das margens e o formulário já não mexe. A curta sai sozinha, a comprida
+  espera mais, e o X fecha-o.
+- 270 testes a passar e Pint limpo.
+
+---
+
 ## O olho para ver a palavra-passe no portal
 
 $${\color{#5D6348}\textsf{2026-09-11 · 10:59}}$$
