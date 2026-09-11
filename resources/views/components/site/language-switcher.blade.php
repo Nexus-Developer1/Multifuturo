@@ -21,8 +21,9 @@
                 title="{{ \App\Support\Locales::label($locale) }}"
                 @class([
                     'grid place-items-center rounded-full font-medium uppercase tracking-[0.12em] transition-colors',
-                    // Alvo de toque de 44 px no telemóvel; no rato basta o texto.
-                    'min-h-11 min-w-11 text-xs sm:min-h-8 sm:min-w-0 sm:px-3',
+                    // Alvo de toque de 40 px no telemóvel — folgado acima dos 24 px
+                    // da WCAG 2.5.8, sem pesar no cabeçalho; no rato basta o texto.
+                    'min-h-10 min-w-10 text-[0.7rem] sm:min-h-7 sm:min-w-0 sm:px-2.5',
                     'bg-ink text-sand-50' => $atual,
                     'text-ink-muted hover:text-ink' => ! $atual,
                 ])
