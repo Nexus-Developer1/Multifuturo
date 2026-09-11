@@ -9,6 +9,50 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O olho para ver a palavra-passe no portal
+
+$${\color{#5D6348}\textsf{2026-09-11 · 10:59}}$$
+
+**Commit:** `191c722` — `Portal: olho para ver a palavra-passe, e o login sem a linha de seguranca`
+
+No portal da equipa não havia maneira de ver o que se escrevia na palavra-passe. Agora
+há um olho no fim de cada campo de palavra-passe: carrega-se e a palavra-passe fica à
+vista, e o olho passa a riscado; carrega-se outra vez e volta a ficar escondida.
+
+**Onde aparece.**
+
+- No login (`/entrar`).
+- No perfil, na nova palavra-passe e na repetição.
+- Na conta de cada pessoa, em Equipa e acessos.
+
+**Pormenores.**
+
+- Ao submeter, o campo volta sempre a ficar escondido antes de o formulário sair, para o
+  browser não guardar a palavra-passe no histórico de texto dos formulários.
+- O olho do próprio Edge sai, para não aparecerem dois.
+- O botão diz aos leitores de ecrã o que faz e se está ligado.
+
+**E no painel escuro do login** sai a linha "Acesso reservado · ligação segura". A frase
+"Uma só entrada. Todos os módulos." fica centrada no espaço por baixo da marca.
+
+**Ficheiros**
+
+- `resources/views/components/portal/password.blade.php` — o campo com o olho, novo.
+- `resources/views/components/layouts/portal.blade.php` — o script do olho e o painel sem
+  a linha.
+- `resources/css/portal.css` — o desenho do olho e a frase centrada.
+- `resources/views/portal/login.blade.php`, `profile.blade.php` e `team/form.blade.php` —
+  os campos passam a usar o componente.
+- `tests/Feature/PortalTest.php` — teste novo do olho.
+
+**Notas**
+
+- Verificado ampliado a 390 e a 1440 pixels: o olho mostra e esconde, o texto não passa
+  por baixo dele, e ao submeter o campo volta a password.
+- 269 testes a passar e Pint limpo.
+
+---
+
 ## Seletor de idioma um pouco mais pequeno
 
 $${\color{#5D6348}\textsf{2026-09-11 · 10:47}}$$
