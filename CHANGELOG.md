@@ -9,6 +9,55 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A abertura passa-se com o dedo, e perde as setas no telemóvel
+
+$${\color{#5D6348}\textsf{2026-09-11 · 09:22}}$$
+
+**Commit:** `e295c8f` — `Site: abertura da pagina inicial passa-se com o dedo; setas so em ecra largo`
+
+Na abertura da página inicial, as fotografias passam-se agora com o dedo: deslizar para a
+esquerda mostra a seguinte, para a direita a anterior. As setas saíram do telemóvel, a
+pedido da agência; ficam os pontos, que dizem quantas fotografias há e também servem para
+saltar para uma delas.
+
+**Porque não funcionava antes.** Já havia uma camada para arrastar, mas no telemóvel o
+gesto nunca lá chegava por inteiro. Sem `touch-action`, quando o dedo se mexe o browser
+fica com o gesto para deslocar a página e cancela o ponteiro — e o código esperava pelo
+fim do gesto, que não vinha. Além disso, o título e o parágrafo estavam num bloco por
+cima da camada: um deslizar que começasse sobre o texto nem lhe tocava.
+
+**O que mudou.**
+
+- O gesto passou para a abertura inteira, com `touch-action: pan-y`: deslizar na
+  horizontal muda de fotografia, deslizar na vertical continua a descer a página.
+- Só conta um gesto sobretudo horizontal, com pelo menos 50 pixels de percurso.
+- Os pontos e as ligações ficam de fora do gesto, para não perderem o toque.
+- Com o rato, arrastar sobre o texto continua a servir para o seleccionar.
+- As setas escondem-se abaixo de ecrã largo. No computador ficam, porque aí não há dedo.
+
+**Um defeito antigo que apareceu pelo caminho.** Ao verificar os pontos, um toque no
+terceiro não fazia nada — e nem no computador os pontos ou as setas recebiam cliques. O
+bloco do texto e os comandos estavam na mesma camada, e como o texto vem depois na
+página, a margem de baixo dele ficava exactamente por cima dos comandos. Ou seja, os
+pontos e as setas nunca funcionaram: só a rotação automática mudava de fotografia. Os
+comandos subiram uma camada e passaram a receber o toque.
+
+**Ficheiros**
+
+- `resources/js/app.js` — o gesto no componente das fotografias.
+- `resources/views/pages/home.blade.php` — o gesto na abertura inteira, e as setas só em
+  ecrã largo.
+
+**Notas**
+
+- Verificado com gestos de dedo simulados a 390 pixels: para a esquerda sobre a
+  fotografia, para a direita sobre o título, na vertical (não muda e a página desce) e um
+  toque no terceiro ponto. No computador, as setas continuam e arrastar com o rato muda de
+  fotografia.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## As fotografias da página inicial trocam de tamanho ao toque
 
 $${\color{#5D6348}\textsf{2026-09-11 · 09:06}}$$
