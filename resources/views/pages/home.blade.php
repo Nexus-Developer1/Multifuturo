@@ -59,7 +59,7 @@
                 tapava-os — nem os pontos nem as setas chegavam a receber o toque.
             --}}
             @if (count($heroImages) > 1)
-                <div x-cloak class="absolute bottom-6 right-5 z-20 flex items-center gap-1 sm:right-8 lg:right-12 2xl:right-20"
+                <div x-cloak class="comandos-carrossel absolute bottom-6 right-5 z-20 flex items-center gap-1 sm:right-8 lg:right-12 2xl:right-20"
                      x-data="consentOffset(16)"
                      :style="{ bottom: 'calc(1.5rem + ' + offset + 'px)' }">
                     <button type="button" @click="anterior()"
@@ -73,18 +73,18 @@
                     <div class="flex gap-2.5 px-1">
                         @foreach ($heroImages as $i => $imagem)
                             {{--
-                                O ponto activo lê-se do aria-current (um atributo que o
-                                Alpine substitui a cada mudança) e o desenho está todo
-                                no CSS (.ponto-carrossel). Antes o ponto trocava classes
-                                de largura e opacidade por :class, e no telemóvel houve
-                                pontos a ficar com as duas ao mesmo tempo — uma pílula
-                                branca com o ponto cinzento por cima. O botão perde
-                                também a aparência nativa do telemóvel.
+                                Cada ponto tem duas peças fixas, uma por cima da outra: a
+                                pílula e o ponto. O activo lê-se do aria-current e a troca
+                                é só por opacidade (desenho em app.css, .ponto-*). Nada
+                                muda de tamanho: quando a pílula encolhia para ponto, alguns
+                                telemóveis deixavam o desenho antigo por pintar, e ficava
+                                uma pílula fantasma por trás dos pontos já visitados.
                             --}}
                             <button type="button" @click="ir({{ $i }})"
                                     class="ponto-botao grid h-11 w-6 place-items-center"
                                     :aria-current="atual === {{ $i }} ? 'true' : 'false'"
                                     aria-label="{{ __('ui.home.photo_n', ['n' => $i + 1, 'total' => count($heroImages)]) }}">
+                                <span class="ponto-pilula" aria-hidden="true"></span>
                                 <span class="ponto-carrossel" aria-hidden="true"></span>
                             </button>
                         @endforeach
