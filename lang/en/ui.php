@@ -255,8 +255,6 @@ return [
         'localities' => 'Parishes',
         'portfolio' => 'Properties in this area',
         'all_in_city' => 'All properties in :city',
-        'buy_in' => 'Buy in :zone',
-        'rent_in' => 'Rent in :zone',
     ],
 
     'home_sections' => [

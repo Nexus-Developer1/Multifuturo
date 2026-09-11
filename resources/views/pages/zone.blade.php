@@ -26,10 +26,6 @@
             @if ($editorial?->intro)
                 <p class="mt-6 text-lg text-ink-muted">{{ $editorial->intro }}</p>
             @endif
-            <div class="mt-6 flex flex-wrap gap-3">
-                <a href="{{ route('buy', array_filter(['concelho' => $cityName, 'freguesia' => $localityName])) }}" class="btn-primary py-2 text-xs">{{ __('ui.zones.buy_in', ['zone' => $localityName ?? $cityName]) }}</a>
-                <a href="{{ route('rent', array_filter(['concelho' => $cityName, 'freguesia' => $localityName])) }}" class="btn-secondary py-2 text-xs">{{ __('ui.zones.rent_in', ['zone' => $localityName ?? $cityName]) }}</a>
-            </div>
         </header>
 
         @if ($editorial?->cover_url)

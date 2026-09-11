@@ -254,8 +254,6 @@ return [
         'localities' => 'Freguesias',
         'portfolio' => 'Imóveis nesta zona',
         'all_in_city' => 'Todos os imóveis em :city',
-        'buy_in' => 'Comprar em :zone',
-        'rent_in' => 'Arrendar em :zone',
     ],
 
     'home_sections' => [
