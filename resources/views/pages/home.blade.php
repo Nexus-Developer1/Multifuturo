@@ -72,12 +72,20 @@
 
                     <div class="flex gap-2.5 px-1">
                         @foreach ($heroImages as $i => $imagem)
+                            {{--
+                                O ponto activo lê-se do aria-current (um atributo que o
+                                Alpine substitui a cada mudança) e o desenho está todo
+                                no CSS (.ponto-carrossel). Antes o ponto trocava classes
+                                de largura e opacidade por :class, e no telemóvel houve
+                                pontos a ficar com as duas ao mesmo tempo — uma pílula
+                                branca com o ponto cinzento por cima. O botão perde
+                                também a aparência nativa do telemóvel.
+                            --}}
                             <button type="button" @click="ir({{ $i }})"
-                                    class="grid h-11 w-6 place-items-center"
+                                    class="ponto-botao grid h-11 w-6 place-items-center"
                                     :aria-current="atual === {{ $i }} ? 'true' : 'false'"
                                     aria-label="{{ __('ui.home.photo_n', ['n' => $i + 1, 'total' => count($heroImages)]) }}">
-                                <span class="block h-1.5 rounded-full bg-sand-50 transition-all duration-500"
-                                      :class="atual === {{ $i }} ? 'w-6 opacity-100' : 'w-1.5 opacity-50'"></span>
+                                <span class="ponto-carrossel" aria-hidden="true"></span>
                             </button>
                         @endforeach
                     </div>

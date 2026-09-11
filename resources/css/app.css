@@ -549,3 +549,41 @@
         hyphens: auto;
     }
 }
+
+/*
+|--------------------------------------------------------------------------
+| Pontos do carrossel da abertura
+|--------------------------------------------------------------------------
+|
+| Um ponto por fotografia; o da fotografia à vista estica numa pílula. O
+| estado vem do aria-current do botão, que o Alpine escreve de novo a cada
+| mudança — não há classes a acumular, que foi o que deixou pontos com a
+| pílula e o ponto ao mesmo tempo no telemóvel.
+|
+| O botão fica sem aparência nativa nem realce de toque: no telemóvel alguns
+| browsers desenhavam-lhe um fundo por baixo do ponto.
+|
+*/
+@layer components {
+    .ponto-botao {
+        appearance: none;
+        -webkit-appearance: none;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .ponto-carrossel {
+        display: block;
+        width: 0.375rem;
+        height: 0.375rem;
+        border-radius: 9999px;
+        background-color: var(--color-sand-50);
+        opacity: 0.5;
+        transition: width 0.5s ease, opacity 0.5s ease;
+    }
+    [aria-current='true'] > .ponto-carrossel {
+        width: 1.5rem;
+        opacity: 1;
+    }
+}
