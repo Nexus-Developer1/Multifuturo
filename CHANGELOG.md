@@ -9,6 +9,35 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Seletor de idioma um pouco mais pequeno
+
+$${\color{#5D6348}\textsf{2026-09-11 · 10:47}}$$
+
+**Commit:** `a6934b3` — `Site: seletor de idioma um pouco mais pequeno`
+
+O botão PT/EN do cabeçalho pesava demasiado ao lado do logotipo e do menu. Fica um
+pouco mais pequeno, sem mudar o desenho.
+
+**O que mudou.**
+
+- No telemóvel, cada opção passa de 44 para 40 pixels e a letra de 12 para 11,2. O
+  botão fica com 86×46 em vez de 94×50, com o alvo de toque ainda muito acima dos 24
+  pixels mínimos da WCAG 2.5.8.
+- No computador, cada opção passa de 32 para 28 pixels de altura, com menos folga dos
+  lados e a mesma letra do telemóvel. O botão fica com 81×34 em vez de 91×38.
+
+**Ficheiros**
+
+- `resources/views/components/site/language-switcher.blade.php` — os tamanhos novos.
+
+**Notas**
+
+- Verificado ampliado a 390 e a 1440 pixels: nada transborda e o cabeçalho mantém a
+  altura.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## Os pontos da abertura sem pílulas fantasma
 
 $${\color{#5D6348}\textsf{2026-09-11 · 10:34}}$$
