@@ -9,6 +9,44 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Os pontos da abertura deixam de se baralhar no telemóvel
+
+$${\color{#5D6348}\textsf{2026-09-11 · 10:25}}$$
+
+**Commit:** `e6892d2` — `Site: pontos da abertura com o estado no aria-current e o desenho no CSS`
+
+Na abertura da página inicial, os pontos que dizem quantas fotografias há apareciam
+estragados no telemóvel: cada ponto inactivo mostrava uma pílula branca com o ponto
+cinzento por cima, como se estivesse activo e inactivo ao mesmo tempo.
+
+**O que estava por trás.** Cada ponto trocava duas classes de largura e duas de
+opacidade conforme a fotografia à vista. Se um ponto ficar com as duas ao mesmo tempo, o
+CSS dá a vitória à pílula larga e opaca — é exactamente o que se via. Não consegui
+reproduzir o acumular no browser de teste, e o Alpine está carregado uma só vez, por isso
+a correcção tira o problema pela raiz em vez de perseguir o browser exacto.
+
+**O que mudou.**
+
+- O ponto deixa de trocar classes. O desenho está todo no CSS e o estado lê-se do
+  `aria-current` do botão, um atributo que o Alpine volta a escrever inteiro a cada
+  mudança — não há nada que se possa acumular.
+- O botão de cada ponto fica sem aparência nativa e sem realce de toque, que alguns
+  browsers de telemóvel desenham por baixo.
+- A passagem de ponto para pílula continua animada, em meio segundo.
+
+**Ficheiros**
+
+- `resources/views/pages/home.blade.php` — os pontos, sem classes trocadas.
+- `resources/css/app.css` — o desenho dos pontos e do estado activo.
+
+**Notas**
+
+- Verificado ampliado no telemóvel, ao abrir e depois de deslizar: uma pílula na
+  fotografia à vista e pontos pequenos nas outras.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## A comparação de imóveis arrumada no telemóvel
 
 $${\color{#5D6348}\textsf{2026-09-11 · 10:03}}$$
