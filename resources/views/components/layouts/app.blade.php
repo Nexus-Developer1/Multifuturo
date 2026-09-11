@@ -72,6 +72,8 @@
         Barra do comparador: aparece quando há imóveis escolhidos e acompanha o
         visitante pelo site. Só com JavaScript (a escolha vive no localStorage).
     --}}
+    {{-- Na própria página de comparação a barra não faz falta: já se está a comparar. --}}
+    @unless (request()->routeIs('compare'))
     {{-- O aviso de cookies manda: enquanto estiver no ecrã, a barra assenta por cima dele. --}}
     <div x-cloak x-show="$store.compare.count > 0" x-transition
          x-data="consentOffset()"
@@ -92,6 +94,7 @@
             </div>
         </div>
     </div>
+    @endunless
 
     {{-- Configuração do consentimento de cookies lida pelo consent.js (sem valores sensíveis). --}}
     <script>window.MF_CONSENT = {!! json_encode(['cookie' => config('consent.cookie'), 'days' => config('consent.days'), 'version' => config('consent.version'), 'categories' => config('consent.categories'), 'endpoint' => route('consent.store')], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!};</script>

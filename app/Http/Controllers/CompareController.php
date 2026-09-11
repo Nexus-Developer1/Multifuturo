@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
+use App\Support\Features;
 use App\Support\Format;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -62,7 +63,10 @@ class CompareController extends Controller
             __('ui.property.build_year') => fn (Property $p) => $p->build_year,
             __('ui.property.condition') => fn (Property $p) => $p->property_condition,
             __('ui.property.energy_rating') => fn (Property $p) => $p->energy_rating,
-            __('ui.property.features') => fn (Property $p) => $p->features ? implode(', ', $p->features) : null,
+            // Uma por linha e no idioma da página (o dicionário das características).
+            __('ui.property.features') => fn (Property $p) => $p->features
+                ? implode("\n", array_map(fn ($f) => Features::label((string) $f), $p->features))
+                : null,
         ];
 
         $rows = [];

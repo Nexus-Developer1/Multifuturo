@@ -28,42 +28,62 @@
                 <a href="{{ route('buy') }}" class="btn-primary mt-6">{{ __('ui.nav.buy') }}</a>
             </div>
         @else
-            {{-- Em ecrãs estreitos a tabela desliza na horizontal; a coluna dos rótulos fica fixa. --}}
-            <div class="mt-12 overflow-x-auto">
-                <table class="w-full min-w-[44rem] border-collapse text-sm">
-                    <caption class="sr-only">{{ __('ui.compare.title') }}</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col" class="sticky left-0 z-10 w-40 bg-sand-50 pb-6 pr-4 text-left align-bottom">
-                                <span class="label">{{ trans_choice('ui.compare.count', $properties->count(), ['count' => $properties->count()]) }}</span>
-                            </th>
-                            @foreach ($properties as $p)
-                                @php $titulo = $p->title ?: trim(($p->property_type ?? '').' '.(\App\Support\Format::typology($p->bedrooms) ?? '')); @endphp
-                                <th scope="col" class="w-1/3 pb-6 pl-4 text-left align-bottom font-normal">
-                                    <a href="{{ route('property.show', $p) }}" class="block">
-                                        <x-property.image :src="$p->cover_photo['url'] ?? null" :alt="$titulo" ratio="4/3" class="rounded-xl" sizes="33vw" />
-                                        <span class="label mt-3 block">{{ __('ui.property.reference') }} {{ $p->reference ?? $p->internal_id }}</span>
-                                        <span class="mt-1 block text-base leading-snug hover:underline">{{ $titulo }}</span>
-                                    </a>
-                                    <button type="button" x-cloak x-data class="link mt-2 text-xs"
-                                            @click="$store.compare.toggle(@js($p->slug)); window.location.href = @js(route('compare'))">
-                                        {{ __('ui.compare.remove') }}
-                                    </button>
-                                </th>
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($rows as $label => $valores)
-                            <tr class="border-t border-sand-200">
-                                <th scope="row" class="sticky left-0 z-10 bg-sand-50 py-3 pr-4 text-left align-top font-medium text-ink-muted">{{ $label }}</th>
-                                @foreach ($valores as $valor)
-                                    <td class="py-3 pl-4 align-top {{ $valor === null ? 'text-ink-muted' : '' }}">{{ $valor ?? '—' }}</td>
+            {{--
+                Uma grelha em vez de uma tabela larga. No telemóvel, os imóveis ficam
+                lado a lado em colunas iguais, sem deslizar para o lado; cada linha
+                comparada leva o rótulo por cima, a toda a largura, e os valores por
+                baixo, cada um alinhado com a coluna do seu imóvel. A partir de ecrã
+                largo, o rótulo passa para uma coluna à esquerda, como numa tabela.
+
+                Antes era uma tabela com 704 px de largura mínima e a coluna dos
+                rótulos presa à esquerda: no telemóvel ela comia quase metade do ecrã
+                e cada imóvel aparecia cortado.
+
+                As classes da grelha estão escritas por inteiro para o Tailwind as
+                encontrar. Os papéis ARIA mantêm a leitura de tabela nos leitores de
+                ecrã.
+            --}}
+            @php
+                $grelha = $properties->count() === 2
+                    ? 'grid-cols-2 lg:grid-cols-[12rem_repeat(2,minmax(0,1fr))]'
+                    : 'grid-cols-3 lg:grid-cols-[12rem_repeat(3,minmax(0,1fr))]';
+            @endphp
+            <div class="mt-12" role="table" aria-label="{{ __('ui.compare.title') }}" data-comparador>
+                <div role="row" class="grid {{ $grelha }} gap-x-3 sm:gap-x-6 lg:gap-x-8">
+                    <div role="columnheader" class="col-span-full pb-4 lg:col-span-1 lg:self-end lg:pb-6">
+                        <span class="label">{{ trans_choice('ui.compare.count', $properties->count(), ['count' => $properties->count()]) }}</span>
+                    </div>
+                    @foreach ($properties as $p)
+                        @php $titulo = $p->title ?: trim(($p->property_type ?? '').' '.(\App\Support\Format::typology($p->bedrooms) ?? '')); @endphp
+                        <div role="columnheader" class="min-w-0 pb-6" data-coluna-imovel>
+                            <a href="{{ route('property.show', $p) }}" class="block">
+                                <x-property.image :src="$p->cover_photo['url'] ?? null" :alt="$titulo" ratio="4/3" class="rounded-xl" sizes="(min-width: 1024px) 28vw, 45vw" />
+                                <span class="label mt-3 block">{{ __('ui.property.reference') }} {{ $p->reference ?? $p->internal_id }}</span>
+                                {{-- Três linhas no máximo: os títulos da agência são compridos e as colunas no telemóvel são estreitas. --}}
+                                <span class="mt-1 line-clamp-3 text-sm leading-snug hover:underline sm:text-base">{{ $titulo }}</span>
+                            </a>
+                            <button type="button" x-cloak x-data class="link mt-2 text-left text-xs"
+                                    @click="$store.compare.toggle(@js($p->slug)); window.location.href = @js(route('compare'))">
+                                {{ __('ui.compare.remove') }}
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+
+                @foreach ($rows as $label => $valores)
+                    <div role="row" class="grid {{ $grelha }} gap-x-3 border-t border-sand-200 py-3 sm:gap-x-6 lg:gap-x-8">
+                        <div role="rowheader" class="label col-span-full pb-1.5 lg:col-span-1 lg:pb-0 lg:text-sm lg:normal-case lg:tracking-normal">{{ $label }}</div>
+                        @foreach ($valores as $valor)
+                            {{-- As comodidades chegam uma por linha; cada linha começa por
+                                 maiúscula, como na ficha do imóvel. --}}
+                            <div role="cell" class="min-w-0 wrap-break-word text-sm {{ $valor === null ? 'text-ink-muted' : '' }}">
+                                @foreach (explode("\n", $valor ?? '—') as $linha)
+                                    <span class="block first-letter:uppercase">{{ $linha }}</span>
                                 @endforeach
-                            </tr>
+                            </div>
                         @endforeach
-                    </tbody>
-                </table>
+                    </div>
+                @endforeach
             </div>
 
             <div class="mt-10 flex flex-wrap gap-3">
