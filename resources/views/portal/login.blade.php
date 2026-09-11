@@ -17,8 +17,8 @@
                 <label for="password">Palavra-passe</label>
                 <a href="{{ route('filament.admin.auth.password-reset.request') }}">Esqueceu-se?</a>
             </div>
-            <input id="password" name="password" type="password" required autocomplete="current-password"
-                   @error('password') aria-invalid="true" @enderror>
+            <x-portal.password id="password" required autocomplete="current-password"
+                               :aria-invalid="$errors->has('password') ? 'true' : null" />
             @error('password')<p class="p-erro" role="alert">{{ $message }}</p>@enderror
         </div>
 

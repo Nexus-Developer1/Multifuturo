@@ -196,6 +196,22 @@ it('a recuperação de palavra-passe do Filament continua a existir e é para l�
     $this->get('/admin/password-reset/request')->assertOk();
 });
 
+it('os campos de palavra-passe do portal têm o olho para a mostrar', function () {
+    // Pedido da agência (2026-09-11): ver o que se escreveu antes de submeter.
+    // O botão aponta para o campo e começa desligado; o campo continua password.
+    $this->get('/entrar')->assertOk()
+        ->assertSee('id="password"', false)
+        ->assertSee('type="password"', false)
+        ->assertSee('autocomplete="current-password"', false)
+        ->assertSee('data-ver-senha', false)
+        ->assertSee('aria-controls="password" aria-pressed="false"', false);
+
+    // No perfil há dois: a nova palavra-passe e a repetição.
+    $this->actingAs(utilizadorAtivo())->get('/conta')->assertOk()
+        ->assertSee('aria-controls="password"', false)
+        ->assertSee('aria-controls="password_confirmation"', false);
+});
+
 it('o login e o portal têm a marca da agência, como o site', function () {
     // Decisão de 2026-09-09: o portal deixou de ser uma plataforma neutra e
     // passou a ter o ADN da Multifuturo — mesma marca, mesma paleta, mesmas

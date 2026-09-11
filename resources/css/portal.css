@@ -94,15 +94,14 @@ h1, h2, h3, p { margin: 0; }
 .p-brilho--cima { top: -7rem; right: -6rem; background: rgba(176, 137, 104, .28); }
 .p-brilho--baixo { bottom: -9rem; left: -5rem; background: rgba(93, 99, 72, .30); }
 
-.p-discurso { position: relative; max-width: 28rem; }
+/* Centrada no espaço por baixo da marca (as margens automáticas ficam com a folga). */
+.p-discurso { position: relative; max-width: 28rem; margin-block: auto; }
 .p-discurso h2 { font-family: var(--p-fonte-titulo); font-size: 2.3rem; font-weight: 400; letter-spacing: -.01em; line-height: 1.12; }
 .p-discurso p { margin-top: 1rem; font-size: .95rem; color: rgba(255, 255, 255, .72); }
 .p-lista { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: .9rem; }
 .p-lista li { display: flex; align-items: center; gap: .85rem; font-size: .9rem; color: rgba(255, 255, 255, .85); }
 .p-lista__icone { display: grid; place-items: center; flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 9px; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .10); }
 .p-lista__icone svg { width: 1.1rem; height: 1.1rem; }
-.p-seguranca { position: relative; display: flex; align-items: center; gap: .5rem; font-size: .75rem; color: rgba(255, 255, 255, .45); }
-.p-seguranca svg { width: 1rem; height: 1rem; }
 
 .p-entrada__painel { display: flex; align-items: center; justify-content: center; width: 100%; padding: 3rem 1.5rem; background: var(--p-superficie); }
 .p-entrada__caixa { width: 100%; max-width: 24rem; }
@@ -132,6 +131,23 @@ h1, h2, h3, p { margin: 0; }
 .p-campo input:focus { outline: none; border-color: var(--p-acao); box-shadow: 0 0 0 3px var(--p-acao-tinta); }
 .p-campo input[aria-invalid="true"] { border-color: var(--p-erro); }
 .p-campo .p-erro { margin-top: .4rem; font-size: .8rem; color: var(--p-erro); }
+/* Palavra-passe com o "olho" (x-portal.password). O botão ocupa o fim do campo,
+   com a altura dele; o texto não passa por baixo. O olho próprio do Edge sai,
+   para não aparecerem dois. */
+.p-senha { position: relative; }
+.p-campo .p-senha input { padding-right: 3rem; }
+.p-senha input::-ms-reveal, .p-senha input::-ms-clear { display: none; }
+.p-senha__ver {
+    position: absolute; top: 0; right: 0; bottom: 0; width: 2.9rem;
+    display: grid; place-items: center; padding: 0; border: 0; background: transparent;
+    color: var(--p-texto-fraco); cursor: pointer; border-radius: 0 var(--p-raio) var(--p-raio) 0;
+    transition: color .15s;
+}
+.p-senha__ver:hover { color: var(--p-texto); }
+.p-senha__ver:focus-visible { outline: 2px solid var(--p-acao); outline-offset: -4px; }
+.p-senha__ver svg { width: 1.15rem; height: 1.15rem; }
+.p-senha__ver[aria-pressed="true"] .p-senha__olho,
+.p-senha__ver[aria-pressed="false"] .p-senha__olho-riscado { display: none; }
 .p-codigo { text-align: center; font-size: 1.9rem !important; font-weight: 600; letter-spacing: .45em; height: 3.6rem !important; }
 .p-caixa { display: flex; align-items: center; gap: .6rem; font-size: .88rem; color: var(--p-texto); }
 .p-caixa input { width: 1.05rem; height: 1.05rem; accent-color: var(--p-acao); }

@@ -46,11 +46,6 @@
                 <h2>Uma só entrada.<br>Todos os módulos.</h2>
                 <p>Entre uma vez e escolha onde quer trabalhar.</p>
             </div>
-
-            <p class="p-seguranca">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                Acesso reservado · ligação segura
-            </p>
         </aside>
 
         <main class="p-entrada__painel">
@@ -158,5 +153,29 @@
         })();
     </script>
 @endif
+<script>
+    // O "olho" dos campos de palavra-passe (x-portal.password): troca o campo
+    // entre password e text. Ao submeter, volta tudo a password, para o browser
+    // não guardar a palavra-passe no histórico de texto dos formulários.
+    (function () {
+        document.addEventListener('click', function (e) {
+            var botao = e.target.closest('[data-ver-senha]');
+            if (!botao) return;
+            var campo = document.getElementById(botao.getAttribute('aria-controls'));
+            if (!campo) return;
+            var ver = campo.type === 'password';
+            campo.type = ver ? 'text' : 'password';
+            botao.setAttribute('aria-pressed', ver ? 'true' : 'false');
+            botao.title = ver ? 'Esconder palavra-passe' : 'Mostrar palavra-passe';
+        });
+        document.addEventListener('submit', function (e) {
+            e.target.querySelectorAll('[data-ver-senha]').forEach(function (botao) {
+                var campo = document.getElementById(botao.getAttribute('aria-controls'));
+                if (campo) campo.type = 'password';
+                botao.setAttribute('aria-pressed', 'false');
+            });
+        });
+    })();
+</script>
 </body>
 </html>

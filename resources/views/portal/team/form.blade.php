@@ -39,7 +39,7 @@
                 </div>
                 <div class="p-campo p-grelha-2__cheio">
                     <label for="password">Palavra-passe {!! $editing ? '<span class="p-opcional">(deixe em branco para manter)</span>' : '' !!}</label>
-                    <input id="password" name="password" type="password" minlength="8" autocomplete="new-password" @if (! $editing) required @endif @error('password') aria-invalid="true" @enderror>
+                    <x-portal.password id="password" minlength="8" autocomplete="new-password" :required="! $editing" :aria-invalid="$errors->has('password') ? 'true' : null" />
                     <p class="p-ajuda-campo">Mínimo 8 caracteres. Dê-a à pessoa por um canal seguro — ela pode mudá-la no perfil.</p>
                 </div>
             </div>

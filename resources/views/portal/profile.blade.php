@@ -47,12 +47,12 @@
             <div class="p-grelha-2">
                 <div class="p-campo">
                     <label for="password">Nova palavra-passe <span class="p-opcional">(deixe em branco para manter)</span></label>
-                    <input id="password" name="password" type="password" minlength="8" autocomplete="new-password" @error('password') aria-invalid="true" @enderror>
+                    <x-portal.password id="password" minlength="8" autocomplete="new-password" :aria-invalid="$errors->has('password') ? 'true' : null" />
                     <p class="p-ajuda-campo">Mínimo 8 caracteres.</p>
                 </div>
                 <div class="p-campo">
                     <label for="password_confirmation">Repetir a nova palavra-passe</label>
-                    <input id="password_confirmation" name="password_confirmation" type="password" minlength="8" autocomplete="new-password">
+                    <x-portal.password id="password_confirmation" minlength="8" autocomplete="new-password" />
                 </div>
             </div>
         </section>
