@@ -49,7 +49,10 @@
                 <span x-cloak x-show="$store.favorites.count > 0" x-text="$store.favorites.count"
                       class="absolute -right-2 -top-2 min-w-4 rounded-full bg-olive-600 px-1 text-center text-[0.65rem] leading-4 text-sand-50"></span>
             </a>
-            <x-site.language-switcher class="hidden lg:flex" />
+            {{-- O seletor de idioma fica sempre no cabeçalho, também em telemóvel: o
+                 "hidden lg:flex" que aqui estava nunca o escondia (o inline-flex do
+                 componente ganhava), e havia uma segunda cópia dentro do menu. --}}
+            <x-site.language-switcher />
             <a href="{{ route('contact') }}" class="hidden text-[0.8rem] uppercase tracking-[0.12em] transition-colors hover:text-olive-700 lg:inline-block">
                 {{ __('ui.nav.contact') }}
             </a>
@@ -66,7 +69,6 @@
                 </a>
             @endforeach
             <a href="{{ route('favorites') }}" class="py-3 font-serif text-xl uppercase text-ink hover:text-olive-700">{{ __('ui.nav.favorites') }}</a>
-            <x-site.language-switcher class="mt-3 gap-2" compact />
         </div>
     </nav>
 </header>

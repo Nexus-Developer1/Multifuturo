@@ -8,7 +8,6 @@
     Desenho: um par de opções dentro de uma pílula com um traço fino à volta,
     para se ler como um interruptor e não como dois links soltos.
 --}}
-@props(['compact' => false])
 
 @if (\App\Support\Locales::isMultilingual())
     <div {{ $attributes->merge(['class' => 'inline-flex items-center rounded-full border border-sand-200 p-0.5']) }}
@@ -23,8 +22,7 @@
                 @class([
                     'grid place-items-center rounded-full font-medium uppercase tracking-[0.12em] transition-colors',
                     // Alvo de toque de 44 px no telemóvel; no rato basta o texto.
-                    'min-h-11 min-w-11 text-xs sm:min-h-8 sm:min-w-0 sm:px-3' => ! $compact,
-                    'min-h-11 min-w-11 px-4 text-sm' => $compact,
+                    'min-h-11 min-w-11 text-xs sm:min-h-8 sm:min-w-0 sm:px-3',
                     'bg-ink text-sand-50' => $atual,
                     'text-ink-muted hover:text-ink' => ! $atual,
                 ])
