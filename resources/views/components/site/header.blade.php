@@ -16,11 +16,15 @@
         @keydown.escape.window="open = false"
         @scroll.window="descido = window.scrollY > 24"
         :class="descido ? 'border-b border-sand-200' : 'border-b border-transparent'">
-    <div class="container-site flex h-20 items-center gap-6">
-        {{-- A marca, o mais à esquerda possível --}}
-        <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-3 text-ink" aria-label="{{ config('agency.name') }}">
-            <img src="{{ asset('images/marca/simbolo.png') }}" alt="" width="384" height="317" class="h-8 w-auto sm:h-9">
-            <span class="hidden font-serif text-base leading-tight tracking-[0.16em] uppercase sm:block">
+    <div class="container-site flex h-20 items-center gap-3 sm:gap-6">
+        {{-- A marca, o mais à esquerda possível — símbolo e nome em todos os
+             tamanhos de ecrã. No telemóvel o nome encolhe para caber ao lado do
+             seletor de idioma e do botão do menu, sem partir em duas linhas; nos
+             ecrãs de menos de 360 px encolhe mais um pouco, senão o botão do menu
+             ficava cortado na borda. --}}
+        <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-2 text-ink sm:gap-3" aria-label="{{ config('agency.name') }}">
+            <img src="{{ asset('images/marca/simbolo.png') }}" alt="" width="384" height="317" class="h-8 w-auto max-[359px]:h-7 sm:h-9">
+            <span class="block whitespace-nowrap font-serif text-[0.78rem] leading-tight tracking-[0.16em] uppercase max-[359px]:text-[0.68rem] sm:text-base">
                 Multifuturo<span class="block text-[0.62em] tracking-[0.22em] text-olive-600">Propriedades</span>
             </span>
         </a>
