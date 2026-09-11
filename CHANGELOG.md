@@ -9,6 +9,44 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Os pontos da abertura sem pílulas fantasma
+
+$${\color{#5D6348}\textsf{2026-09-11 · 10:34}}$$
+
+**Commit:** `0afd578` — `Site: pontos da abertura trocam so por opacidade, sem nada a mudar de tamanho`
+
+A correcção anterior aos pontos da abertura melhorou mas não chegou: no telemóvel da
+agência, alguns pontos continuavam a mostrar uma pílula branca por trás do ponto cinzento.
+
+**O que estava por trás.** Com a versão anterior cada ponto só podia ter um tamanho, por
+isso a pílula que sobrava tinha de vir de outro lado. O que bate com "só alguns pontos" é
+um defeito de desenho do browser no telemóvel: quando a pílula activa encolhia para ponto
+— a largura a animar —, alguns telemóveis não voltavam a pintar a zona antiga por cima das
+fotografias em movimento, e ficava uma pílula fantasma nos pontos que já tinham estado
+activos. Depende do motor gráfico do telemóvel, e por isso não se reproduz no browser de
+teste.
+
+**O que mudou.**
+
+- Nada muda de tamanho. Cada ponto leva duas peças fixas, uma por cima da outra — a
+  pílula e o ponto — e a troca é só por opacidade, que a placa gráfica trata sem voltar a
+  pintar.
+- Os comandos ficam numa camada gráfica própria, separada das fotografias que mexem por
+  baixo.
+
+**Ficheiros**
+
+- `resources/views/pages/home.blade.php` — as duas peças de cada ponto.
+- `resources/css/app.css` — o desenho e a troca por opacidade.
+
+**Notas**
+
+- Verificado ampliado no telemóvel, ao abrir, depois de deslizar e depois de tocar num
+  ponto: uma pílula na fotografia à vista e pontos pequenos nas outras.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## Os pontos da abertura deixam de se baralhar no telemóvel
 
 $${\color{#5D6348}\textsf{2026-09-11 · 10:25}}$$
