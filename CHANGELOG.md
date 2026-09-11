@@ -9,6 +9,46 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Todo o texto corrido do site justificado
+
+$${\color{#5D6348}\textsf{2026-09-11 · 09:48}}$$
+
+**Commit:** `a03b934` — `Site: texto corrido justificado em todo o site`
+
+A pedido da agência, o texto corrido do site passa a estar justificado: as descrições dos
+imóveis, a página da agência, as páginas legais, as zonas. Uma só regra no CSS trata do
+site inteiro, em vez de página a página, e apanha também o texto que vier a ser escrito
+no backoffice.
+
+**Onde não mexe, e porquê.** A justificação só alinha as linhas que não são a última, por
+isso frases de uma linha, etiquetas e botões ficam exactamente como estavam. Ficam de fora,
+de propósito, os blocos onde justificar estraga em vez de arrumar: a frase grande em letra
+serifada da página inicial e da agência, a frase de abertura da agência (que usa quebra de
+linha equilibrada) e o texto dentro de caixas centradas, como as mensagens de "sem
+resultados".
+
+**Sem buracos no telemóvel.** Numa coluna estreita, justificar abre espaços grandes entre
+as palavras. Junta-se a hifenização automática: o browser parte as palavras compridas no
+fim da linha, à portuguesa na versão portuguesa e à inglesa na inglesa, porque segue o
+idioma da página.
+
+**Ficheiros**
+
+- `resources/css/app.css` — a regra, com a explicação do que fica de fora.
+
+**Notas**
+
+- Verificado a 390 e a 1440 pixels na ficha de um imóvel (português e inglês), na agência,
+  na política de privacidade e na página inicial.
+- Na ficha do imóvel ficaram justificados os 21 parágrafos de várias linhas no telemóvel e
+  os 19 no computador, em português e em inglês, sem nenhum dos excluídos apanhado por engano.
+- A hifenização depende do dicionário do browser. Os telemóveis (Android e iPhone) têm o
+  português; o browser de teste no Windows não, por isso aí ainda se vêem alguns espaços
+  largos na frase grande em letra serifada da página da agência.
+- 268 testes a passar e Pint limpo.
+
+---
+
 ## As páginas de zona sem os botões de comprar e arrendar
 
 $${\color{#5D6348}\textsf{2026-09-11 · 09:39}}$$
