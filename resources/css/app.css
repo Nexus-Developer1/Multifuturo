@@ -484,6 +484,27 @@
         height: 118%;
         top: -9%;
     }
+
+    /*
+     * Composição da página inicial em telemóvel: duas colunas, a grande com o
+     * dobro da pequena. Tocar numa fotografia troca as proporções (1fr 2fr) e a
+     * grelha anima a passagem — as alturas acompanham, porque cada moldura tem
+     * a sua proporção fixa. Só abaixo de lg: em ecrã largo manda o grid-cols-12.
+     */
+    @media (width < 64rem) {
+        .composicao {
+            grid-template-columns: 2fr 1fr;
+            transition: grid-template-columns 700ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .composicao.is-trocada {
+            grid-template-columns: 1fr 2fr;
+        }
+    }
+    @media (width < 64rem) and (prefers-reduced-motion: reduce) {
+        .composicao {
+            transition: none;
+        }
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

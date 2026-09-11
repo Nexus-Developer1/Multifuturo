@@ -130,15 +130,25 @@
     @endphp
     @if ($composicao->count() === 2)
         <section class="container-site pb-24 sm:pb-32">
-            <div class="grid grid-cols-12 items-end gap-6 lg:gap-8">
-                <x-site.reveal tipo="wipe" class="col-span-8 lg:col-span-7">
-                    <div class="parallax-frame relative aspect-[4/5] sm:aspect-[3/2]">
+            {{--
+                Em telemóvel, tocar numa das fotografias troca-lhes o tamanho: a
+                pequena passa a grande e a grande a pequena, com uma transição
+                lenta (a grelha passa de 2fr 1fr a 1fr 2fr — ver .composicao em
+                app.css). Em ecrã largo a composição é fixa e o toque não faz nada.
+                x-on:/x-bind: em vez de @/: porque nos componentes Blade esses
+                prefixos são lidos pelo próprio Blade.
+            --}}
+            <div class="composicao grid items-end gap-6 lg:grid-cols-12 lg:gap-8"
+                 x-data="{ trocadas: false, trocar() { if (window.matchMedia('(min-width: 64rem)').matches) return; this.trocadas = ! this.trocadas } }"
+                 x-bind:class="trocadas && 'is-trocada'">
+                <x-site.reveal tipo="wipe" class="cursor-pointer lg:col-span-7 lg:cursor-auto" x-on:click="trocar()">
+                    <div class="parallax-frame relative aspect-4/5 sm:aspect-3/2">
                         <img src="{{ $composicao[0] }}" alt="" width="1600" height="1067" loading="lazy" decoding="async"
                              data-parallax="0.1" class="absolute inset-x-0 w-full object-cover">
                     </div>
                 </x-site.reveal>
                 {{-- A pequena entra um pouco depois da grande, para não abrirem em bloco. --}}
-                <x-site.reveal tipo="wipe" atraso="200" class="col-span-4 lg:col-start-9 lg:col-span-4 lg:-mb-16">
+                <x-site.reveal tipo="wipe" atraso="200" class="cursor-pointer lg:col-start-9 lg:col-span-4 lg:-mb-16 lg:cursor-auto" x-on:click="trocar()">
                     <div class="parallax-frame relative aspect-square">
                         <img src="{{ $composicao[1] }}" alt="" width="900" height="900" loading="lazy" decoding="async"
                              data-parallax="0.22" class="absolute inset-x-0 w-full object-cover">
