@@ -7,9 +7,11 @@
 @php use App\Support\Format; @endphp
 <x-layouts.app :title="__('ui.home.title')" :description="__('ui.home_sections.hero_lead')" :canonical="route('home')" :image="$heroImage">
     {{-- 1. Abertura: fotografia a toda a largura, texto encostado em baixo à esquerda --}}
-    <section @class(['relative isolate flex items-end overflow-hidden', 'bg-olive-900 text-sand-50' => $heroImage, 'bg-sand-100 text-ink' => ! $heroImage])
+    @php $variasFotos = $heroImages && count($heroImages) > 1; @endphp
+    <section @class(['relative isolate flex items-end overflow-hidden', 'bg-olive-900 text-sand-50' => $heroImage, 'bg-sand-100 text-ink' => ! $heroImage, 'touch-pan-y' => $variasFotos])
              style="min-height: min(92svh, 900px)"
-             @if ($heroImages) x-data="slideshow({{ count($heroImages) }}, 5000)" @endif>
+             @if ($heroImages) x-data="slideshow({{ count($heroImages) }}, 5000)" @endif
+             @if ($variasFotos) x-on:pointerdown="agarrar($event)" x-on:pointerup="largar($event)" x-on:pointercancel="inicioX = null" @endif>
         @if ($heroImages)
             {{--
                 As fotografias da carteira, a alternar de 5 em 5 segundos com um
@@ -37,29 +39,31 @@
 
             @if (count($heroImages) > 1)
                 {{--
-                    Passar as fotografias à mão: arrastar por cima da imagem (rato
-                    ou dedo) e duas setas nos lados, que se acendem ao aproximar o
-                    rato. Qualquer uma delas pára a rotação automática — quem está
-                    a escolher não quer a fotografia a fugir-lhe.
+                    Passar as fotografias à mão: deslizar o dedo (ou arrastar o rato)
+                    em qualquer ponto da abertura — o gesto está na própria secção,
+                    também por cima do texto. Esta camada só dá o cursor de mão no
+                    computador. Mudar de fotografia à mão pára a rotação automática:
+                    quem está a escolher não quer a fotografia a fugir-lhe.
                 --}}
-                <div x-cloak class="absolute inset-0 z-0 cursor-grab active:cursor-grabbing"
-                     @pointerdown="agarrar($event)" @pointerup="largar($event)" @pointercancel="inicioX = null"
-                     aria-hidden="true"></div>
+                <div x-cloak class="absolute inset-0 z-0 cursor-grab active:cursor-grabbing" aria-hidden="true"></div>
 
             @endif
 
             {{--
-                Comandos: duas setas e os pontos, que dizem quantas fotografias há.
-                Qualquer um deles pára a rotação automática — quem está a escolher
-                não quer a fotografia a fugir-lhe. Assentam por cima do aviso de
-                cookies enquanto ele estiver no ecrã.
+                Comandos: os pontos, que dizem quantas fotografias há, e duas setas
+                só em ecrã largo — no telemóvel passa-se com o dedo, e as setas
+                saíram a pedido da agência. Qualquer comando pára a rotação
+                automática. Assentam por cima do aviso de cookies enquanto ele
+                estiver no ecrã. Ficam em z-20, acima do bloco do texto (z-10): com a
+                mesma camada, o texto vinha depois na página e a margem de baixo dele
+                tapava-os — nem os pontos nem as setas chegavam a receber o toque.
             --}}
             @if (count($heroImages) > 1)
-                <div x-cloak class="absolute bottom-6 right-5 z-10 flex items-center gap-1 sm:right-8 lg:right-12 2xl:right-20"
+                <div x-cloak class="absolute bottom-6 right-5 z-20 flex items-center gap-1 sm:right-8 lg:right-12 2xl:right-20"
                      x-data="consentOffset(16)"
                      :style="{ bottom: 'calc(1.5rem + ' + offset + 'px)' }">
                     <button type="button" @click="anterior()"
-                            class="grid h-11 w-9 place-items-center text-sand-50/70 transition-colors duration-300 hover:text-sand-50 focus-visible:text-sand-50">
+                            class="hidden h-11 w-9 place-items-center text-sand-50/70 transition-colors duration-300 hover:text-sand-50 focus-visible:text-sand-50 lg:grid">
                         <span class="sr-only">{{ __('ui.home.photo_prev') }}</span>
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14 6l-6 6 6 6"/>
@@ -79,7 +83,7 @@
                     </div>
 
                     <button type="button" @click="seguinte()"
-                            class="grid h-11 w-9 place-items-center text-sand-50/70 transition-colors duration-300 hover:text-sand-50 focus-visible:text-sand-50">
+                            class="hidden h-11 w-9 place-items-center text-sand-50/70 transition-colors duration-300 hover:text-sand-50 focus-visible:text-sand-50 lg:grid">
                         <span class="sr-only">{{ __('ui.home.photo_next') }}</span>
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m10 6 6 6-6 6"/>
@@ -90,7 +94,7 @@
         @endif
 
         {{-- Acima da camada de arrastar, para o texto continuar a poder seleccionar-se. --}}
-        <div class="container-site relative z-10 pb-16 pt-32 sm:pb-24">
+        <div class="container-site relative z-10 pb-16 pt-32 sm:pb-24" data-texto-abertura>
             <x-site.reveal tipo="fade">
                 <p @class(['eyebrow', 'text-sand-200' => $heroImage])>{{ __('ui.home.eyebrow') }}</p>
             </x-site.reveal>

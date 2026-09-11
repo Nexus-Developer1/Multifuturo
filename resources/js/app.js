@@ -190,26 +190,39 @@ function slideshow(total, intervalo = 5000) {
         },
 
         /*
-         * Arrastar com o rato (ou com o dedo): a partir de 60 px de percurso
-         * horizontal muda de fotografia. O ponteiro fica preso ao elemento para
-         * o gesto não se perder se sair da imagem a meio.
+         * Deslizar com o dedo (ou arrastar com o rato) em qualquer ponto da
+         * abertura: a partir de 50 px de percurso, e desde que o gesto seja
+         * sobretudo horizontal, muda de fotografia. A abertura tem touch-action
+         * pan-y, por isso um deslizar na vertical continua a descer a página —
+         * e aí o browser cancela o ponteiro antes de o gesto chegar aqui.
          */
         inicioX: null,
+        inicioY: 0,
 
         agarrar(e) {
+            // Os pontos e as ligações tratam do seu próprio toque: prender o
+            // ponteiro aqui desviava-lhes o clique.
+            if (e.target.closest('button, a')) return;
+            // Com o rato, arrastar por cima do texto é para o seleccionar.
+            if (e.pointerType === 'mouse' && e.target.closest('[data-texto-abertura]')) return;
+
             this.inicioX = e.clientX;
-            e.currentTarget.setPointerCapture?.(e.pointerId);
+            this.inicioY = e.clientY;
+            // Com o rato, o gesto não se perde se sair da imagem a meio. No
+            // toque o browser já prende o ponteiro sozinho.
+            if (e.pointerType === 'mouse') e.currentTarget.setPointerCapture?.(e.pointerId);
         },
 
         largar(e) {
             if (this.inicioX === null) return;
 
-            const percurso = e.clientX - this.inicioX;
+            const dx = e.clientX - this.inicioX;
+            const dy = e.clientY - this.inicioY;
             this.inicioX = null;
 
-            if (Math.abs(percurso) < 60) return;
+            if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
 
-            percurso < 0 ? this.seguinte() : this.anterior();
+            dx < 0 ? this.seguinte() : this.anterior();
         },
     };
 }
