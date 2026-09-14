@@ -9,6 +9,46 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O Google passa a saber o nome do site e quem é a agência
+
+$${\color{#5D6348}\textsf{2026-09-14 · 10:22}}$$
+
+**Commit:** `44757ff` — `Site: dados estruturados WebSite e RealEstateAgent na pagina inicial`
+
+Nos resultados do Google, o site aparecia como "multifuturo.pt" e com um globo cinzento
+em vez do logótipo.
+
+**O que se viu.**
+
+- **O ícone.** O favicon já estava certo: ícones quadrados de 192 e 512 pixels no
+  `<head>`, que o Google aceita, e nada bloqueado no robots.txt. O serviço de favicons do
+  Google ainda não tem nenhum ícone para o domínio, ou seja, ainda não voltou a processar
+  o site desde que ficou no ar. Isto não se resolve no código: resolve-se quando o Google
+  voltar a passar, e acelera-se no Search Console.
+- **O nome.** Faltavam os dados estruturados `WebSite`, que é de onde o Google tira o
+  nome a mostrar. Sem eles mostra só o domínio.
+
+**O que mudou.** A página inicial passa a levar dados estruturados com duas peças:
+
+- `WebSite` — nome "Multifuturo Propriedades", nome alternativo "Multifuturo" e a raiz do
+  domínio como endereço, como o Google pede.
+- `RealEstateAgent` — a agência, com o logótipo quadrado, o telefone, o email, a morada,
+  as coordenadas e as redes sociais do rodapé.
+
+**Ficheiros**
+
+- `app/Http/Controllers/PageController.php` — os dados estruturados do site.
+- `resources/views/pages/home.blade.php` — a saída no `<head>`.
+- `tests/Feature/NomeDoSiteGoogleTest.php` — testes novos: o nome, a agência e os ícones.
+
+**Notas**
+
+- Para chegar ao Google, a produção em `multifuturo.pt` tem de ser atualizada. Depois
+  convém pedir a indexação da página inicial no Search Console.
+- 277 testes a passar e Pint limpo.
+
+---
+
 ## O login pelo www deixa de dar "sessão expirada"
 
 $${\color{#5D6348}\textsf{2026-09-14 · 09:30}}$$
