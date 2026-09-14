@@ -6,6 +6,11 @@
 --}}
 @php use App\Support\Format; @endphp
 <x-layouts.app :title="__('ui.home.title')" :description="__('ui.home_sections.hero_lead')" :canonical="route('home')" :image="$heroImage">
+    {{-- O nome do site e a agência para o Google (ver PageController::siteJsonLd). --}}
+    <x-slot:head>
+        <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) !!}</script>
+    </x-slot:head>
+
     {{-- 1. Abertura: fotografia a toda a largura, texto encostado em baixo à esquerda --}}
     @php $variasFotos = $heroImages && count($heroImages) > 1; @endphp
     <section @class(['relative isolate flex items-end overflow-hidden', 'bg-olive-900 text-sand-50' => $heroImage, 'bg-sand-100 text-ink' => ! $heroImage, 'touch-pan-y' => $variasFotos])

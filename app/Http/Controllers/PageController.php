@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\BusinessType;
 use App\Models\Property;
+use App\Support\Locales;
 use App\Support\PropertyCache;
 use App\Support\Zones;
 use Illuminate\Contracts\View\View;
@@ -54,6 +55,7 @@ class PageController extends Controller
         $heroImage = $heroImages[0] ?? null;
 
         return view('pages.home', [
+            'jsonLd' => $this->siteJsonLd(),
             'featured' => $featured,
             'heroImage' => $heroImage,
             'heroImages' => $heroImages,
@@ -65,6 +67,54 @@ class PageController extends Controller
                 'localities' => Property::query()->active()->whereNotNull('locality')->distinct()->count('locality'),
             ]),
         ]);
+    }
+
+    /**
+     * Dados estruturados do site, na página inicial.
+     *
+     * O Google tira daqui o nome que mostra por cima do endereço nos resultados
+     * (WebSite.name — sem isto mostra só "multifuturo.pt") e liga o site à
+     * agência, com o logótipo, os contactos e as redes sociais. O url do WebSite
+     * é a raiz do domínio, como o Google pede, mesmo que a raiz reencaminhe
+     * para /pt.
+     *
+     * @return array<string, mixed>
+     */
+    private function siteJsonLd(): array
+    {
+        $raiz = rtrim((string) config('app.url'), '/').'/';
+
+        $agencia = array_filter([
+            '@type' => 'RealEstateAgent',
+            '@id' => $raiz.'#agencia',
+            'name' => config('agency.name'),
+            'url' => $raiz,
+            'logo' => asset('images/marca/favicon-512.png'),
+            'image' => asset('images/marca/favicon-512.png'),
+            'telephone' => config('agency.whatsapp') ?: config('agency.phone'),
+            'email' => config('agency.email'),
+            'address' => config('agency.address'),
+            'geo' => config('agency.lat') && config('agency.lon')
+                ? ['@type' => 'GeoCoordinates', 'latitude' => (float) config('agency.lat'), 'longitude' => (float) config('agency.lon')]
+                : null,
+            'sameAs' => array_values(array_filter(config('agency.social', []))) ?: null,
+        ]);
+
+        return [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'WebSite',
+                    '@id' => $raiz.'#site',
+                    'name' => config('agency.name'),
+                    'alternateName' => 'Multifuturo',
+                    'url' => $raiz,
+                    'inLanguage' => Locales::htmlLang(),
+                    'publisher' => ['@id' => $raiz.'#agencia'],
+                ],
+                $agencia,
+            ],
+        ];
     }
 
     public function buy(): View
