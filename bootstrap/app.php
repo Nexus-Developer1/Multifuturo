@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\RedirectToCanonicalHost;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,6 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Um só endereço: www.multifuturo.pt passa para multifuturo.pt antes de haver
+        // sessão. Com os dois, o login pelo www dava "Page Expired" (ver o middleware).
+        $middleware->prepend(RedirectToCanonicalHost::class);
+
         // Portal: sem sessão vai-se para /entrar; com sessão, a página de escolha.
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('portal'));
