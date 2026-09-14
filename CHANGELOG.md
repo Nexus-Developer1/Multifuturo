@@ -9,6 +9,48 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O login pelo www deixa de dar "sessão expirada"
+
+$${\color{#5D6348}\textsf{2026-09-14 · 09:30}}$$
+
+**Commit:** `7c0102f` — `Site: www passa para o endereco do APP_URL, e o login pelo www deixa de dar 419`
+
+O cliente não conseguia entrar no backoffice: depois de pôr o email e a palavra-passe,
+aparecia a página "Page Expired", a que ele chama "sessão expirada". Na máquina da NXS o
+login funcionava com as mesmas credenciais.
+
+**O que estava por trás.** O site responde em dois endereços, `multifuturo.pt` e
+`www.multifuturo.pt`, mas o formulário de login é sempre enviado para
+`https://multifuturo.pt/entrar`. Quem abria a página pelo www recebia o cookie de sessão
+para `www.multifuturo.pt`, e esse cookie não segue para o endereço sem www. O servidor
+recebia o login sem sessão, não conseguia confirmar o token do formulário e recusava-o
+com um 419. Na NXS escrevia-se `multifuturo.pt`, e aí o cookie e o formulário estavam no
+mesmo endereço.
+
+Reproduzido na produção: pelo endereço sem www o login responde 302, pelo www responde 419.
+
+**O que mudou.** Quem abre o site pelo www é reencaminhado logo para `multifuturo.pt`, com
+o mesmo caminho e a mesma query, antes de haver sessão. Assim o cookie e o formulário ficam
+sempre juntos. As páginas levam um 301, que o Google também usa para deixar de ver o site
+em duplicado; os envios levam um 308, que mantém o método. Se o `APP_URL` for com www, é o
+endereço sem www que passa para lá. Qualquer outro endereço, como o de testes na NXS ou o
+IP da rede local, fica como está.
+
+**Ficheiros**
+
+- `app/Http/Middleware/RedirectToCanonicalHost.php` — o reencaminhamento, novo.
+- `bootstrap/app.php` — o reencaminhamento corre antes de tudo o resto.
+- `tests/Feature/DominioCanonicoTest.php` — testes novos: www para sem www, caminho e query,
+  308 nos envios, outros endereços intactos e APP_URL com www.
+
+**Notas**
+
+- A correção só chega ao cliente depois de atualizada a produção em `multifuturo.pt`.
+  Até lá, a solução é entrar por `https://multifuturo.pt/entrar`, sem www.
+- 274 testes a passar e Pint limpo.
+
+---
+
 ## Os avisos do portal passam para o canto da página
 
 $${\color{#5D6348}\textsf{2026-09-11 · 11:10}}$$
