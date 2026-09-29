@@ -317,10 +317,10 @@ nunca são tocados.
 
 ```
 # Tarefas agendadas: cópia de segurança diária e limpeza dos consentimentos
-* * * * * /opt/cpanel/ea-php83/root/usr/bin/php /home/multifut/multifuturo/artisan schedule:run >/dev/null 2>&1
+* * * * * /opt/alt/php83/usr/bin/php /home/multifut/multifuturo/artisan schedule:run >/dev/null 2>&1
 
 # Fila: os emails dos pedidos do site
-* * * * * /opt/cpanel/ea-php83/root/usr/bin/php /home/multifut/multifuturo/artisan queue:work --stop-when-empty --max-time=50 --tries=3 >/dev/null 2>&1
+* * * * * /opt/alt/php83/usr/bin/php /home/multifut/multifuturo/artisan queue:work --stop-when-empty --max-time=50 --tries=3 >/dev/null 2>&1
 ```
 
 ### Primeira instalação
@@ -334,12 +334,14 @@ fica em `multifuturo/storage/instalacao.log`. Depois troca-se o Cron para o
 
 ### A versão de PHP e o `.htaccess`
 
-O domínio tem de estar em **PHP 8.3** no *MultiPHP Manager* do cPanel. É lá que
-se escolhe, e a escolha fica escrita num bloco no `public_html/.htaccess`:
+O domínio tem de estar em **PHP 8.3 (alt-php83)** no *MultiPHP Manager* do
+cPanel — o PHP do sistema neste alojamento é o 7.4, e é o que vale para quem não
+escolher. A escolha fica escrita num bloco no `public_html/.htaccess`, com um
+nome parecido com este (o exato é o que o cPanel lá puser):
 
 ```apache
 # php -- BEGIN cPanel-generated handler, do not edit
-AddHandler application/x-httpd-ea-php83 .php .php8 .phtml
+AddHandler application/x-httpd-alt-php83___lsphp .php .php8 .phtml
 # php -- END cPanel-generated handler, do not edit
 ```
 

@@ -29,9 +29,11 @@ LOG="$APP/storage/atualizacao.log"
 
 cd "$APP" || exit 1
 
-# O Cron usa a versão de PHP do sistema, que pode não ser a do domínio.
+# O Cron corre com o PHP do sistema, que aqui é o 7.4 — o domínio é que está
+# em 8.3. Neste alojamento o 8.3 é o alt-php83 (CloudLinux); as outras
+# hipóteses ficam para o caso de a conta mudar de servidor.
 PHP=""
-for candidato in /opt/cpanel/ea-php83/root/usr/bin/php /usr/local/bin/ea-php83 /usr/bin/ea-php83; do
+for candidato in /opt/alt/php83/usr/bin/php /opt/cpanel/ea-php83/root/usr/bin/php /usr/local/bin/ea-php83 /usr/bin/ea-php83; do
     if [ -x "$candidato" ]; then PHP="$candidato"; break; fi
 done
 [ -z "$PHP" ] && PHP="php"
@@ -42,6 +44,18 @@ VERSAO=$(head -n 1 "$MANIFEST" | tr -d '\r')
 [ -f "$APLICADO" ] && [ "$(tr -d '\r' < "$APLICADO")" = "$VERSAO" ] && exit 0
 
 exec > "$LOG" 2>&1
+
+# O PHP encontrado tem de ser o do domínio: com o 7.4 do sistema, o artisan
+# estoirava a meio e o registo não explicava porquê.
+VERSAO_PHP=$("$PHP" -r 'echo PHP_VERSION;' 2>/dev/null)
+case "$VERSAO_PHP" in
+    8.3*|8.4*|8.5*) ;;
+    *)
+        echo "FALHOU - o PHP encontrado é o $VERSAO_PHP ($PHP); o projeto precisa do 8.3."
+        echo "         Corrija o caminho na lista de candidatos, no topo deste guião."
+        exit 1
+        ;;
+esac
 
 # Cada passo é verificado aqui: "set -e" não serve, porque o sh ignora-o em
 # vários contextos e o guião seguiria em frente depois de um erro.
