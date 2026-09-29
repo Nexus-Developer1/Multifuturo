@@ -9,6 +9,48 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O pacote deixa de mexer no `.htaccess` do alojamento
+
+$${\color{#5D6348}\textsf{2026-09-29 · 16:44}}$$
+
+**Commit:** `bbc1af9` — `Deploy: o pacote nao substitui o .htaccess do public_html`
+
+Ao aplicar o primeiro pacote, o site respondeu com *"Composer detected issues in your
+platform: Your Composer dependencies require a PHP version >= 8.3.0"*.
+
+**O que estava por trás.** O pacote levava o `public_html/.htaccess` do projeto e
+substituía o do servidor. Só que é nesse ficheiro que o cPanel escreve o bloco que
+escolhe a versão de PHP do domínio (*MultiPHP Manager*). Sem esse bloco, o domínio caiu
+para o PHP do sistema — 7.4 — e as dependências, resolvidas para 8.3, recusaram-se a
+arrancar. O aviso do Composer era a consequência, não a causa.
+
+**O que mudou.**
+
+- O pacote deixa de levar `.htaccess`. Leva `.htaccess.modelo`, e o `atualizar.sh` só o
+  copia quando não existe nenhum — numa atualização, o do servidor nunca é tocado.
+- O registo da atualização passa a dizer a versão de PHP com que correu.
+- O `DEPLOY.md` explica onde se escolhe o PHP 8.3 e porque é que aquele ficheiro é do
+  servidor e não do pacote.
+
+**Reposição.** No cPanel, *MultiPHP Manager* → `multifuturo.pt` → PHP 8.3 → Apply, que
+volta a escrever o bloco. Em alternativa, colar o bloco à mão no topo do
+`public_html/.htaccess`.
+
+**Ficheiros**
+
+- `scripts/deploy-pacote.ps1` — o `.htaccess` fica de fora; vai como modelo.
+- `scripts/atualizar-servidor.sh`, `scripts/instalar-servidor.sh` — só criam o
+  `.htaccess` se faltar; a atualização diz a versão de PHP.
+- `DEPLOY.md` — a versão de PHP e o `.htaccess`, na secção 11.
+
+**Notas**
+
+- Pacote novo gerado e verificado: leva `public_html/.htaccess.modelo` e nenhum
+  `.htaccess`.
+- 282 testes a passar e Pint limpo.
+
+---
+
 ## O deploy para o cPanel, num pacote
 
 $${\color{#5D6348}\textsf{2026-09-29 · 16:32}}$$
