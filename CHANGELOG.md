@@ -9,6 +9,56 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Reservado, Vendido, Arrendado — e o preço passa a sob consulta
+
+$${\color{#5D6348}\textsf{2026-09-29 · 16:05}}$$
+
+**Commit:** `6f79617` — `Backoffice: situacao do imovel (texto livre) manda o preco para sob consulta`
+
+Com os primeiros contratos fechados, a agência precisava de dizer em que pé está cada
+negócio. O imóvel só tinha finalidade (venda, arrendamento) e os estados internos da
+angariação, que o tiram do site.
+
+**A situação do imóvel.** O separador Geral, na secção Estado, leva um campo novo,
+"Situação". É uma caixa de texto com sugestões: Reservado, Vendido e Arrendado vêm de
+origem, as já usadas juntam-se à lista, e pode escrever-se outra qualquer — a agência
+cria situações novas sem esperar por código.
+
+**O que a situação faz.** Com situação preenchida, o site deixa de mostrar o preço: na
+ficha e nas listagens aparece "Preço sob consulta", e o preço também sai dos dados
+estruturados, que seriam contraditórios. A situação aparece à vista — em pílula escura
+sobre a fotografia no cartão, e por cima do preço na ficha. Para voltar a mostrar o
+preço, apaga-se a situação.
+
+**O aviso.** Assim que se escreve uma situação, aparece no formulário uma caixa amarela a
+dizer que aquele imóvel vai passar a aparecer sob consulta; ao gravar, um aviso repete-o.
+
+**Não confundir com "Vendida".** A caixa "Vendida" e o "Fora do mercado" tiram a ficha do
+site. A situação não: a ficha continua publicada, com a situação à vista e o preço sob
+consulta. É o que a agência quer para um imóvel reservado ou acabado de vender.
+
+**Na lista de imóveis** há uma coluna "Situação" e um filtro por situação.
+
+**Ficheiros**
+
+- `database/migrations/2026_09_29_100000_add_commercial_state_to_properties_table.php` — a coluna nova.
+- `app/Models/Property.php` — as três situações de origem e a regra do preço (`priceIsVisible`).
+- `app/Filament/Resources/Properties/Schemas/PropertyForm.php` — o campo e a caixa de aviso.
+- `app/Filament/Resources/Properties/PropertyResource.php`, `Pages/EditProperty.php`, `Pages/CreateProperty.php` — o aviso ao gravar.
+- `app/Filament/Resources/Properties/Tables/PropertiesTable.php` — coluna e filtro.
+- `resources/views/components/property/card.blade.php`, `resources/views/pages/property.blade.php` — a etiqueta no site.
+- `app/Http/Controllers/PropertyController.php`, `CompareController.php` — preço sob consulta também aqui.
+- `tests/Feature/SituacaoImovelTest.php` — testes novos.
+
+**Notas**
+
+- A situação é escrita à mão, por isso aparece igual na versão inglesa do site.
+- Verificado no browser com um imóvel de demonstração, entretanto apagado: etiqueta no
+  cartão, etiqueta na ficha e "Preço sob consulta" nos dois sítios.
+- 282 testes a passar e Pint limpo.
+
+---
+
 ## O Google passa a saber o nome do site e quem é a agência
 
 $${\color{#5D6348}\textsf{2026-09-14 · 10:22}}$$
