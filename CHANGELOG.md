@@ -9,6 +9,48 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A situação escolhe-se numa lista, como o tipo de negócio
+
+$${\color{#5D6348}\textsf{2026-09-29 · 17:44}}$$
+
+**Commit:** `8be0cc1` — `Backoffice: situacao do imovel em lista, com o "+" para criar uma nova`
+
+A agência preferiu que a situação do imóvel se escolhesse como o tipo de negócio, numa
+lista, sem o texto de ajuda por baixo.
+
+**O que mudou.**
+
+- O campo "Situação" passa a ser uma lista igual à do tipo de negócio: Reservado,
+  Vendido, Arrendado e as que a agência já tenha usado.
+- Ao lado da lista há um **+** que abre a janela "Nova situação": escreve-se o nome e
+  fica escolhida logo. Depois de gravada no imóvel, passa a aparecer na lista dos outros.
+  A agência continua a criar situações sem esperar por código.
+- Sai o texto de ajuda e o "Sem situação — o preço aparece normalmente". A caixa amarela
+  a avisar que o imóvel vai aparecer sob consulta fica.
+- O aviso diz agora "retire a situação" em vez de "apague", que é o que se faz numa lista.
+
+**Dois pormenores do Filament.** Com opções calculadas, a lista abria em "A carregar…";
+passa a vir com a página (`dynamicOptions(false)`), e abre logo como a do tipo de negócio.
+Só que, assim, a lista já desenhada não sabia de uma situação acabada de criar no **+**,
+e o campo ficava em branco com o valor escolhido. O campo leva uma chave que muda quando
+as opções mudam, e o Livewire volta a desenhá-lo.
+
+**Ficheiros**
+
+- `app/Filament/Resources/Properties/Schemas/PropertyForm.php` — a lista, o **+** e as
+  situações disponíveis.
+- `app/Filament/Resources/Properties/PropertyResource.php` — o texto do aviso.
+- `tests/Feature/SituacaoImovelTest.php` — teste novo: a lista tem as três de origem, o
+  **+** cria uma nova, grava-se, e ela passa a aparecer nos outros imóveis.
+
+**Notas**
+
+- Verificado no backoffice com uma conta de teste, entretanto apagada, sem gravar nenhum
+  imóvel: a lista abre com as três opções, e o **+** cria e mostra a situação nova.
+- 283 testes a passar e Pint limpo.
+
+---
+
 ## Os guiões verificam as extensões do PHP antes de começar
 
 $${\color{#5D6348}\textsf{2026-09-29 · 17:25}}$$
