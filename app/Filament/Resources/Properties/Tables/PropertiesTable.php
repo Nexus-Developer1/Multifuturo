@@ -100,7 +100,7 @@ class PropertiesTable
                 TextColumn::make('price')
                     ->label('Preço')
                     ->toggleable()
-                    ->state(fn (Property $record) => Format::price($record->price, $record->currency, $record->business_type, $record->price_visible))
+                    ->state(fn (Property $record) => Format::price($record->price, $record->currency, $record->business_type, $record->priceIsVisible()))
                     ->alignEnd()
                     ->sortable(),
 
@@ -154,6 +154,17 @@ class PropertiesTable
                     })
                     ->tooltip(fn (Property $record) => $record->status_reason)
                     ->sortable(['is_active', 'is_sold', 'off_market']),
+
+                // Situação do negócio: o que o site mostra por cima da fotografia,
+                // e o que manda o preço para "sob consulta".
+                TextColumn::make('commercial_state')
+                    ->label('Situação')
+                    ->toggleable()
+                    ->badge()
+                    ->color('warning')
+                    ->tooltip('Com situação, o site mostra "Preço sob consulta".')
+                    ->placeholder('—')
+                    ->sortable(),
 
                 TextColumn::make('tags')
                     ->label('Etiquetas')
@@ -231,6 +242,9 @@ class PropertiesTable
                 SelectFilter::make('city')
                     ->label('Concelho')
                     ->options(fn () => Property::query()->whereNotNull('city')->distinct()->orderBy('city')->pluck('city', 'city')->all()),
+                SelectFilter::make('commercial_state')
+                    ->label('Situação')
+                    ->options(fn () => Property::query()->whereNotNull('commercial_state')->distinct()->orderBy('commercial_state')->pluck('commercial_state', 'commercial_state')->all()),
                 TernaryFilter::make('is_active')
                     ->label('Publicado'),
                 TernaryFilter::make('is_featured')

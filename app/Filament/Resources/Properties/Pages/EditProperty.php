@@ -146,5 +146,10 @@ class EditProperty extends EditRecord
     protected function afterSave(): void
     {
         PropertyCache::flush();
+
+        // Mudar a situação muda o que o site mostra: avisa-se quem gravou.
+        if (array_key_exists('commercial_state', $this->getRecord()->getChanges())) {
+            PropertyResource::avisoDaSituacao($this->getRecord()->commercial_state)?->send();
+        }
     }
 }

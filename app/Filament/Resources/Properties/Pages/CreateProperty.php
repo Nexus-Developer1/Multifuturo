@@ -75,6 +75,8 @@ class CreateProperty extends CreateRecord
     protected function afterCreate(): void
     {
         PropertyCache::flush();
+
+        PropertyResource::avisoDaSituacao($this->getRecord()->commercial_state)?->send();
     }
 
     /**

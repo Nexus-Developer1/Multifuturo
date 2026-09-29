@@ -10,6 +10,7 @@ use App\Filament\Resources\Properties\Tables\PropertiesTable;
 use App\Models\Property;
 use App\Support\Format;
 use BackedEnum;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -43,12 +44,29 @@ class PropertyResource extends Resource
         return ['reference', 'internal_id', 'city', 'locality', 'zone'];
     }
 
+    /**
+     * Aviso de que a situação manda o preço para "sob consulta" — o mesmo texto
+     * ao criar e ao gravar. Sem situação, não há aviso a dar.
+     */
+    public static function avisoDaSituacao(?string $situacao): ?Notification
+    {
+        if (blank($situacao)) {
+            return null;
+        }
+
+        return Notification::make()
+            ->title('Este imóvel vai aparecer sob consulta')
+            ->body('Com a situação "'.$situacao.'", o site deixa de mostrar o preço na ficha e nas listagens: aparece "Preço sob consulta". Para voltar a mostrar o preço, apague a situação.')
+            ->warning()
+            ->persistent();
+    }
+
     /** @return array<string, string> */
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return array_filter([
             'Localização' => Format::location($record->locality, $record->city, $record->district),
-            'Preço' => Format::price($record->price, $record->currency, $record->business_type, $record->price_visible),
+            'Preço' => Format::price($record->price, $record->currency, $record->business_type, $record->priceIsVisible()),
         ]);
     }
 

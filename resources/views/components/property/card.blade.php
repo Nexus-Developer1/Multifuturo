@@ -17,15 +17,23 @@
     $specs = array_filter([
         $p->bedrooms !== null ? trans_choice('ui.property.rooms_count', $p->bedrooms, ['count' => $p->bedrooms]) : null,
         Format::area($p->house_area ?? $p->gross_area),
-        Format::price($p->price, $p->currency, $p->business_type, $p->price_visible),
+        Format::price($p->price, $p->currency, $p->business_type, $p->priceIsVisible()),
     ]);
 @endphp
 <article {{ $attributes->merge(['class' => 'group relative flex flex-col']) }} data-slug="{{ $p->slug }}">
     <a href="{{ $url }}" class="relative block overflow-hidden bg-sand-100" tabindex="-1" aria-hidden="true">
         <x-property.image :src="$p->cover_photo['url'] ?? null" :alt="$title" ratio="4/5" :eager="$eager"
                           class="transition-transform duration-700 group-hover:scale-[1.03]" />
-        @if ($p->is_exclusive)
-            <span class="absolute left-4 top-4 border border-sand-50/70 px-3 py-1.5 text-[0.65rem] font-medium uppercase tracking-label text-sand-50">{{ __('ui.property.exclusive') }}</span>
+        @if ($p->commercial_state || $p->is_exclusive)
+            {{-- Situação do negócio (Reservado, Vendido…) por cima da exclusividade: é a notícia. --}}
+            <div class="absolute left-4 top-4 flex flex-col items-start gap-1.5">
+                @if ($p->commercial_state)
+                    <span class="bg-ink/85 px-3 py-1.5 text-[0.65rem] font-medium uppercase tracking-label text-sand-50">{{ $p->commercial_state }}</span>
+                @endif
+                @if ($p->is_exclusive)
+                    <span class="border border-sand-50/70 px-3 py-1.5 text-[0.65rem] font-medium uppercase tracking-label text-sand-50">{{ __('ui.property.exclusive') }}</span>
+                @endif
+            </div>
         @endif
     </a>
 

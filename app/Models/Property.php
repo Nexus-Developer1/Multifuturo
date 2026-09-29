@@ -46,6 +46,7 @@ use Illuminate\Support\Str;
  * @property ?string $typology
  * @property ?string $building_name
  * @property ?string $status_reason
+ * @property ?string $commercial_state
  * @property ?string $address
  * @property ?string $street_number
  * @property array<string, mixed> $admin
@@ -87,6 +88,16 @@ class Property extends Model
 
     /** Pela ordem do CRM. Só "Ativa" chega ao site. */
     public const STATUSES = [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_PENDING];
+
+    /**
+     * Situação comercial — o que aconteceu ao negócio. Estas três vêm de
+     * origem, mas o campo é texto livre: o backoffice escreve outra situação
+     * quando precisar, sem passar pelo código.
+     *
+     * Não tira o imóvel do site (isso é o "Vendida" ou o "Fora do mercado"):
+     * a ficha continua lá, com a situação à vista e o preço sob consulta.
+     */
+    public const COMMERCIAL_STATES = ['Reservado', 'Vendido', 'Arrendado'];
 
     /**
      * Sem $fillable restritivo: a escrita é feita apenas pelo sync a partir de
@@ -139,6 +150,16 @@ class Property extends Model
             && ! $this->off_market
             && $this->internalStatus() === self::STATUS_ACTIVE
             && ! $this->trashed();
+    }
+
+    /**
+     * O preço aparece no site? Não, se o backoffice o escondeu à mão, nem se o
+     * imóvel tem situação comercial (reservado, vendido, arrendado…) — aí
+     * mostra-se "Preço sob consulta".
+     */
+    public function priceIsVisible(): bool
+    {
+        return $this->price_visible && blank($this->commercial_state);
     }
 
     /** Estado interno da angariação ("Actual" no CRM). */

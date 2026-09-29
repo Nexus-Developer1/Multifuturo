@@ -9,7 +9,7 @@
     $texto = $p->description ?: strip_tags((string) $p->website_html);
     $metaDescription = $p->seo_description
         ?: ($p->short_description
-        ?: ($texto ? mb_substr(preg_replace('/\s+/', ' ', strip_tags($texto)), 0, 155) : ($title.', '.$location.'. '.Format::price($p->price, $p->currency, $p->business_type, $p->price_visible))));
+        ?: ($texto ? mb_substr(preg_replace('/\s+/', ' ', strip_tags($texto)), 0, 155) : ($title.', '.$location.'. '.Format::price($p->price, $p->currency, $p->business_type, $p->priceIsVisible()))));
 
     // Cartão lateral, pela ordem da referência: Tipologia, Quarto(s), WCs, áreas, ano, certificado.
     $tipologia = ($p->typology && $p->typology !== 'Não aplicável') ? $p->typology : Format::typology($p->bedrooms);
@@ -94,7 +94,11 @@
                 </p>
             </div>
             <div class="text-right">
-                <p class="price text-3xl sm:text-4xl">{{ Format::price($p->price, $p->currency, $p->business_type, $p->price_visible) }}</p>
+                {{-- Reservado, Vendido, Arrendado…: por cima do preço, que passa a sob consulta. --}}
+                @if ($p->commercial_state)
+                    <p class="label text-olive-700">{{ $p->commercial_state }}</p>
+                @endif
+                <p class="price text-3xl sm:text-4xl">{{ Format::price($p->price, $p->currency, $p->business_type, $p->priceIsVisible()) }}</p>
                 <p class="mt-1 text-sm text-ink-muted">{{ __('ui.property.reference') }} {{ $p->reference ?? $p->internal_id }}</p>
             </div>
         </header>

@@ -51,7 +51,7 @@ class CompareController extends Controller
     private function rows($properties): array
     {
         $linhas = [
-            __('ui.property.price') => fn (Property $p) => Format::price($p->price, $p->currency, $p->business_type, $p->price_visible),
+            __('ui.property.price') => fn (Property $p) => Format::price($p->price, $p->currency, $p->business_type, $p->priceIsVisible()),
             __('ui.property.type') => fn (Property $p) => $p->property_type,
             __('ui.property.typology') => fn (Property $p) => ($p->typology && $p->typology !== 'Não aplicável') ? $p->typology : Format::typology($p->bedrooms),
             __('ui.property.wc') => fn (Property $p) => $p->bathrooms,

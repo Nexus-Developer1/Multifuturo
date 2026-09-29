@@ -23,6 +23,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Callout;
 use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -179,6 +180,30 @@ class PropertyForm
                     self::aoNivel(Checkbox::make('is_sold')
                         ->label('Vendida'))
                         ->columnSpan(['default' => 12, 'md' => 3]),
+
+                    /*
+                     * Situação do negócio. Texto livre de propósito: as três de
+                     * origem (Reservado, Vendido, Arrendado) são sugestões, e a
+                     * agência pode escrever outra sem esperar por código. As já
+                     * usadas passam a aparecer na lista, para não haver "Reservado"
+                     * e "reservada" à solta.
+                     */
+                    TextInput::make('commercial_state')
+                        ->label('Situação')
+                        ->placeholder('Sem situação — o preço aparece normalmente')
+                        ->helperText('Reservado, Vendido, Arrendado… ou o que precisar. Com situação, o site mostra "Preço sob consulta".')
+                        ->maxLength(32)
+                        ->live(onBlur: true)
+                        ->datalist(fn () => array_values(array_unique([
+                            ...Property::COMMERCIAL_STATES,
+                            ...self::existingValues('commercial_state'),
+                        ])))
+                        ->columnSpan(['default' => 12, 'md' => 4]),
+                    Callout::make('Este imóvel vai aparecer sob consulta')
+                        ->description(fn (callable $get): string => 'Com a situação "'.trim((string) $get('commercial_state')).'", o site deixa de mostrar o preço na ficha e nas listagens: em vez dele aparece "Preço sob consulta". A ficha continua publicada, com a situação à vista. Para voltar a mostrar o preço, apague a situação.')
+                        ->warning()
+                        ->visible(fn (callable $get): bool => filled($get('commercial_state')))
+                        ->columnSpan(['default' => 12, 'md' => 8]),
                 ]),
 
             Section::make('Geral')

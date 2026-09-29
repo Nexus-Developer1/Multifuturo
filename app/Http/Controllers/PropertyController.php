@@ -56,7 +56,7 @@ class PropertyController extends Controller
             'businessFunction' => $p->business_type->value === 'rent' ? 'http://purl.org/goodrelations/v1#LeaseOut' : 'http://purl.org/goodrelations/v1#Sell',
         ];
         // Preço escondido no backoffice não entra no JSON-LD (seria contraditório com a ficha).
-        if ($p->price !== null && $p->price_visible) {
+        if ($p->price !== null && $p->priceIsVisible()) {
             $offer['price'] = (string) $p->price;
             $offer['priceCurrency'] = $p->currency;
         }
