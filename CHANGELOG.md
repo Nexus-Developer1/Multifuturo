@@ -9,6 +9,63 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O deploy para o cPanel, num pacote
+
+$${\color{#5D6348}\textsf{2026-09-29 · 16:32}}$$
+
+**Commit:** `9ea1732` — `Deploy: pacote para o cPanel, com guiao de atualizacao por Cron`
+
+O site do cliente vive num alojamento cPanel, sem Docker e sem Terminal, e não havia
+maneira arrumada de lá pôr código novo: o que existia no repositório era o deploy em
+contentores, que serve o servidor de testes da NXS. Agora a atualização é um pacote.
+
+**Como passa a ser.**
+
+```powershell
+.\scripts\deploy-pacote.ps1      # gera dist\multifuturo-AAAAMMDD-HHMM.zip
+```
+
+O ZIP traz as dependências de produção e o CSS e o JS já compilados — o alojamento não
+precisa de Node nem de Composer — com a arrumação da conta lá dentro: `multifuturo/` (o
+projeto, sem `public/`) e `public_html/` (o conteúdo de `public/`, com o `index.php` a
+apontar para `../multifuturo`). Envia-se para `/home/multifut` no Gestor de Ficheiros e
+faz-se Extract por cima. O Composer e o Vite correm dentro do contentor do Sail, que é
+onde este projeto tem as versões certas.
+
+**O que aplica o pacote.** Um Cron Job de minuto a minuto corre o `atualizar.sh`, que só
+atua quando o manifesto traz uma versão nova: apaga os ficheiros de código que saíram do
+pacote (extrair por cima não apaga nada), corre as migrações, garante o atalho das
+fotografias, regenera as caches e corrige as permissões. O resultado fica em
+`storage/atualizacao.log`, com `FIM` ou `FALHOU` na última linha. O `.env`, o `storage/`
+e a base de dados nunca são tocados.
+
+**A pasta pública.** O `bootstrap/app.php` reconhece a arrumação do cPanel — projeto sem
+`public/`, `public_html` ao lado — e passa a usá-la como pasta pública. Sem isto, o
+`storage:link`, os assets do Filament e o manifesto do Vite iam parar a uma pasta fora
+da web. Em desenvolvimento e no servidor em contentores nada muda.
+
+**Sem Redis.** O `.env.cpanel.example` é o modelo do alojamento partilhado: sessões,
+cache e fila na base de dados, logs em ficheiro, SMTP do domínio. A fila e as tarefas
+agendadas correm por Cron (ver DEPLOY.md).
+
+**Ficheiros**
+
+- `scripts/deploy-pacote.ps1` — gera o pacote.
+- `scripts/atualizar-servidor.sh` — aplica o pacote no servidor (vai como `atualizar.sh`).
+- `scripts/instalar-servidor.sh` — a primeira instalação (vai como `instalar.sh`).
+- `bootstrap/app.php` — a pasta pública do cPanel.
+- `.env.cpanel.example` — o modelo do alojamento.
+- `DEPLOY.md` — secção 11 nova, com os três Cron Jobs; `README.md` e `.gitignore` atualizados.
+
+**Notas**
+
+- Pacote gerado e verificado: 26 MB, 19 138 ficheiros, sem dependências de
+  desenvolvimento, sem nenhum `.env` a não ser o modelo, com o `index.php` corrigido e o
+  manifesto a listar os 218 ficheiros de código.
+- 282 testes a passar e Pint limpo.
+
+---
+
 ## Reservado, Vendido, Arrendado — e o preço passa a sob consulta
 
 $${\color{#5D6348}\textsf{2026-09-29 · 16:05}}$$
