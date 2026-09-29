@@ -345,6 +345,13 @@ AddHandler application/x-httpd-alt-php83___lsphp .php .php8 .phtml
 # php -- END cPanel-generated handler, do not edit
 ```
 
+As **extensões** do PHP 8.3 escolhem-se em *Select PHP Version* → *Extensions*
+(o seletor do CloudLinux, que vale para o site e para o Cron). O projeto precisa
+de: `ctype`, `dom`, `fileinfo`, `filter`, `iconv`, `intl`, `libxml`, `mbstring`,
+`openssl`, `pdo_mysql` (com `mysqlnd`), `session`, `tokenizer`, `xml`,
+`xmlreader` e `zip`. Os guiões verificam-nas antes de começar e, se faltar
+alguma, o registo diz quais.
+
 Por isso o pacote **não leva** `.htaccess`: leva `.htaccess.modelo`, que o
 `atualizar.sh` só usa quando não existe nenhum. Substituí-lo numa atualização
 faria o domínio cair para o PHP do sistema (7.4) e o site respondia com

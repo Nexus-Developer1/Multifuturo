@@ -57,6 +57,16 @@ case "$VERSAO_PHP" in
         ;;
 esac
 
+# As extensões do PHP que o projeto usa (composer.lock + base de dados). Com
+# uma a faltar, o artisan estoirava no primeiro passo que a usasse; assim o
+# registo diz logo todas as que faltam.
+FALTAM=$("$PHP" -r 'echo implode(" ", array_filter(["ctype", "dom", "fileinfo", "filter", "iconv", "intl", "libxml", "mbstring", "openssl", "pdo_mysql", "session", "tokenizer", "xmlreader", "zip"], fn ($e) => ! extension_loaded($e)));')
+if [ -n "$FALTAM" ]; then
+    echo "FALHOU - faltam extensões do PHP: $FALTAM"
+    echo "         Ativar no cPanel, em Select PHP Version > Extensions (versão 8.3)."
+    exit 1
+fi
+
 # Cada passo é verificado aqui: "set -e" não serve, porque o sh ignora-o em
 # vários contextos e o guião seguiria em frente depois de um erro.
 passo() {
