@@ -9,6 +9,37 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Os guiões verificam as extensões do PHP antes de começar
+
+$${\color{#5D6348}\textsf{2026-09-29 · 17:25}}$$
+
+**Commit:** `73ba332` — `Deploy: guioes do cPanel verificam as extensoes do PHP antes de migrar`
+
+A primeira atualização no alojamento parou nas migrações com `Class "DOMDocument" not
+found`: o PHP 8.3 do domínio não tinha a extensão `dom` ativa. Faltando uma, é provável
+que faltem outras, e cada tentativa só mostraria a seguinte.
+
+**O que mudou.** O `atualizar.sh` e o `instalar.sh` verificam, logo a seguir à versão do
+PHP, todas as extensões que o projeto usa — as pedidas pelo `composer.lock` e o
+`pdo_mysql` da base de dados. Se faltar alguma, o registo diz `FALHOU` com a lista
+completa e onde se ativam, sem tocar em nada.
+
+O `DEPLOY.md` passa a listar as extensões e a dizer onde se escolhem: *Select PHP
+Version* → *Extensions*, o seletor do CloudLinux, que vale para o site e para o Cron.
+
+**Ficheiros**
+
+- `scripts/atualizar-servidor.sh`, `scripts/instalar-servidor.sh` — a verificação.
+- `DEPLOY.md` — as extensões necessárias, na secção 11.
+
+**Notas**
+
+- Uma atualização que falha não fica marcada como aplicada, por isso o Cron volta a
+  tentar a cada minuto: depois de ativar as extensões, a atualização conclui sozinha.
+- Sintaxe dos guiões verificada e pacote novo gerado.
+
+---
+
 ## Os guiões do cPanel encontram o PHP 8.3 deste alojamento
 
 $${\color{#5D6348}\textsf{2026-09-29 · 17:17}}$$
