@@ -73,6 +73,14 @@ rm -f "$APP/storage/.manifesto-novo" "$APP/storage/.manifesto-atual"
 # Caches do pacote anterior (configuração, rotas, vistas, pacotes).
 rm -f bootstrap/cache/*.php
 
+# Sobra de um envio antigo: com uma pasta public/ dentro do projeto, o
+# bootstrap/app.php deixa de usar o public_html e o storage:link e os assets do
+# Filament vão parar a uma pasta fora da web. Avisa-se, mas não se apaga nada.
+if [ -d "$APP/public" ]; then
+    echo "AVISO: existe $APP/public, de um envio anterior."
+    echo "       A pasta pública é $WEB — apague $APP/public no Gestor de Ficheiros."
+fi
+
 passo "migrate" "$PHP" artisan migrate --force
 
 # 3. Fotografias dos imóveis: public_html/storage aponta para storage/app/public.
