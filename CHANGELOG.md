@@ -9,6 +9,38 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## Os guiões do cPanel encontram o PHP 8.3 deste alojamento
+
+$${\color{#5D6348}\textsf{2026-09-29 · 17:17}}$$
+
+**Commit:** `d01e2a0` — `Deploy: guioes do cPanel usam o alt-php83 e recusam outro PHP`
+
+O alojamento da Multifuturo é CloudLinux: o PHP 8.3 do domínio é o **alt-php83**, e o PHP
+do sistema — o que o Cron usa se ninguém disser outro — é o 7.4. Os guiões procuravam o
+8.3 onde ele fica noutros alojamentos (`ea-php83`), não o encontravam e caíam para o 7.4,
+com o qual o `artisan` não arranca.
+
+**O que mudou.**
+
+- O `atualizar.sh` e o `instalar.sh` procuram primeiro `/opt/alt/php83/usr/bin/php`; os
+  caminhos do `ea-php83` ficam como alternativa, para o caso de a conta mudar de servidor.
+- Os dois recusam correr com outro PHP que não o 8.3 ou mais recente: escrevem no
+  registo `FALHOU`, com a versão encontrada e o caminho, em vez de estoirarem a meio.
+- O `DEPLOY.md` passa a mostrar os Cron Jobs com o caminho do alt-php83, e o bloco do
+  `.htaccess` com o nome que o cPanel usa para ele.
+
+**Ficheiros**
+
+- `scripts/atualizar-servidor.sh`, `scripts/instalar-servidor.sh` — o caminho do PHP e a
+  guarda da versão.
+- `DEPLOY.md` — os caminhos e o nome do bloco do PHP, na secção 11.
+
+**Notas**
+
+- Sintaxe dos dois guiões verificada (`sh -n`) e pacote novo gerado.
+
+---
+
 ## O pacote deixa de mexer no `.htaccess` do alojamento
 
 $${\color{#5D6348}\textsf{2026-09-29 · 16:44}}$$
