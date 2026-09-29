@@ -56,7 +56,7 @@ class PropertyResource extends Resource
 
         return Notification::make()
             ->title('Este imóvel vai aparecer sob consulta')
-            ->body('Com a situação "'.$situacao.'", o site deixa de mostrar o preço na ficha e nas listagens: aparece "Preço sob consulta". Para voltar a mostrar o preço, apague a situação.')
+            ->body('Com a situação "'.$situacao.'", o site deixa de mostrar o preço na ficha e nas listagens: aparece "Preço sob consulta". Para voltar a mostrar o preço, retire a situação.')
             ->warning()
             ->persistent();
     }

@@ -112,6 +112,21 @@ class PropertyForm
             ->all();
     }
 
+    /**
+     * Situações para a lista: as de origem, as já usadas e a do imóvel (que pode
+     * ter acabado de ser criada no "+" e ainda não estar gravada).
+     *
+     * @return array<string, string>
+     */
+    private static function commercialStates(?string $atual = null): array
+    {
+        return self::list(array_values(array_unique(array_filter([
+            ...Property::COMMERCIAL_STATES,
+            ...self::existingValues('commercial_state'),
+            $atual,
+        ]))));
+    }
+
     /** @param  array<int, string>  $values */
     private static function list(array $values): array
     {
@@ -182,25 +197,38 @@ class PropertyForm
                         ->columnSpan(['default' => 12, 'md' => 3]),
 
                     /*
-                     * Situação do negócio. Texto livre de propósito: as três de
-                     * origem (Reservado, Vendido, Arrendado) são sugestões, e a
-                     * agência pode escrever outra sem esperar por código. As já
-                     * usadas passam a aparecer na lista, para não haver "Reservado"
-                     * e "reservada" à solta.
+                     * Situação do negócio: uma lista como a do tipo de negócio.
+                     * As três de origem (Reservado, Vendido, Arrendado) juntam-se
+                     * às que a agência já usou, e o "+" ao lado cria uma nova sem
+                     * esperar por código. A que o imóvel tem entra sempre na
+                     * lista, mesmo acabada de criar e ainda por gravar.
                      */
-                    TextInput::make('commercial_state')
+                    Select::make('commercial_state')
                         ->label('Situação')
-                        ->placeholder('Sem situação — o preço aparece normalmente')
-                        ->helperText('Reservado, Vendido, Arrendado… ou o que precisar. Com situação, o site mostra "Preço sob consulta".')
-                        ->maxLength(32)
-                        ->live(onBlur: true)
-                        ->datalist(fn () => array_values(array_unique([
-                            ...Property::COMMERCIAL_STATES,
-                            ...self::existingValues('commercial_state'),
-                        ])))
+                        ->options(fn (?string $state): array => self::commercialStates($state))
+                        // As opções vêm com a página, como no tipo de negócio: sem
+                        // isto, por serem calculadas, a lista abria em "A carregar…".
+                        ->dynamicOptions(false)
+                        // …mas então a lista já desenhada não sabe de uma situação
+                        // acabada de criar no "+", e o campo ficava em branco. A chave
+                        // muda quando a lista muda, e o Livewire volta a desenhá-lo.
+                        ->extraFieldWrapperAttributes(fn (?string $state): array => [
+                            'wire:key' => 'situacao-'.md5(implode('|', self::commercialStates($state))),
+                        ])
+                        ->native(false)
+                        ->live()
+                        ->createOptionForm([
+                            TextInput::make('nome')
+                                ->label('Nome')
+                                ->placeholder('Ex.: Em escritura')
+                                ->required()
+                                ->maxLength(32),
+                        ])
+                        ->createOptionModalHeading('Nova situação')
+                        ->createOptionUsing(fn (array $data): string => trim((string) $data['nome']))
                         ->columnSpan(['default' => 12, 'md' => 4]),
                     Callout::make('Este imóvel vai aparecer sob consulta')
-                        ->description(fn (callable $get): string => 'Com a situação "'.trim((string) $get('commercial_state')).'", o site deixa de mostrar o preço na ficha e nas listagens: em vez dele aparece "Preço sob consulta". A ficha continua publicada, com a situação à vista. Para voltar a mostrar o preço, apague a situação.')
+                        ->description(fn (callable $get): string => 'Com a situação "'.trim((string) $get('commercial_state')).'", o site deixa de mostrar o preço na ficha e nas listagens: em vez dele aparece "Preço sob consulta". A ficha continua publicada, com a situação à vista. Para voltar a mostrar o preço, retire a situação.')
                         ->warning()
                         ->visible(fn (callable $get): bool => filled($get('commercial_state')))
                         ->columnSpan(['default' => 12, 'md' => 8]),

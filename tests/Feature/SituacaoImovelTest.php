@@ -11,6 +11,8 @@ use App\Filament\Resources\Properties\Pages\EditProperty;
 use App\Filament\Resources\Properties\PropertyResource;
 use App\Models\Property;
 use App\Models\User;
+use Filament\Actions\Testing\TestAction;
+use Filament\Forms\Components\Select;
 use Livewire\Livewire;
 
 it('com situação, o site troca o preço por "sob consulta" e mostra a situação', function () {
@@ -70,6 +72,28 @@ it('a situação é texto livre: o backoffice escreve uma que não existe no có
 
     // As três de origem continuam a ser as sugestões.
     expect(Property::COMMERCIAL_STATES)->toBe(['Reservado', 'Vendido', 'Arrendado']);
+});
+
+it('a situação escolhe-se numa lista, e o "+" cria uma nova sem código', function () {
+    $this->actingAs(User::factory()->create());
+
+    $p = Property::factory()->create();
+
+    Livewire::test(EditProperty::class, ['record' => $p->getRouteKey()])
+        // As três de origem estão na lista, como as opções do tipo de negócio.
+        ->assertFormFieldExists('commercial_state', fn ($campo) => $campo instanceof Select
+            && array_keys($campo->getOptions()) === Property::COMMERCIAL_STATES)
+        ->callAction(TestAction::make('createOption')->schemaComponent('commercial_state'), data: ['nome' => 'Aguarda banco'])
+        ->assertFormSet(['commercial_state' => 'Aguarda banco'])
+        ->assertSee('Este imóvel vai aparecer sob consulta')
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($p->refresh()->commercial_state)->toBe('Aguarda banco');
+
+    // Depois de usada, a nova passa a estar na lista dos outros imóveis.
+    Livewire::test(EditProperty::class, ['record' => Property::factory()->create()->getRouteKey()])
+        ->assertFormFieldExists('commercial_state', fn ($campo) => array_key_exists('Aguarda banco', $campo->getOptions()));
 });
 
 it('o aviso de "sob consulta" só aparece quando há situação', function () {
