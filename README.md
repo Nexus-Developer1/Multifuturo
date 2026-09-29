@@ -71,10 +71,15 @@ flowchart LR
 
 ## 🌍 Produção
 
-O deploy está preparado e testado: Docker em produção com Apache (mod_php; o HTTPS termina no Apache do anfitrião),
-fila, agendador, MySQL e Redis — `compose.production.yaml`,
-`docker/production/`, `deploy/deploy.sh` e `deploy/restore.sh`. O guia completo, do
-servidor vazio ao site no ar e às atualizações, está em **[DEPLOY.md](DEPLOY.md)**.
+O site do cliente está num **alojamento cPanel** (`multifuturo.pt`), sem Docker e sem Terminal: o
+código vai num pacote já pronto, gerado por `scripts\deploy-pacote.ps1`, e um Cron Job aplica-o
+(`scripts/atualizar-servidor.sh`). O `.env` de lá faz-se do `.env.cpanel.example`.
+
+Há também a pilha em **Docker** — Apache (mod_php; o HTTPS termina no Apache do anfitrião), fila,
+agendador, MySQL e Redis (`compose.production.yaml`, `docker/production/`, `deploy/deploy.sh`,
+`deploy/restore.sh`) — que serve o servidor de testes da NXS.
+
+O guia completo dos dois caminhos está em **[DEPLOY.md](DEPLOY.md)** (o cPanel na secção 11).
 
 ## 🚀 Começar
 

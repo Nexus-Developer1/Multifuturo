@@ -25,3 +25,6 @@ Homestead.yaml
 Thumbs.db
 storage/app/design/
 storage/backups/
+
+# Pacotes de deploy para o cPanel (scripts/deploy-pacote.ps1)
+/dist

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
-return Application::configure(basePath: dirname(__DIR__))
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
@@ -40,3 +40,18 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
+
+/*
+ * Alojamento cPanel: o domínio serve sempre ~/public_html, por isso o conteúdo
+ * de public/ vive lá e o projeto fica ao lado, em ~/multifuturo. Sem isto, o
+ * public_path() apontava para uma pasta fora da web e o storage:link, os
+ * assets do Filament e o manifesto do Vite iam parar ao sítio errado.
+ *
+ * Em desenvolvimento (e no servidor em Docker) a pasta public/ existe dentro
+ * do projeto e nada muda.
+ */
+if (! is_dir($app->basePath('public')) && is_dir($publico = dirname($app->basePath()).'/public_html')) {
+    $app->usePublicPath($publico);
+}
+
+return $app;

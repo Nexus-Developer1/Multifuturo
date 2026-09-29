@@ -257,11 +257,85 @@ Depois do certbot, acrescentar ao vhost `*:443` que ele criou
 e `sudo systemctl reload apache2`.
 
 **Alojamento com painel (cPanel/Plesk):** a mesma ideia — o painel gere o
-certificado e cria-se um proxy do domínio para `http://127.0.0.1:8080`. Se o
-alojamento não permitir Docker de todo, este projeto precisa de PHP 8.3 (com
-pdo_mysql, redis, intl, gd, zip, bcmath, exif, pcntl), MySQL 8 e Redis
-no próprio alojamento — raro num alojamento partilhado; nesse caso, um VPS
-pequeno é o caminho.
+certificado e cria-se um proxy do domínio para `http://127.0.0.1:8080`. Sem
+Docker no alojamento, o caminho é a secção 11: o código vai num pacote já
+pronto e não é preciso nem Redis nem contentores.
 
 O `docker/production/vhost.conf` (o Apache de dentro do contentor) já trata
 dos cabeçalhos de segurança, da compressão e das caches dos estáticos.
+
+## 11. Alojamento cPanel (é onde o site está)
+
+`multifuturo.pt` vive num alojamento partilhado com cPanel, sem Docker e sem
+Terminal: os comandos do servidor correm por **Cron Job**. O alojamento não
+precisa de Node nem de Composer — o pacote vai já pronto daqui.
+
+A conta está arrumada assim:
+
+```
+/home/multifut/multifuturo/    o projeto (vendor de produção), fora do alcance da web
+/home/multifut/public_html/    o conteúdo de public/ (assets, Filament, index.php
+                               a apontar para ../multifuturo) e o atalho storage/
+```
+
+O `bootstrap/app.php` reconhece esta arrumação (sem `public/` no projeto, com
+`../public_html` ao lado) e usa o `public_html` como pasta pública. Em
+desenvolvimento e no servidor em contentores nada muda.
+
+O `.env` do alojamento faz-se a partir de
+[.env.cpanel.example](.env.cpanel.example): sem Redis, com as sessões, a cache
+e a fila na base de dados.
+
+### Gerar e enviar o pacote
+
+```powershell
+.\scripts\deploy-pacote.ps1      # gera dist\multifuturo-AAAAMMDD-HHMM.zip
+```
+
+Precisa do Docker a correr (o Composer e o Vite correm dentro do contentor).
+Enviar o ZIP para `/home/multifut` no Gestor de Ficheiros e fazer **Extract**
+por cima.
+
+### O Cron que aplica
+
+Um Cron Job "Once Per Minute" fica permanentemente com:
+
+```
+tr -d '\r' < /home/multifut/multifuturo/atualizar.sh | /bin/sh > /home/multifut/cron-debug.txt 2>&1
+```
+
+O `atualizar.sh` só atua quando o `deploy-manifest.txt` do pacote traz uma
+versão ainda não aplicada: apaga os ficheiros de código que saíram do pacote
+(extrair por cima não os apaga), corre as migrações, garante o atalho das
+fotografias, regenera as caches e corrige as permissões. O resultado fica em
+`multifuturo/storage/atualizacao.log`, cuja última linha é `FIM` ou `FALHOU`.
+
+O `.env`, o `storage/` (fotografias, documentos, cópias) e a base de dados
+nunca são tocados.
+
+### Os outros dois Cron Jobs
+
+```
+# Tarefas agendadas: cópia de segurança diária e limpeza dos consentimentos
+* * * * * /opt/cpanel/ea-php83/root/usr/bin/php /home/multifut/multifuturo/artisan schedule:run >/dev/null 2>&1
+
+# Fila: os emails dos pedidos do site
+* * * * * /opt/cpanel/ea-php83/root/usr/bin/php /home/multifut/multifuturo/artisan queue:work --stop-when-empty --max-time=50 --tries=3 >/dev/null 2>&1
+```
+
+### Primeira instalação
+
+Extrair o pacote, criar o `.env` (do `.env.cpanel.example`, com a base de dados
+de *MySQL Databases* e a conta de email de *Email Accounts*) e pôr o Cron a
+correr o `instalar.sh` em vez do `atualizar.sh`, uma vez. Ele gera a `APP_KEY`,
+cria as tabelas, põe o atalho das fotografias e gera as caches; o resultado
+fica em `multifuturo/storage/instalacao.log`. Depois troca-se o Cron para o
+`atualizar.sh` e cria-se a primeira conta da equipa.
+
+### Notas do alojamento
+
+- O editor de ficheiros do cPanel grava com fins de linha do Windows — daí o
+  `tr -d '\r'` no Cron, e os guiões tolerarem `APP_KEY=` seguido de `\r`.
+- `www.multifuturo.pt` é reencaminhado para `multifuturo.pt`
+  (`RedirectToCanonicalHost`): com os dois endereços, o login dava "Page
+  Expired", porque o cookie de sessão não segue de um para o outro.
