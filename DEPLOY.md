@@ -332,6 +332,23 @@ cria as tabelas, põe o atalho das fotografias e gera as caches; o resultado
 fica em `multifuturo/storage/instalacao.log`. Depois troca-se o Cron para o
 `atualizar.sh` e cria-se a primeira conta da equipa.
 
+### A versão de PHP e o `.htaccess`
+
+O domínio tem de estar em **PHP 8.3** no *MultiPHP Manager* do cPanel. É lá que
+se escolhe, e a escolha fica escrita num bloco no `public_html/.htaccess`:
+
+```apache
+# php -- BEGIN cPanel-generated handler, do not edit
+AddHandler application/x-httpd-ea-php83 .php .php8 .phtml
+# php -- END cPanel-generated handler, do not edit
+```
+
+Por isso o pacote **não leva** `.htaccess`: leva `.htaccess.modelo`, que o
+`atualizar.sh` só usa quando não existe nenhum. Substituí-lo numa atualização
+faria o domínio cair para o PHP do sistema (7.4) e o site respondia com
+*"Composer detected issues in your platform"*, que é o aviso das dependências
+a exigirem 8.3.
+
 ### Notas do alojamento
 
 - O editor de ficheiros do cPanel grava com fins de linha do Windows — daí o

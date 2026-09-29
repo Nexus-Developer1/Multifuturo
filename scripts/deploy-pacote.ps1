@@ -98,9 +98,16 @@ try {
             Where-Object Name -ne '.gitignore' | Remove-Item -Force
     }
 
+    # O .htaccess do servidor fica de fora: alem das regras do Laravel, leva o
+    # bloco que o cPanel escreve para escolher a versao de PHP do dominio
+    # (MultiPHP Manager). Substitui-lo numa atualizacao fazia o dominio cair
+    # para o PHP do sistema (7.4) e o site deixava de abrir. Vai como modelo,
+    # para o atualizar.sh o usar se nao existir nenhum.
     Copy-Tree (Join-Path $root 'public') $web `
         -excludeDirs @((Join-Path $root 'public\storage')) `
-        -excludeFiles @('hot')
+        -excludeFiles @('hot', '.htaccess')
+
+    Copy-Item (Join-Path $root 'public\.htaccess') (Join-Path $web '.htaccess.modelo') -Force
 
     # O index.php passa a procurar o projeto em ../multifuturo em vez de ..
     $index = Join-Path $web 'index.php'

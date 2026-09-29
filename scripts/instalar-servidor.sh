@@ -53,6 +53,13 @@ fi
 
 passo "migrate" "$PHP" artisan migrate --force
 
+# O .htaccess vem no pacote como modelo, para não pisar o bloco que o cPanel
+# escreve nele com a versão de PHP do domínio.
+if [ ! -f "$WEB/.htaccess" ] && [ -f "$WEB/.htaccess.modelo" ]; then
+    cp "$WEB/.htaccess.modelo" "$WEB/.htaccess"
+    echo "== .htaccess criado do modelo"
+fi
+
 if [ ! -e "$WEB/storage" ]; then
     echo "== atalho das fotografias"
     ln -s "$APP/storage/app/public" "$WEB/storage"

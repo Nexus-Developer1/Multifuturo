@@ -56,7 +56,16 @@ passo() {
 
 echo "== $(date)"
 echo "== versão: $VERSAO"
-echo "== PHP: $PHP"
+echo "== PHP: $PHP ($("$PHP" -r 'echo PHP_VERSION;' 2>/dev/null))"
+
+# O .htaccess do public_html nunca se substitui: além das regras do Laravel,
+# leva o bloco que o cPanel escreve para escolher a versão de PHP do domínio.
+# Só se cria se faltar, a partir do modelo que vem no pacote.
+if [ ! -f "$WEB/.htaccess" ] && [ -f "$WEB/.htaccess.modelo" ]; then
+    cp "$WEB/.htaccess.modelo" "$WEB/.htaccess"
+    echo "== .htaccess criado do modelo"
+    echo "   Confirme a versão de PHP do domínio no MultiPHP Manager (8.3)."
+fi
 
 # 1. Ficheiros que saíram do pacote. Só nas pastas de código: storage/,
 #    vendor/, .env e as fotografias nunca são tocados.
