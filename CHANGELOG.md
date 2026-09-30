@@ -9,6 +9,71 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A listagem atualiza-se logo ao gravar, também no cPanel
+
+$${\color{#5D6348}\textsf{2026-09-30 · 10:11}}$$
+
+**Commit:** `25070eb` — `Site: cache dos imoveis invalida-se sem Redis, e cartao com situacao so com preco sob consulta`
+
+A agência pôs um imóvel em "Reservado" e a listagem continuou a mostrar o preço, os
+quartos e a área. A ficha já mostrava "Reservado" e "Preço sob consulta": a situação
+estava gravada, a listagem é que estava a mostrar uma cópia antiga.
+
+**O que estava por trás.** As listagens, os destaques e as zonas guardam as leituras de
+imóveis em cache, e o backoffice limpa essa cache sempre que grava. A limpeza usava
+tags, que o Redis tem — no servidor de testes funcionava. No alojamento cPanel não há
+Redis: a cache fica na base de dados, que não tem tags, e a limpeza não fazia nada. A
+listagem só se atualizava quando a cópia expirava, ao fim de uma hora.
+
+**O que mudou.**
+
+- Nas caches sem tags, as chaves passam a levar uma versão, e gravar no backoffice muda
+  de versão: as cópias antigas deixam de ser lidas e expiram sozinhas. Com Redis fica
+  tudo como estava.
+- Com situação, o cartão do imóvel mostra só "Preço sob consulta", sem os quartos nem a
+  área — o negócio já não está aberto e os pormenores ficam na ficha.
+
+**Ficheiros**
+
+- `app/Support/PropertyCache.php` — a versão nas chaves, sem tags.
+- `resources/views/components/property/card.blade.php` — o cartão com situação.
+- `tests/Feature/SituacaoImovelTest.php` — testes novos: o cartão com situação, e gravar
+  "Reservado" pelo backoffice com a cache na base de dados, como no cPanel, atualiza
+  logo a listagem.
+
+**Notas**
+
+- 288 testes a passar e Pint limpo.
+
+---
+
+## Um "Actual" vazio já não esconde o imóvel da listagem
+
+$${\color{#5D6348}\textsf{2026-09-30 · 10:11}}$$
+
+**Commit:** `9fceead` — `Site: ficha com o Actual a null no JSON volta a aparecer nas listagens`
+
+Encontrado a testar a atualização da listagem depois de gravar uma situação. Uma ficha
+sem "Actual", quando gravada pelo formulário, fica com `{"status": null}` no JSON. A
+ficha tratava isso como "Ativa" e continuava publicada, mas a consulta das listagens lia
+o texto `null` e escondia-a — o imóvel sumia de Comprar e Arrendar sem nenhum aviso.
+
+**O que mudou.** A consulta das listagens trata o `null` do JSON como falta do campo,
+tal como a ficha: conta como "Ativa". Nada muda para as fichas com o "Actual"
+preenchido.
+
+**Ficheiros**
+
+- `app/Models/Property.php` — o scope `active()`.
+- `tests/Feature/BackofficeCrmFieldsTest.php` — teste novo: uma ficha com o "Actual" a
+  `null` é publicável e aparece na listagem.
+
+**Notas**
+
+- 288 testes a passar e Pint limpo.
+
+---
+
 ## O cartão do imóvel sem a referência
 
 $${\color{#5D6348}\textsf{2026-09-30 · 09:52}}$$
