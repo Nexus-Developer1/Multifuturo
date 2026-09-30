@@ -215,9 +215,11 @@ class Property extends Model
             ->where('off_market', false)
             // "Actual" (o estado interno da angariação): só uma ficha "Ativa" chega
             // ao site — "Inativa" e "Pendente" ficam de fora, mesmo que o "Visível no
-            // website" tenha ficado ligado. As fichas antigas não têm o campo —
-            // COALESCE trata-as como ativas.
-            ->whereRaw("COALESCE(JSON_UNQUOTE(JSON_EXTRACT(admin, '$.status')), ?) = ?", [self::STATUS_ACTIVE, self::STATUS_ACTIVE]);
+            // website" tenha ficado ligado. As fichas sem o campo contam como ativas,
+            // como no internalStatus(): tanto as que não o têm (SQL NULL) como as
+            // que o têm a null no JSON — o JSON_UNQUOTE devolve aí o texto 'null',
+            // e a ficha desaparecia da listagem continuando "publicável".
+            ->whereRaw("COALESCE(NULLIF(JSON_UNQUOTE(JSON_EXTRACT(admin, '$.status')), 'null'), ?) = ?", [self::STATUS_ACTIVE, self::STATUS_ACTIVE]);
     }
 
     /** @param  Builder<Property>  $query */

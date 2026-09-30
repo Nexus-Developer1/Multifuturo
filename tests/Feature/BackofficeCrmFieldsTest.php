@@ -283,6 +283,18 @@ it('as fichas sem "Actual" contam como ativas', function () {
     $this->get(route('buy'))->assertOk()->assertSee('data-slug="'.$p->slug.'"', false);
 });
 
+it('o "Actual" gravado a null conta como ativa, na ficha e na listagem', function () {
+    // Gravar pelo formulário uma ficha sem "Actual" escreve {"status": null} no
+    // JSON. O internalStatus() tratava-a como ativa, mas o scope lia o texto
+    // 'null' e a ficha sumia da listagem (encontrado a 2026-09-30).
+    $p = Property::factory()->create(['admin' => ['status' => null]]);
+
+    expect($p->isPublishable())->toBeTrue()
+        ->and(Property::query()->active()->whereKey($p->getKey())->exists())->toBeTrue();
+
+    $this->get(route('buy'))->assertOk()->assertSee('data-slug="'.$p->slug.'"', false);
+});
+
 it('marcar "Inativa" no formulário desliga o "Visível no website"', function () {
     $p = Property::factory()->create(['is_active' => true, 'admin' => ['status' => Property::STATUS_ACTIVE]]);
 
