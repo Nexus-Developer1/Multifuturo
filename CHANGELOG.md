@@ -9,6 +9,36 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## "Sem situação" no topo da lista
+
+$${\color{#5D6348}\textsf{2026-09-30 · 09:19}}$$
+
+**Commit:** `2daea6c` — `Backoffice: opcao "Sem situacao" no topo da lista da situacao`
+
+Depois de escolher uma situação, não havia na lista maneira visível de a tirar: o
+Filament só oferece um × pequeno ao lado, que passa despercebido.
+
+**O que mudou.** A lista da situação abre agora com **Sem situação** no topo, seguida de
+Reservado, Vendido, Arrendado e das que a agência já usou. Escolhê-la tira a situação:
+a caixa amarela desaparece e, ao gravar, o site volta a mostrar o preço. O campo vazio
+também diz "Sem situação", em vez de "Seleccione uma opção". Na base de dados fica
+`null`, e não um texto vazio.
+
+**Ficheiros**
+
+- `app/Filament/Resources/Properties/Schemas/PropertyForm.php` — a opção vazia, o texto
+  do campo vazio e a gravação como `null`.
+- `tests/Feature/SituacaoImovelTest.php` — teste novo: "Sem situação" grava `null` e o
+  preço volta a aparecer; o teste da lista passa a contar com a opção vazia.
+
+**Notas**
+
+- Verificado no backoffice com uma conta de teste, entretanto apagada, sem gravar nenhum
+  imóvel: a lista abre com "Sem situação" em primeiro.
+- 284 testes a passar e Pint limpo.
+
+---
+
 ## A situação escolhe-se numa lista, como o tipo de negócio
 
 $${\color{#5D6348}\textsf{2026-09-29 · 17:44}}$$
