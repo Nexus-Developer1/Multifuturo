@@ -205,7 +205,11 @@ class PropertyForm
                      */
                     Select::make('commercial_state')
                         ->label('Situação')
-                        ->options(fn (?string $state): array => self::commercialStates($state))
+                        // "Sem situação" no topo: é por aí que o imóvel volta a mostrar
+                        // o preço. Vale vazio, e grava-se como null.
+                        ->options(fn (?string $state): array => ['' => 'Sem situação'] + self::commercialStates($state))
+                        ->placeholder('Sem situação')
+                        ->dehydrateStateUsing(fn (?string $state): ?string => filled($state) ? $state : null)
                         // As opções vêm com a página, como no tipo de negócio: sem
                         // isto, por serem calculadas, a lista abria em "A carregar…".
                         ->dynamicOptions(false)

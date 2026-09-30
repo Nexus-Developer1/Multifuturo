@@ -80,9 +80,9 @@ it('a situação escolhe-se numa lista, e o "+" cria uma nova sem código', func
     $p = Property::factory()->create();
 
     Livewire::test(EditProperty::class, ['record' => $p->getRouteKey()])
-        // As três de origem estão na lista, como as opções do tipo de negócio.
+        // "Sem situação" no topo e as três de origem, como as opções do tipo de negócio.
         ->assertFormFieldExists('commercial_state', fn ($campo) => $campo instanceof Select
-            && array_keys($campo->getOptions()) === Property::COMMERCIAL_STATES)
+            && $campo->getOptions() === ['' => 'Sem situação', 'Reservado' => 'Reservado', 'Vendido' => 'Vendido', 'Arrendado' => 'Arrendado'])
         ->callAction(TestAction::make('createOption')->schemaComponent('commercial_state'), data: ['nome' => 'Aguarda banco'])
         ->assertFormSet(['commercial_state' => 'Aguarda banco'])
         ->assertSee('Este imóvel vai aparecer sob consulta')
@@ -94,6 +94,23 @@ it('a situação escolhe-se numa lista, e o "+" cria uma nova sem código', func
     // Depois de usada, a nova passa a estar na lista dos outros imóveis.
     Livewire::test(EditProperty::class, ['record' => Property::factory()->create()->getRouteKey()])
         ->assertFormFieldExists('commercial_state', fn ($campo) => array_key_exists('Aguarda banco', $campo->getOptions()));
+});
+
+it('"Sem situação" tira a situação e o preço volta a aparecer', function () {
+    $this->actingAs(User::factory()->create());
+
+    $p = Property::factory()->create(['price_visible' => true, 'commercial_state' => 'Reservado']);
+
+    Livewire::test(EditProperty::class, ['record' => $p->getRouteKey()])
+        ->assertSee('Este imóvel vai aparecer sob consulta')
+        ->fillForm(['commercial_state' => ''])
+        ->assertDontSee('Este imóvel vai aparecer sob consulta')
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    // Grava-se null, não uma string vazia: é o que "sem situação" quer dizer.
+    expect($p->refresh()->commercial_state)->toBeNull()
+        ->and($p->priceIsVisible())->toBeTrue();
 });
 
 it('o aviso de "sob consulta" só aparece quando há situação', function () {
