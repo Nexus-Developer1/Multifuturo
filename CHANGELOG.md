@@ -9,6 +9,38 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A caixa "Vendida" sai do formulário
+
+$${\color{#5D6348}\textsf{2026-09-30 · 09:31}}$$
+
+**Commit:** `2020e47` — `Backoffice: sai a caixa "Vendida" do formulario do imovel`
+
+Com a Situação no formulário, a caixa "Vendida" da secção Estado passou a dizer o
+mesmo por outro caminho, e com um efeito diferente: escondia o imóvel do site, enquanto
+a situação "Vendido" o deixa publicado com o preço sob consulta. A agência pediu para a
+tirar.
+
+**O que mudou.** A secção Estado fica com o Actual, o Motivo — que ocupa agora o espaço
+da caixa — e a Situação. Um imóvel vendido marca-se em Situação → Vendido.
+
+**O que fica.** A coluna `is_sold` continua na base de dados e continua a esconder do
+site um imóvel marcado, porque é essa a regra do resto do código (lista, estatísticas,
+histórico). Antes de a tirar do formulário confirmei que nenhum imóvel está marcado,
+aqui e no servidor de testes, para nenhum ficar escondido sem maneira de o desmarcar.
+
+**Ficheiros**
+
+- `app/Filament/Resources/Properties/Schemas/PropertyForm.php` — sem a caixa; o Motivo
+  mais largo.
+- `tests/Feature/SituacaoImovelTest.php` — teste novo: a caixa não está no formulário e a
+  Situação está.
+
+**Notas**
+
+- 285 testes a passar e Pint limpo.
+
+---
+
 ## "Sem situação" no topo da lista
 
 $${\color{#5D6348}\textsf{2026-09-30 · 09:19}}$$
