@@ -9,6 +9,35 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## O cartão do imóvel sem a referência
+
+$${\color{#5D6348}\textsf{2026-09-30 · 09:52}}$$
+
+**Commit:** `a0c479e` — `Site: cartao do imovel sem a referencia`
+
+A agência pediu para tirar a referência ("Ref. MF26-009") do cartão dos imóveis nas
+listagens, nos destaques e nos favoritos. A referência continua na ficha do imóvel, por
+baixo do preço, e no formulário de contacto.
+
+O cartão fica com a zona, e por baixo os quartos, a área e o preço. Com situação
+(Reservado, Vendido, Arrendado ou outra), o preço já aparece como "Preço sob consulta"
+desde a entrada da situação; o MF26-009 que a agência viu com preço estava gravado sem
+situação.
+
+**Ficheiros**
+
+- `resources/views/components/property/card.blade.php` — sem a linha da referência.
+- `tests/Feature/SituacaoImovelTest.php` — a listagem já não mostra a referência e a
+  ficha continua a mostrá-la.
+- `tests/Feature/BackofficeCrmFieldsTest.php`, `tests/Feature/BusinessTypeTest.php` —
+  encontravam o cartão pela referência; passam a encontrá-lo pelo slug.
+
+**Notas**
+
+- 285 testes a passar e Pint limpo.
+
+---
+
 ## A caixa "Vendida" sai do formulário
 
 $${\color{#5D6348}\textsf{2026-09-30 · 09:31}}$$
