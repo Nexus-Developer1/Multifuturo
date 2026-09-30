@@ -113,6 +113,16 @@ it('"Sem situação" tira a situação e o preço volta a aparecer', function ()
         ->and($p->priceIsVisible())->toBeTrue();
 });
 
+it('a caixa "Vendida" já não está no formulário: vende-se pela situação', function () {
+    // Pedido da agência (2026-09-30): um imóvel vendido marca-se em Situação,
+    // que o deixa no site com o preço sob consulta, em vez de o esconder.
+    $this->actingAs(User::factory()->create());
+
+    Livewire::test(EditProperty::class, ['record' => Property::factory()->create()->getRouteKey()])
+        ->assertFormFieldDoesNotExist('is_sold')
+        ->assertFormFieldExists('commercial_state');
+});
+
 it('o aviso de "sob consulta" só aparece quando há situação', function () {
     expect(PropertyResource::avisoDaSituacao(null))->toBeNull();
 

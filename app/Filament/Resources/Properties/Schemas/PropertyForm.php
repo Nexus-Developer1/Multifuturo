@@ -188,13 +188,13 @@ class PropertyForm
                         })
                         ->extraAttributes(fn (?string $state): array => ['class' => 'estado-actual '.(self::STATUS_CLASSES[$state] ?? '')])
                         ->columnSpan(['default' => 12, 'md' => 2]),
+                    // A caixa "Vendida" saiu a pedido da agência (2026-09-30): um
+                    // imóvel vendido marca-se na Situação, que o deixa no site com o
+                    // preço sob consulta. A coluna is_sold continua na base de dados.
                     TextInput::make('status_reason')
                         ->label('Motivo')
                         ->maxLength(191)
-                        ->columnSpan(['default' => 12, 'md' => 7]),
-                    self::aoNivel(Checkbox::make('is_sold')
-                        ->label('Vendida'))
-                        ->columnSpan(['default' => 12, 'md' => 3]),
+                        ->columnSpan(['default' => 12, 'md' => 10]),
 
                     /*
                      * Situação do negócio: uma lista como a do tipo de negócio.
