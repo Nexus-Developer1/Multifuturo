@@ -31,10 +31,12 @@ it('com situação, o site troca o preço por "sob consulta" e mostra a situaç�
     // Nem no JSON-LD, que seria contraditório com a ficha.
     expect($ficha->getContent())->not->toContain('"price":"250000.00"');
 
-    // E na listagem, no cartão.
+    // E na listagem, no cartão — já sem a referência, que fica só na ficha.
     $this->get(route('buy'))->assertOk()
         ->assertSee('Reservado')
-        ->assertSee('Preço sob consulta');
+        ->assertSee('Preço sob consulta')
+        ->assertDontSee('Ref. '.$p->reference);
+    $ficha->assertSee('Ref. '.$p->reference);
 });
 
 it('sem situação, o preço aparece como sempre', function () {

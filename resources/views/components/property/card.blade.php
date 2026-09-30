@@ -73,10 +73,10 @@
             {{-- O título completo fica para quem ouve a página e para os motores de busca. --}}
             <span class="sr-only"> — {{ $title }}</span>
         </h3>
+        {{-- Com situação (reservado, vendido…) o preço já vem como "Preço sob consulta".
+             A referência saiu do cartão a pedido da agência (2026-09-30): fica na ficha. --}}
         @if ($specs)
             <p class="mt-1.5 text-sm uppercase tracking-wide text-ink-muted">{{ implode(', ', $specs) }}</p>
         @endif
-        {{-- A referência é o que o cliente diz ao telefone: discreta, mas presente. --}}
-        <p class="mt-1 text-xs text-ink-muted/80">{{ __('ui.property.reference') }} {{ $p->reference ?? $p->internal_id }}</p>
     </div>
 </article>

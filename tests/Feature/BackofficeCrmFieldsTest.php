@@ -224,7 +224,8 @@ it('o estado interno "Actual", o motivo e os monitores ficam guardados e fora do
         ->and($p->isPublishable())->toBeTrue();
 
     // Guardados, mas nada disto sai no site.
-    $this->get(route('buy'))->assertOk()->assertSee('MF-5001');
+    // O cartão encontra-se pelo slug: a referência já não vai no cartão.
+    $this->get(route('buy'))->assertOk()->assertSee('data-slug="'.$p->slug.'"', false);
     $this->get(route('property.show', $p))->assertOk()
         ->assertDontSee('Montra da rua')
         ->assertDontSee('Em avaliação');
@@ -279,7 +280,7 @@ it('as fichas sem "Actual" contam como ativas', function () {
         ->and($p->isPublishable())->toBeTrue()
         ->and(Property::query()->active()->count())->toBe(1);
 
-    $this->get(route('buy'))->assertOk()->assertSee('MF-6002');
+    $this->get(route('buy'))->assertOk()->assertSee('data-slug="'.$p->slug.'"', false);
 });
 
 it('marcar "Inativa" no formulário desliga o "Visível no website"', function () {

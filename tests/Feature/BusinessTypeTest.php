@@ -34,11 +34,14 @@ it('só o arrendamento puro mostra o preço por mês', function () {
 });
 
 it('as listagens públicas mostram as finalidades mapeadas', function () {
-    Property::factory()->create(['business_type' => BusinessType::Transfer, 'reference' => 'F-TRESP']);
-    Property::factory()->create(['business_type' => BusinessType::RentOrSale, 'reference' => 'F-AMBAS']);
+    $tresp = Property::factory()->create(['business_type' => BusinessType::Transfer, 'reference' => 'F-TRESP']);
+    $ambas = Property::factory()->create(['business_type' => BusinessType::RentOrSale, 'reference' => 'F-AMBAS']);
 
-    $this->get(route('buy'))->assertOk()->assertSee('F-TRESP')->assertSee('F-AMBAS');
-    $this->get(route('rent'))->assertOk()->assertSee('F-AMBAS')->assertDontSee('F-TRESP');
+    // Os cartões encontram-se pelo slug: a referência já não vai no cartão.
+    $cartao = fn (Property $p) => 'data-slug="'.$p->slug.'"';
+
+    $this->get(route('buy'))->assertOk()->assertSee($cartao($tresp), false)->assertSee($cartao($ambas), false);
+    $this->get(route('rent'))->assertOk()->assertSee($cartao($ambas), false)->assertDontSee($cartao($tresp), false);
 });
 
 it('todas as finalidades têm rótulo em português', function () {
