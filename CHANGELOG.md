@@ -9,6 +9,29 @@ atualizam este ficheiro não têm entrada própria.
 
 ---
 
+## A ficha sem a referência por baixo do preço
+
+$${\color{#5D6348}\textsf{2026-09-30 · 10:44}}$$
+
+**Commit:** `93b5b6c` — `Site: ficha do imovel sem a referencia por baixo do preco`
+
+Depois de a tirar do cartão, a agência pediu para tirar também a referência ("Ref.
+MF26-006") que aparecia por baixo do preço, no topo da ficha do imóvel.
+
+A referência continua no bloco do formulário de contacto da ficha, e segue sempre com
+o pedido — é por ela que a agência sabe de que imóvel se fala.
+
+**Ficheiros**
+
+- `resources/views/pages/property.blade.php` — sem a linha da referência.
+- `tests/Feature/SituacaoImovelTest.php` — o bloco do preço já não tem a referência.
+
+**Notas**
+
+- 288 testes a passar e Pint limpo.
+
+---
+
 ## A listagem atualiza-se logo ao gravar, também no cPanel
 
 $${\color{#5D6348}\textsf{2026-09-30 · 10:11}}$$
