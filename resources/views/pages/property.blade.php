@@ -99,7 +99,8 @@
                     <p class="label text-olive-700">{{ $p->commercial_state }}</p>
                 @endif
                 <p class="price text-3xl sm:text-4xl">{{ Format::price($p->price, $p->currency, $p->business_type, $p->priceIsVisible()) }}</p>
-                <p class="mt-1 text-sm text-ink-muted">{{ __('ui.property.reference') }} {{ $p->reference ?? $p->internal_id }}</p>
+                {{-- A referência saiu daqui a pedido da agência (2026-09-30). Continua no
+                     formulário de contacto, que a envia com o pedido. --}}
             </div>
         </header>
 

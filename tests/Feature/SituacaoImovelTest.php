@@ -31,11 +31,14 @@ it('com situação, o site troca o preço por "sob consulta" e mostra a situaç�
     // Nem no JSON-LD, que seria contraditório com a ficha.
     expect($ficha->getContent())->not->toContain('"price":"250000.00"');
 
-    // E na listagem, no cartão — já sem a referência, que fica só na ficha.
+    // E na listagem, no cartão — já sem a referência.
     $this->get(route('buy'))->assertOk()
         ->assertSee('Reservado')
         ->assertSee('Preço sob consulta')
         ->assertDontSee('Ref. '.$p->reference);
+    // Na ficha, a referência já não está ao pé do preço — só no formulário de contacto.
+    preg_match('#<div class="text-right">(.*?)</div>#s', $ficha->getContent(), $blocoDoPreco);
+    expect($blocoDoPreco[1] ?? '')->toContain('Preço sob consulta')->not->toContain($p->reference);
     $ficha->assertSee('Ref. '.$p->reference);
 });
 
