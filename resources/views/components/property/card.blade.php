@@ -14,11 +14,15 @@
     $title = $p->title ?: trim(($p->property_type ?? '').' '.(Format::typology($p->bedrooms) ?? ''));
     // Cabeçalho do cartão: "Porto — Ramalde". Sem concelho, fica o título.
     $local = collect([$p->city, $p->locality])->filter()->implode(' — ') ?: $title;
-    $specs = array_filter([
-        $p->bedrooms !== null ? trans_choice('ui.property.rooms_count', $p->bedrooms, ['count' => $p->bedrooms]) : null,
-        Format::area($p->house_area ?? $p->gross_area),
-        Format::price($p->price, $p->currency, $p->business_type, $p->priceIsVisible()),
-    ]);
+    // Com situação (reservado, vendido…) o cartão diz só "Preço sob consulta": o
+    // negócio já não está aberto, e os pormenores ficam na ficha.
+    $specs = filled($p->commercial_state)
+        ? [__('ui.property.price_on_request')]
+        : array_filter([
+            $p->bedrooms !== null ? trans_choice('ui.property.rooms_count', $p->bedrooms, ['count' => $p->bedrooms]) : null,
+            Format::area($p->house_area ?? $p->gross_area),
+            Format::price($p->price, $p->currency, $p->business_type, $p->priceIsVisible()),
+        ]);
 @endphp
 <article {{ $attributes->merge(['class' => 'group relative flex flex-col']) }} data-slug="{{ $p->slug }}">
     <a href="{{ $url }}" class="relative block overflow-hidden bg-sand-100" tabindex="-1" aria-hidden="true">
@@ -73,8 +77,7 @@
             {{-- O título completo fica para quem ouve a página e para os motores de busca. --}}
             <span class="sr-only"> — {{ $title }}</span>
         </h3>
-        {{-- Com situação (reservado, vendido…) o preço já vem como "Preço sob consulta".
-             A referência saiu do cartão a pedido da agência (2026-09-30): fica na ficha. --}}
+        {{-- A referência saiu do cartão a pedido da agência (2026-09-30): fica na ficha. --}}
         @if ($specs)
             <p class="mt-1.5 text-sm uppercase tracking-wide text-ink-muted">{{ implode(', ', $specs) }}</p>
         @endif

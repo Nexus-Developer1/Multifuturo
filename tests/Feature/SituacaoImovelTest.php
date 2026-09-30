@@ -125,6 +125,44 @@ it('a caixa "Vendida" já não está no formulário: vende-se pela situação', 
         ->assertFormFieldExists('commercial_state');
 });
 
+/** O texto do cartão de um imóvel numa página, sem o resto da página. */
+function cartaoDe(string $html, Property $p): string
+{
+    preg_match('#<article[^>]*data-slug="'.preg_quote($p->slug, '#').'"(.*?)</article>#s', $html, $m);
+
+    return trim(preg_replace('/\s+/u', ' ', strip_tags($m[1] ?? '')));
+}
+
+it('com situação, o cartão diz só "Preço sob consulta", sem quartos nem área', function () {
+    $p = Property::factory()->create(['bedrooms' => 3, 'house_area' => 208, 'price' => 570000, 'commercial_state' => 'Reservado']);
+
+    $cartao = cartaoDe($this->get(route('buy'))->assertOk()->getContent(), $p);
+
+    expect($cartao)->toContain('Preço sob consulta')
+        ->and($cartao)->not->toContain('quartos')
+        ->and($cartao)->not->toContain('208')
+        ->and($cartao)->not->toContain('570');
+});
+
+it('sem Redis (cache na base de dados, como no cPanel), gravar a situação atualiza logo a listagem', function () {
+    // Em 2026-09-30 a agência pôs um imóvel em "Reservado" e a listagem continuou
+    // com o preço: sem tags, o flush() da cache não fazia nada.
+    config(['cache.default' => 'database']);
+    $this->actingAs(User::factory()->create());
+
+    $p = Property::factory()->create(['bedrooms' => 3, 'price' => 570000, 'price_visible' => true, 'commercial_state' => null]);
+
+    expect(cartaoDe($this->get(route('buy'))->getContent(), $p))->toContain('3 quartos');
+
+    Livewire::test(EditProperty::class, ['record' => $p->getRouteKey()])
+        ->fillForm(['commercial_state' => 'Reservado'])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect(cartaoDe($this->get(route('buy'))->getContent(), $p))->toContain('Preço sob consulta')
+        ->not->toContain('3 quartos');
+});
+
 it('o aviso de "sob consulta" só aparece quando há situação', function () {
     expect(PropertyResource::avisoDaSituacao(null))->toBeNull();
 
